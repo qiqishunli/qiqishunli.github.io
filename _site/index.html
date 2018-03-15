@@ -1,598 +1,418 @@
-<!DOCTYPE html>
-<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>码志</title>
-    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-css/css/primer.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-markdown/dist/user-content.min.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/octicons/octicons/octicons.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/collection.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/repo-card.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/repo-list.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/mini-repo-list.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/boxed-group.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/common.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/share.js/dist/css/share.min.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/responsive.css">
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/posts/index.css">
-    <!-- Latest compiled and minified CSS -->
-    
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/pages/index.css">
-    
-
-    
-    <link rel="canonical" href="http://localhost:4000/">
-    <link rel="alternate" type="application/atom+xml" title="码志" href="http://localhost:4000/feed.xml">
-    <link rel="shortcut icon" href="http://localhost:4000/favicon.ico">
-    
-    <meta name="keywords" content="码志, Zhuang Ma, mzlogin, mazhuang">
-    <meta name="description" content="马壮的个人博客">
-    
-    
-        
-    
-    <meta property="og:url" content="http://localhost:4000/">
-    <meta property="og:site_name" content="码志">
-    <meta property="og:type" content="article">
-    <meta property="og:locale" content="zh_CN">
-    
-    <script src="http://localhost:4000/assets/vendor/jquery/dist/jquery.min.js"></script>
-    <script src="http://localhost:4000/assets/js/jquery-ui.js"></script>
-    <script type="text/javascript">
-    function toggleMenu() {
-        var nav = document.getElementsByClassName("site-header-nav")[0];
-        if (nav.style.display == "inline-flex") {
-          nav.style.display = "none";
-        } else {
-          nav.style.display = "inline-flex";
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Blog - 浅浅蓝's blog</title>
+<meta name="description" content="一个热爱前端开发的小姑娘
+">
+<link rel="canonical" href="http://localhost:4000/"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
         }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
     }
-    </script>
-</head>
-<body class="home" data-mz="home">
-    <header class="site-header">
-        <div class="container">
-            <h1><a href="http://localhost:4000/" title="码志"><span class="octicon octicon-mark-github"></span> 码志</a></h1>
-            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <nav class="site-header-nav" role="navigation">
-                
-                <a href="http://localhost:4000/" class=" site-header-nav-item" target="" title="首页">首页</a>
-                
-                <a href="http://localhost:4000/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
-                
-                <a href="http://localhost:4000/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
-                
-                <a href="http://localhost:4000/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
-                
-                <a href="http://localhost:4000/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
-                
-            </nav>
-        </div>
-    </header>
-    <!-- / header -->
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
 
-    <section class="banner">
-    <div class="collection-head">
-        <div class="container">
-            <div class="collection-title">
-              <h1 class="collection-header" id="sub-title"><span>打码改变人生</span></h1>
-                <div class="collection-info">
-                    <span class="meta-info mobile-hidden">
-                        <span class="octicon octicon-location"></span>
-                        Wuhan, China
-                    </span>
-                    <span class="meta-info">
-                        <span class="octicon octicon-organization"></span>
-                        <a href="http://www.zkh360.com" target="_blank">zkh360.com</a>
-                    </span>
-                     <span class="meta-info">
-                        <span class="octicon octicon-mark-github"></span>
-                        <a href="https://github.com/mzlogin" target="_blank">mzlogin</a>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- /.banner -->
-<section class="container content">
-    <div class="columns">
-        <div class="column two-thirds">
-            <ol class="repo-list">
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="http://localhost:4000/2017/12/03/tcp-connect-between-android-emulators/">解决两个 Android 模拟器之间无法网络通信的问题</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        本文解决的是一个小众场景的问题：
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/12/03
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="http://localhost:4000/categories/#Android" title="Android">Android</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="http://localhost:4000/2017/11/12/start-from-toast/">Android 源码分析 —— 从 Toast 出发</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        本系列文章在 https://github.com/mzlogin/rtfsc-android 持续更新中，欢迎有兴趣的童鞋们关注。
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/11/12
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="http://localhost:4000/categories/#Android" title="Android">Android</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="http://localhost:4000/2017/10/24/1024-poses/">程序员节的过节姿势大全</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        今天是 10 月 24 日，不知道你的朋友圈有没有被程序员节刷屏，反正我的是被刷了。
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/10/24
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="http://localhost:4000/categories/#Blog" title="Blog">Blog</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="http://localhost:4000/2017/10/14/guanggoo-android-app/">发布一款光谷社区第三方 Android App</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        在过去的一个来月，我利用业余时间做了一款光谷社区的第三方 Android 客户端。
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/10/14
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="http://localhost:4000/categories/#Android" title="Android">Android</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="http://localhost:4000/2017/10/05/rtfsc-methods-and-meaning/">阅读源码的意义与方法</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        思索了这两个问题良久，也去知乎找了一些相关话题的问答，但并没有标准答案。所以，我这里也只是记录一些我对此的看法，也许会随着 RTFSC 阅历的丰富而发生变化，我会记录更新于 https://github.com/mzlogin/rtfsc-android。
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/10/05
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="http://localhost:4000/categories/#Android" title="Android">Android</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="http://localhost:4000/2017/09/23/rtfsc-android-start/">Android 源码分析开篇</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        在心中谋划已久的此事终于要开篇了，虽然迟了点，十年前没有种的树，就从现在开始种吧。
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/09/23
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="http://localhost:4000/categories/#Android" title="Android">Android</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="http://localhost:4000/2017/09/11/joins-in-sql/">图解 SQL 里的各种 JOIN</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        从业以来主要在做客户端，用到的数据库都是表结构比较简单的 SQLite，以我那还给老师一大半的 SQL 水平倒也能对付。现在偶尔需要到后台的 SQL Server 里追查一些数据问题，就显得有点捉襟见肘了，特别是各种 JOIN，有时候傻傻分不清楚，于是索性弄明白并做个记录。
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/09/11
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="http://localhost:4000/categories/#Database" title="Database">Database</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="http://localhost:4000/2017/09/01/markdown-odd-skills/">关于 Markdown 的一些奇技淫巧</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        自从几年前开始在 GitHub 玩耍，接触到 Markdown 之后，就一发不可收拾，在各种文档编辑上，有条件用 Markdown 的尽量用，不能用的创造条件也要用——README、博客、公众号、接口文档等等全都是，比如当前这篇文章就是用 Markdown 编辑而成。
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/09/01
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="http://localhost:4000/categories/#Markdown" title="Markdown">Markdown</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-            </ol>
-        </div>
-        <div class="column one-third">
-            
-<h3>Search</h3>
-<div id="site_search">
-    <input type="text" id="search_box" placeholder="Search">
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-home">
+  <div class="main">
+    <div class="m-post-list"><article><h1><a href="/android/2017/12/03/tcp-connect-between-android-emulators.html">解决两个 Android 模拟器之间无法网络通信的问题</a></h1>
+          <div class="m-article-content">本文解决的是一个小众场景的问题：
+
+出差在外，需要调试局域网内的两台 Android 设备之间通过 TCP 通信的情况，可手边又不是随时有多台可用的设备，于是想在笔记本上同时跑两台 Android 模拟器来构造调试环境，但是发现它俩的 IP 地址竟然都是 10.0.2.15，场面一度十分尴尬……
+
+
+
+谷狗之后，众多相关的博客和问答贴将我引向了官方文档页面：
+
+Interconnecting emulator instances
+
+原来官方指南上解释过相关的知识，现将我关心和以前迷惑的部分翻译摘录如下，如果希望对此有个更全面的了解，还是推荐完整阅读 Android 官方文档里有关 Emulator 的章节 https://developer.android.com/studio/run...</div><a href="/android/2017/12/03/tcp-connect-between-android-emulators.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Dec 03, 2017</span></div>
+  </div>
 </div>
-
-<ul id="search_results"></ul>
-
-<link rel="stylesheet" type="text/css" href="http://localhost:4000/assets/css/modules/sidebar-search.css">
-<script src="http://localhost:4000/assets/js/simple-jekyll-search.min.js"></script>
-<script src="http://localhost:4000/assets/js/search.js"></script>
-
-<script type="text/javascript">
-SimpleJekyllSearch({
-    searchInput: document.getElementById('search_box'),
-    resultsContainer: document.getElementById('search_results'),
-    json: 'http://localhost:4000/assets/search_data.json',
-    searchResultTemplate: '<li><a href="{url}" title="{desc}">{title}</a></li>',
-    noResultsText: 'No results found',
-    limit: 10,
-    fuzzy: false,
-    exclude: ['Welcome']
-})
-</script>
-
-            <h3>My Popular Repositories</h3>
+</article><article><h1><a href="/android/2017/11/12/start-from-toast.html">Android 源码分析 —— 从 Toast 出发</a></h1>
+          <div class="m-article-content">本系列文章在 https://github.com/mzlogin/rtfsc-android 持续更新中，欢迎有兴趣的童鞋们关注。
 
 
 
-<a href="https://github.com/mzlogin/awesome-adb" target="_blank" class="card text-center">
-    <div class="thumbnail">
-        <div class="card-image geopattern" data-pattern-id="awesome-adb">
-            <div class="card-image-cell">
-                <h3 class="card-title">
-                    awesome-adb
-                </h3>
-            </div>
-        </div>
-        <div class="caption">
-            <div class="card-description">
-                <p class="card-text"><img class="emoji" title=":lollipop:" alt=":lollipop:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f36d.png" height="20" width="20"> ADB Usage Complete / ADB 用法大全</p>
-            </div>
-            <div class="card-text">
-                <span class="meta-info" title="3605 stars">
-                    <span class="octicon octicon-star"></span> 3605
-                </span>
-                <span class="meta-info" title="845 forks">
-                    <span class="octicon octicon-git-branch"></span> 845
-                </span>
-                <span class="meta-info" title="Last updated：2018-03-15 02:49:48 UTC">
-                    <span class="octicon octicon-clock"></span>
-                    <time datetime="2018-03-15 02:49:48 UTC">2018-03-15</time>
-                </span>
-            </div>
-        </div>
-    </div>
-</a>
+（图 from Android Developers）
 
-<a href="https://github.com/mzlogin/chinese-copywriting-guidelines" target="_blank" class="card text-center">
-    <div class="thumbnail">
-        <div class="card-image geopattern" data-pattern-id="chinese-copywriting-guidelines">
-            <div class="card-image-cell">
-                <h3 class="card-title">
-                    chinese-copywriting-guidelines
-                </h3>
-            </div>
-        </div>
-        <div class="caption">
-            <div class="card-description">
-                <p class="card-text"><img class="emoji" title=":mahjong:" alt=":mahjong:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f004.png" height="20" width="20"> Chinese Copywriting Guidelines：中文文案排版指北（简体中文版）</p>
-            </div>
-            <div class="card-text">
-                <span class="meta-info" title="1017 stars">
-                    <span class="octicon octicon-star"></span> 1017
-                </span>
-                <span class="meta-info" title="185 forks">
-                    <span class="octicon octicon-git-branch"></span> 185
-                </span>
-                <span class="meta-info" title="Last updated：2018-03-15 07:08:55 UTC">
-                    <span class="octicon octicon-clock"></span>
-                    <time datetime="2018-03-15 07:08:55 UTC">2018-03-15</time>
-                </span>
-            </div>
-        </div>
-    </div>
-</a>
+Toast 是 Android 开发里较常用的一个类了，有时候用它给用户弹提示信息和界面反馈，有时候用它来作为辅助调试的手段。用得多了，自然想对其表层之下的运行机制有所了解，所以在此将它选为我的第一个 RTFSC Roots。
 
-<a href="https://github.com/mzlogin/mzlogin.github.io" target="_blank" class="card text-center">
-    <div class="thumbnail">
-        <div class="card-image geopattern" data-pattern-id="mzlogin.github.io">
-            <div class="card-image-cell">
-                <h3 class="card-title">
-                    mzlogin.github.io
-                </h3>
-            </div>
-        </div>
-        <div class="caption">
-            <div class="card-description">
-                <p class="card-text"><img class="emoji" title=":speak_no_evil:" alt=":speak_no_evil:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f64a.png" height="20" width="20"> My Blog / Jekyll Themes</p>
-            </div>
-            <div class="card-text">
-                <span class="meta-info" title="466 stars">
-                    <span class="octicon octicon-star"></span> 466
-                </span>
-                <span class="meta-info" title="446 forks">
-                    <span class="octicon octicon-git-branch"></span> 446
-                </span>
-                <span class="meta-info" title="Last updated：2018-03-14 09:19:00 UTC">
-                    <span class="octicon octicon-clock"></span>
-                    <time datetime="2018-03-14 09:19:00 UTC">2018-03-14</time>
-                </span>
-            </div>
-        </div>
-    </div>
-</a>
+本篇采用的记录方式是先对它有个整体的了解，然后提出一些问题，再通过阅读源码，对问题进行一一解读而后得出答案。
 
-<a href="https://github.com/mzlogin/vim-markdown-toc" target="_blank" class="card text-center">
-    <div class="thumbnail">
-        <div class="card-image geopattern" data-pattern-id="vim-markdown-toc">
-            <div class="card-image-cell">
-                <h3 class="card-title">
-                    vim-markdown-toc
-                </h3>
-            </div>
-        </div>
-        <div class="caption">
-            <div class="card-description">
-                <p class="card-text"><img class="emoji" title=":package:" alt=":package:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f4e6.png" height="20" width="20"> A vim 7.4+ plugin to generate table of contents for Markdown files.</p>
-            </div>
-            <div class="card-text">
-                <span class="meta-info" title="159 stars">
-                    <span class="octicon octicon-star"></span> 159
-                </span>
-                <span class="meta-info" title="20 forks">
-                    <span class="octicon octicon-git-branch"></span> 20
-                </span>
-                <span class="meta-info" title="Last updated：2018-03-14 09:17:42 UTC">
-                    <span class="octicon octicon-clock"></span>
-                    <time datetime="2018-03-14 09:17:42 UTC">2018-03-14</time>
-                </span>
-            </div>
-        </div>
-    </div>
-</a>
+本文使用的工具与源码为：Chrome、插件 insight.io、GitHub 项目 aosp-mirror/platform_frameworks_ba...</div><a href="/android/2017/11/12/start-from-toast.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Nov 12, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/blog/2017/10/24/1024-poses.html">程序员节的过节姿势大全</a></h1>
+          <div class="m-article-content">今天是 10 月 24 日，不知道你的朋友圈有没有被程序员节刷屏，反正我的是被刷了。
 
-<a href="https://github.com/mzlogin/CleanExpert" target="_blank" class="card text-center">
-    <div class="thumbnail">
-        <div class="card-image geopattern" data-pattern-id="CleanExpert">
-            <div class="card-image-cell">
-                <h3 class="card-title">
-                    CleanExpert
-                </h3>
-            </div>
-        </div>
-        <div class="caption">
-            <div class="card-description">
-                <p class="card-text"><img class="emoji" title=":green_heart:" alt=":green_heart:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f49a.png" height="20" width="20"> A cleaner app for android</p>
-            </div>
-            <div class="card-text">
-                <span class="meta-info" title="67 stars">
-                    <span class="octicon octicon-star"></span> 67
-                </span>
-                <span class="meta-info" title="35 forks">
-                    <span class="octicon octicon-git-branch"></span> 35
-                </span>
-                <span class="meta-info" title="Last updated：2018-03-05 08:02:26 UTC">
-                    <span class="octicon octicon-clock"></span>
-                    <time datetime="2018-03-05 08:02:26 UTC">2018-03-05</time>
-                </span>
-            </div>
-        </div>
-    </div>
-</a>
+看到 1024 这个数字，相信很多人都怀着特别的感情，比如我，游泳不会止步于 1000 米，肯定会补 24 米凑个整，跑步如果跑到 10 公里，那一定再多跑个 0.24 出来。
+
+搞不好还会想起那些年追过的社区，嗟叹一下逝去的青春：
 
 
 
-        </div>
-    </div>
-    <div class="pagination text-align">
-      <div class="btn-group">
-        
-            <button disabled href="javascript:;" class="btn btn-outline">«</button>
-        
-        
-            <a href="javascript:;" class="active btn btn-outline">1</a>
-        
-        
-          
-              <a href="http://localhost:4000/page2" class="btn btn-outline">2</a>
-          
-        
-          
-              <a href="http://localhost:4000/page3" class="btn btn-outline">3</a>
-          
-        
-          
-              <a href="http://localhost:4000/page4" class="btn btn-outline">4</a>
-          
-        
-          
-              <a href="http://localhost:4000/page5" class="btn btn-outline">5</a>
-          
-        
-          
-              <a href="http://localhost:4000/page6" class="btn btn-outline">6</a>
-          
-        
-          
-              <a href="http://localhost:4000/page7" class="btn btn-outline">7</a>
-          
-        
-          
-              <a href="http://localhost:4000/page8" class="btn btn-outline">8</a>
-          
-        
-          
-              <a href="http://localhost:4000/page9" class="btn btn-outline">9</a>
-          
-        
-          
-              <a href="http://localhost:4000/page10" class="btn btn-outline">10</a>
-          
-        
-          
-              <a href="http://localhost:4000/page11" class="btn btn-outline">11</a>
-          
-        
-          
-              <a href="http://localhost:4000/page12" class="btn btn-outline">12</a>
-          
-        
-          
-              <a href="http://localhost:4000/page13" class="btn btn-outline">13</a>
-          
-        
-        
-            <a href="http://localhost:4000/page2" class="btn btn-outline">»</a>
-        
-        </div>
-    </div>
-    <!-- /pagination -->
-</section>
-<!-- /section.content -->
+那么，这样一个特别的日子，我的交游圈里大家是以怎样的姿势度过的呢？
 
-    <footer class="container">
-        <div class="site-footer" role="contentinfo">
-            <div class="copyright left mobile-block">
-                    © 2015
-                    <span title="Zhuang Ma">Zhuang Ma</span>
-                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
-            </div>
+程序员们怎么过
 
-            <ul class="site-footer-links right mobile-hidden">
-                <li>
-                    <a href="javascript:window.scrollTo(0,0)">TOP</a>
-                </li>
-            </ul>
-            <a href="http://github.com/mzlogin/mzlogin.github.io" target="_blank" aria-label="view source code">
-                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
-            </a>
-            <ul class="site-footer-links mobile-hidden">
-                
-                <li>
-                    <a href="http://localhost:4000/" title="首页" target="">首页</a>
-                </li>
-                
-                <li>
-                    <a href="http://localhost:4000/categories/" title="分类" target="">分类</a>
-                </li>
-                
-                <li>
-                    <a href="http://localhost:4000/wiki/" title="维基" target="">维基</a>
-                </li>
-                
-                <li>
-                    <a href="http://localhost:4000/links/" title="链接" target="">链接</a>
-                </li>
-                
-                <li>
-                    <a href="http://localhost:4000/about/" title="关于" target="">关于</a>
-                </li>
-                
-                <li><a href="http://localhost:4000/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
-            </ul>
+聚众自黑型
 
-        </div>
+作为互联网上最擅长自黑自嘲，以至于现在不明真相的群众都把他们的自黑当真话听的群体，这一天怎么会甘于寂寞，今天微信群里的画风是这样的：
+
+
+
+
+
+
+
+（from 掘金.专栏作者群）
+
+大家纷纷表示自己是个假程序员。
+
+感(xuan)恩(yao)公司关怀型
+
+以重视员...</div><a href="/blog/2017/10/24/1024-poses.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Oct 24, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/android/2017/10/14/guanggoo-android-app.html">发布一款光谷社区第三方 Android App</a></h1>
+          <div class="m-article-content">在过去的一个来月，我利用业余时间做了一款光谷社区的第三方 Android 客户端。
+
+前言
+
+光谷社区是我在决定离开帝都回武汉的过程中，及回武汉之后关注得较多的武汉本土社区，网站 http://guanggoo.com 自己的 description 是这样的：
+
+
+  光谷社区是源自光谷的高端社交网络，这里有关于创业、创意、IT、金融等最热话题的交流，也有招聘问答、活动交友等最新资讯的发布。
+
+
+描述得还比较准确。我觉得身在光谷，或者心系光谷的童鞋们可以关注一下。
+
+发布详情
+
+目前支持特性：
+
+
+  登录
+  首页主题列表（三种视图）
+  主题详情 / 评论列表
+  节点列表 / 节点主题列表
+  评论 / 艾特用户
+  分享主题链接
+  发表新主题
+  查看用户信息
+
+
+源码放在...</div><a href="/android/2017/10/14/guanggoo-android-app.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Oct 14, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/android/2017/10/05/rtfsc-methods-and-meaning.html">阅读源码的意义与方法</a></h1>
+          <div class="m-article-content">思索了这两个问题良久，也去知乎找了一些相关话题的问答，但并没有标准答案。所以，我这里也只是记录一些我对此的看法，也许会随着 RTFSC 阅历的丰富而发生变化，我会记录更新于 https://github.com/mzlogin/rtfsc-android。
+
+意义
+
+在我看来，阅读源码的意义在于学习优秀的「套路」。
+
+这里的「套路」所指范围很广，大到架构设计，小到可取的命名风格，还有设计模式、实现某类功能使用到的数据结构和算法等等。所谓高手，其实就是能比大部分人更早更快地掌握套路并熟练运用之人。
+
+埋头在自己的天地里耕芸固然也能逐渐进步和成长，但总会有时候会遇到一些场景，你苦思良久也无法做出良好的设计，总会有一些时候，纠结如何为一个变量命名让你停下飞速敲击的手指。这些令你为难的场景，先...</div><a href="/android/2017/10/05/rtfsc-methods-and-meaning.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Oct 05, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/android/2017/09/23/rtfsc-android-start.html">Android 源码分析开篇</a></h1>
+          <div class="m-article-content">在心中谋划已久的此事终于要开篇了，虽然迟了点，十年前没有种的树，就从现在开始种吧。
+
+自 2014 年底从 Windows 开发转向 Android 开发以后，到现在的两年多时间里，也陆陆续续看了一些强相关的书籍和教程，按我在豆瓣标记的时间顺序：
+
+
+  《Android Programming: The Big Nert Ranch Guide》
+  《疯狂 Java 讲义》
+  《疯狂 Android 讲义》
+  《Android 软件安全与逆向分析》
+  《深入理解 Java 虚拟机》
+  《Android Training》
+  《Android 开发艺术探索》
+  《Android 群英传》
+  《App 研发录》
+
+
+再加上平时在 GitHub 和掘金等技术社区的晃荡，接触...</div><a href="/android/2017/09/23/rtfsc-android-start.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Sep 23, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/database/2017/09/11/joins-in-sql.html">图解 SQL 里的各种 JOIN</a></h1>
+          <div class="m-article-content">从业以来主要在做客户端，用到的数据库都是表结构比较简单的 SQLite，以我那还给老师一大半的 SQL 水平倒也能对付。现在偶尔需要到后台的 SQL Server 里追查一些数据问题，就显得有点捉襟见肘了，特别是各种 JOIN，有时候傻傻分不清楚，于是索性弄明白并做个记录。
+
+前言
+
+在各种问答社区里谈及 SQL 里的各种 JOIN 之间的区别时，最被广为引用的是 CodeProject 上 C.L. Moffatt 的文章 Visual Representation of SQL Joins，他确实讲得简单明了，使用文氏图来帮助理解，效果明显。本文将沿用他的讲解方式，稍有演绎，可以视为该文较为粗糙的中译版。
+
+约定
+
+下文将使用两个数据库表 Table_A 和 Table_B 来进行...</div><a href="/database/2017/09/11/joins-in-sql.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Sep 11, 2017</span></div>
+  </div>
+</div>
+</article></div><nav class="m-pagination"><p>103 post articles, 15 pages.</p>
+          <ul><li><div class="round-button inactive">
+                <div class="icon icon--prrevious"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+</svg>
+</div></div>
+              </li><li>
+                  <div class="round-button cur"><span>1</span></div>
+                </li><li>
+                      <a class="round-button" href="/blog/page2"><span>2</span></a>
+                    </li><li>
+                      <a class="round-button" href="/blog/page3"><span>3</span></a>
+                    </li><li>
+                      <a class="round-button" href="/blog/page4"><span>4</span></a>
+                    </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
+                      <a class="round-button" href="/blog/page15"><span>15</span></a>
+                    </li><li>
+                <a class="round-button" href="/blog/page2">
+                  <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+</svg>
+</div>
+                </a>
+              </li></ul>
+        </nav></div>
+</div>
+</div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
     </footer>
-    <!-- / footer -->
-    <script src="http://localhost:4000/assets/vendor/share.js/dist/js/share.min.js"></script>
-    <script src="http://localhost:4000/assets/js/geopattern.js"></script>
-    <script src="http://localhost:4000/assets/js/prism.js"></script>
-    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/prism.css">
-    <script>
-      jQuery(document).ready(function($) {
-        // geopattern
-        $('.geopattern').each(function(){
-          $(this).geopattern($(this).data('pattern-id'));
-        });
-       // hljs.initHighlightingOnLoad();
-      });
-    </script>
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div style="display:none">
-      <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-80669434-1', 'auto');
-        ga('send', 'pageview');
-
-      </script>
-    </div>
-    
-</body>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script></body>
 </html>

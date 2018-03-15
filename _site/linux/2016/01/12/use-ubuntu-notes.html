@@ -1,0 +1,648 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Ubuntu 使用笔记 - 浅浅蓝's blog</title>
+<meta name="description" content="使用 Ubuntu 过程中遇到的问题及解决方案。使用 git pull 遇到问题提示Agent admitted failure to sign using the key.Permission denied (publickey).fatal: Could not read from remote reposi...">
+<link rel="canonical" href="http://localhost:4000/linux/2016/01/12/use-ubuntu-notes.html"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-post">
+	<div class="main clearfix js-main">
+		<div class="col-2 js-col-2">
+			<aside class="js-article-aside"><div class="m-toc js-toc"></div></aside>
+		</div>
+		<div class="col-1">
+			<article class="js-article" itemscope itemtype="http://schema.org/BlogPosting">
+				<meta itemprop="mainEntityOfPage" itemscope itemType="https://schema.org/WebPage"/>
+				<header class="main-header"><h1 itemprop="headline" itemprop="name headline">Ubuntu 使用笔记</h1><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><time class="article-meta" datetime="2016-01-12T00:00:00+08:00"
+          itemprop="datePublished">Jan 12, 2016
+        </time></div>
+  </div>
+</div>
+</header>
+				<div class="m-article-content js-article-content" itemprop="articleBody"><p>使用 Ubuntu 过程中遇到的问题及解决方案。</p>
+
+<h2 id="使用-git-pull-遇到问题">使用 git pull 遇到问题</h2>
+
+<p>提示</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Agent admitted failure to sign using the key.
+Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+</code></pre></div></div>
+
+<p>解决方法：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-add ~/.ssh/id_rsa
+</code></pre></div></div>
+
+<h2 id="图形界面编辑配置文件">图形界面编辑配置文件</h2>
+
+<p>安装 dconf-editor。</p>
+
+<h2 id="配置-exchange">配置 Exchange</h2>
+
+<p>为 ThunderBird 安装插件 ExQuilla，有时被墙。</p>
+
+<p>http://mesquilla.net/exquilla-currentrelease-tb-linux.xpi</p>
+
+<h2 id="安装和配置-jdk">安装和配置 JDK</h2>
+
+<p>在 Terminal 运行：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>add-apt-repository ppa:webupd8team/java
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get install oracle-java8-installer
+
+<span class="nb">sudo </span>vim /etc/profile
+
+<span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/lib/jvm/java-8-oracle
+<span class="nb">export </span><span class="nv">JRE_HOME</span><span class="o">=</span><span class="nv">$JAVA_HOME</span>/jre
+<span class="nb">export </span><span class="nv">CLASSPATH</span><span class="o">=</span>.:<span class="nv">$JAVA_HOME</span>/lib:<span class="nv">$JRE_HOME</span>/lib
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$JAVA_HOME</span>/bin:<span class="nv">$JRE_HOME</span>/bin:<span class="nv">$PATH</span>
+</code></pre></div></div>
+
+<h2 id="配置-adt">配置 adt</h2>
+
+<p>安装兼容 32 位 adb 运行的环境</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
+</code></pre></div></div>
+
+<p>添加路径到 $PATH 环境变量，修改 /etc/profile 或 ~/.profile 等皆可。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export ANDROID_SDK_HOME=/home/mzlogin/android/sdk
+export PATH=$ANDROID_SDK_HOME/platform-tools:$ANDROID_SDK_HOME/tools:$PATH
+</code></pre></div></div>
+
+<h2 id="安装-svn-图形前端-rabbitvcs">安装 SVN 图形前端 RabbitVCS</h2>
+
+<p>在 Terminal 运行：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>add-apt-repository ppa:rabbitvcs/ppa
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get install rabbitvcs-nautilus3 rabbitvcs-thunar rabbitvcs-gedit rabbitvcs-cli
+</code></pre></div></div>
+
+<h2 id="创建-eclipse-快捷方式">创建 eclipse 快捷方式</h2>
+
+<p>/usr/share/applications 里新建 Eclipse.desktop，填如下内容：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Desktop Entry]
+Name=Eclipse
+Comment=Launch Eclipse
+Exec=/home/mzlogin/android/eclipse/eclipse
+Icon=/home/mzlogin/android/eclipse/icon.xpm
+StartupNotify=true
+Terminal=false
+Type=Application
+</code></pre></div></div>
+
+<h2 id="安装-xmind">安装 XMind</h2>
+
+<p>到 XMind 官网下载安装包，然后 ：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>dpkg <span class="nt">--ignore-depends</span><span class="o">=</span>lame,libwebkitgtk-1.0-0 <span class="nt">-i</span> xmind-linux-3.5.0.201410310637_amd64.deb
+</code></pre></div></div>
+
+<h2 id="切换输入法">切换输入法</h2>
+
+<p>添加一个英文，一个五笔，将切换到上一个源和下一个源的快捷键分别设为左和右 Shift，这样就可以使用左右 Shift 在中英之间来回切换了。</p>
+
+<p>安装 im-switch 会导致语言支持被移除，恢复用 <code class="highlighter-rouge">sudo apt-get install language-selector-gnome</code>。</p>
+
+<h2 id="消除启动-gvim-在-terminal-中的警告">消除启动 gVim 在 terminal 中的警告</h2>
+
+<p>安装 vim-gnome 后运行 gVim 会提示：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GLib-GObject-WARNING **: Attempt to add property GnomeProgram::sm-connect after class was initialised
+</code></pre></div></div>
+
+<p>改为安装 vim-gtk 就好了。</p>
+
+<h2 id="解决-ibus-五笔候选词水平显示和个数的问题">解决 ibus 五笔候选词水平显示和个数的问题</h2>
+
+<p>修改 /usr/share/ibus-table/tables/wubi-jidian86.db 的 ime 表里的 orientation（水平 0 垂直 1）和 select_keys（有几个选择键就有几个项，从下面代码可知用 <code class="highlighter-rouge">,</code> 分隔）。</p>
+
+<p>/usr/share/ibus-tables/engine/tabsqlitedb.py 中</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_page_size</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_select_keys</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">','</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="将-caps-lock-映射为-ctrl">将 Caps Lock 映射为 Ctrl</h2>
+
+<ol>
+  <li>
+    <p>安装 Gnome Tweak Tool</p>
+
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get install gnome-tweak-tool
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>打开 tweak-tool，找到「打字」－「大写锁定键行为」，选择「将 CapsLock 作为额外的 Ctrl」</p>
+  </li>
+</ol>
+
+<p>参考 <a href="http://askubuntu.com/questions/462021/how-do-i-turn-caps-lock-into-an-extra-control-key">http://askubuntu.com/questions/462021/how-do-i-turn-caps-lock-into-an-extra-control-key</a></p>
+
+<h2 id="将个人文件夹下文件夹名改为英文">将个人文件夹下文件夹名改为英文</h2>
+
+<p>~ 目录下的「桌面」和「文档」等文件夹是中文，在 Terminal 下输入很不方便，将其改为英文的方法：</p>
+
+<ol>
+  <li>
+    <p>打开 ~/.config/user-dirs.dirs，将其中的中文改掉：</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>XDG_DESKTOP_DIR="$HOME/desktop"
+XDG_DOWNLOAD_DIR="$HOME/downloads"
+XDG_TEMPLATES_DIR="$HOME/templates"
+XDG_PUBLICSHARE_DIR="$HOME/public"
+XDG_DOCUMENTS_DIR="$HOME/documents"
+XDG_MUSIC_DIR="$HOME/music"
+XDG_PICTURES_DIR="$HOME/pictures"
+XDG_VIDEOS_DIR="$HOME/videos"
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>在文件管理器中将 HOME 目录下的中文文件夹名改成与上面的配置对应。</p>
+  </li>
+</ol>
+
+<h2 id="输入与">输入「」与『』</h2>
+
+<p>极点五笔中文输入状态下，按 [] 即输入「」，按 {} 即输入『』。</p>
+
+<h2 id="virtualbox-里-ubuntu-分辨率无法调整">VirtualBox 里 Ubuntu 分辨率无法调整</h2>
+
+<p>Ubuntu 14.04 LTS 在 VirtualBox 中刚安装完时，分辨率只有 640*480 一种选项，无法调整。</p>
+
+<p>解决方法：</p>
+
+<ol>
+  <li>
+    <p>打开 xdiagnose</p>
+
+    <p><img src="/images/posts/linux/xdiagnose.png" alt="" /></p>
+  </li>
+  <li>
+    <p>勾选 Debug 下的所有选项</p>
+
+    <p><img src="/images/posts/linux/xdiagnose-2.png" alt="" /></p>
+  </li>
+  <li>
+    <p>重启</p>
+  </li>
+  <li>
+    <p>安装增强功能</p>
+
+    <p><img src="/images/posts/linux/install-additions.png" alt="" /></p>
+
+    <p>然后：</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /media/&lt;username&gt;/VBOXADDITIONS_X.X.XX_XXXXX
+sudo ./VBoxLinuxAdditions.run
+</code></pre></div>    </div>
+
+    <p>（注意把 username 替换成自己的，VBOXADDITIONS 后面的 X 换成具体版本号）</p>
+  </li>
+</ol>
+
+<h2 id="与-win7-共享-ssh-key">与 Win7 共享 SSH key</h2>
+
+<p>如下步骤适用于在 Ubuntu 上使用从 Win7 拷贝的 SSH key，反之应该也一样能用。</p>
+
+<p>创建 ~/.ssh 目录，确认其权限为 0700，将 Windows %userprofile%/.ssh 下的 id_rsa 和 id_rsa.pub 文件拷贝到 ~/.ssh 目录下，权限分别改为 0600 和 0644。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mzlogin@ubuntu:~<span class="nv">$ </span>ll ~/.ssh
+total 20
+drwx------  2 mzlogin mzlogin 4096 Jun 22 01:03 ./
+drwxr-xr-x 20 mzlogin mzlogin 4096 Jun 22 01:02 ../
+<span class="nt">-rw-------</span>  1 mzlogin mzlogin 1679 Jun 21 05:17 id_rsa
+<span class="nt">-rw-r--r--</span>  1 mzlogin mzlogin  399 Jun 21 05:17 id_rsa.pub
+</code></pre></div></div>
+
+<p>然后</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-add ~/.ssh/id_rsa
+</code></pre></div></div>
+</div>
+				<footer><meta itemprop="dateModified" content="2016-01-12T00:00:00+08:00"><div class="article-license"><div class="m-license"><div class="clearfix"><p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> license.</p><a class="license" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+      <img alt="Creative Commons License" src="/assets/images/license-cc4.png" />
+    </a><p></p>
+  </div>
+</div></div>
+				</footer>
+			</article>
+			<div class="article-previous-next clearfix"><div class="article-previous"><span>PREVIOUS</span><a href="/android/2016/01/14/android-system-cache.html">Android 系统缓存扫描与清理方法分析</a></div><div class="article-next"><span>NEXT</span><a href="/vim/2015/12/19/vim-markdown-toc.html">为 Markdown 生成 TOC 的 Vim 插件</a></div></div></div>
+	</div>
+</div></div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script><script>
+  (function() {
+    function scrollAnimateTo(destination, duration, callback) {
+      var $body = $('html, body'), bodyScrollTop = $body.scrollTop();
+      if(bodyScrollTop === destination) { return; }
+      $body.animate({ scrollTop: destination }, duration, callback);
+    }
+    window.scrollTopAnchor = function(anchor, callback) {
+      scrollAnimateTo($(anchor).offset().top, 400, function() {
+        window.history.replaceState(null, '', window.location.href.split('#')[0] + anchor);
+        callback && callback();
+      });
+    }
+  })();
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $articleContent = $('.m-post, .m-page').find('.m-article-content'), $this;
+    $articleContent.children('.highlight').each(function() {
+      $this = $(this);
+      $this.attr('data-lang', $this.find('code').attr('data-lang'));
+    });
+
+    $articleContent.children('h1, h2, h3, h4, h5, h6').each(function() {
+      $this = $(this);
+      $this.append($('<a class="anchor" aria-hidden="true"></a>').html('<svg fill="#000000" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>'));
+    });
+    $articleContent.on('click', '.anchor', function() {
+      window.scrollTopAnchor('#' + $(this).parent().attr('id'));
+    });
+  });
+</script><script>
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $window = $(window);
+    var $pageStage = $('.js-page-stage');
+    var $pageMain = $('.js-main');
+    var $pageFooter = $('.js-page-footer');
+    var $articleContent = $('.js-article-content');
+    var $articleAside = $('.js-article-aside');
+    var $toc = $('.js-toc');
+    var $col2 = $('.js-col-2');
+    var hasTitle = $articleContent.find('h1,h2,h3').length > 0;
+    function asideSticky() {
+      return $col2.css('display') !== 'none' && $pageStage.hasClass('has-toc');
+    }
+    function setTocClass() {
+      if (hasTitle) {
+        !$pageStage.hasClass('has-toc') && $pageStage.addClass('has-toc');
+      }
+    }
+    function setAsideTOC() {
+      var asideTop, asideLeft, scrollBottom, asideBottomTop, lastScrollTop;
+      function init() {
+        var asideOffset = $articleAside.offset();
+        var footerOffset = $pageFooter.offset();
+        var mainOffset = $pageMain.offset();
+        asideTop = mainOffset.top;
+        asideHeight = $toc.outerHeight() + parseInt($articleAside.css('padding-top'), 10) + parseInt($articleAside.css('padding-bottom'), 10);
+        asideLeft = mainOffset.left + $pageMain.outerWidth() - $articleAside.outerWidth() - parseInt($pageMain.css('padding-right'), 10);
+        scrollBottom = footerOffset.top - asideHeight;
+        asideBottomTop = scrollBottom - mainOffset.top;
+      }
+      function setAside(force) {
+        force !== true && (force = false);
+        var scrollTop = $window.scrollTop();
+        if (scrollTop >= asideTop && scrollTop <= scrollBottom) {
+          (!force && lastScrollTop >= asideTop && lastScrollTop <= scrollBottom) ||
+          $articleAside.addClass('fixed').css({
+            left: asideLeft + 'px',
+            top: 0
+          });
+        } else if (scrollTop < asideTop) {
+          (!force && lastScrollTop < asideTop) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: 0
+          });
+        } else {
+          (!force && lastScrollTop > scrollBottom) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: asideBottomTop + 'px'
+          });
+        }
+        lastScrollTop = scrollTop;
+      }
+      asideSticky() && (init(), setAside());
+      $window.on('scroll', function() {
+        asideSticky() && setAside();
+      });
+      $window.on('resize', window.throttle(function() {
+        setTocClass();
+        asideSticky() && (init(), setAside(true));
+      }, 100));
+      setTimeout(init, 4000);
+    }
+    function toc() {
+      var $tocUl = $('<ul></ul>'), $tocLi, $headings = $articleContent.find('h1,h2,h3'), headingsTop = [],
+        scrolling, activeLast, activeCur, rendered = false;
+      function init() {
+        $headings.each(function() {
+          headingsTop.push(Math.floor($(this).offset().top));
+        });
+      }
+      function setActiveHeading(element, disabled) {
+        var scrollTop = $window.scrollTop(), i;
+        if (disabled || headingsTop.length < 1) { return; }
+        if (element) {
+          activeCur = element;
+        } else {
+          for (i = 0; i < headingsTop.length; i++) {
+            if (scrollTop >= headingsTop[i]) {
+              activeCur = $tocLi.eq(i);
+            } else {
+              activeCur || (activeCur = $tocLi.eq(i));
+              break;
+            }
+          }
+        }
+        activeLast && activeLast.removeClass('toc-active');
+        (activeLast = activeCur).addClass('toc-active');
+      }
+      function render() {
+        $toc.append($tocUl);
+        $headings.each(function() {
+          var $this = $(this);
+          $tocUl.append($('<li></li>').addClass('toc-' + $this.prop("tagName").toLowerCase())
+            .append($('<a></a>').text($this.text()).attr('href', '#' + $this.prop('id'))));
+        });
+        $tocLi = $tocUl.children('li');
+        $tocUl.on('click', 'a', function(e) {
+          e.preventDefault();
+          var $this = $(this);
+          scrolling = true;
+          setActiveHeading($this.parent());
+          window.scrollTopAnchor($this.attr('href'), function() {
+            scrolling = false;
+          });
+        });
+        rendered = true;
+      }
+      asideSticky() && (render(), $window.on('load', function() {
+        setTimeout(function() {
+          init();
+          setActiveHeading(null, scrolling);
+        }, 1000);
+      }));
+      $window.on('resize', window.throttle(function() {
+        if (asideSticky()) {
+          rendered || render();
+          init();
+          setActiveHeading(null, scrolling);
+        }
+      }));
+      $window.on('scroll', function() {
+        asideSticky() && setActiveHeading(null, scrolling);
+      });
+    }
+    setTocClass();
+    toc();
+    setTimeout(function() {
+      setAsideTOC();
+    }, 1000);
+  });</script></body>
+</html>

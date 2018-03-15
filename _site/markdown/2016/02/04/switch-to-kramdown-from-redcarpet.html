@@ -1,0 +1,608 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>将 GitHub Pages 从 Redcarpet 切换到 kramdown - 浅浅蓝's blog</title>
+<meta name="description" content="GitHub 前不久发布了 New Features 公告，GitHub Pages now faster and simpler with Jekyll 3.0，宣布从 2016 年 5 月 1 日起，GitHub Pages 将只支持 kramdown 作为唯一的 Markdown 引擎。这其实也算得一件好事...">
+<link rel="canonical" href="http://localhost:4000/markdown/2016/02/04/switch-to-kramdown-from-redcarpet.html"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-post">
+	<div class="main clearfix js-main">
+		<div class="col-2 js-col-2">
+			<aside class="js-article-aside"><div class="m-toc js-toc"></div></aside>
+		</div>
+		<div class="col-1">
+			<article class="js-article" itemscope itemtype="http://schema.org/BlogPosting">
+				<meta itemprop="mainEntityOfPage" itemscope itemType="https://schema.org/WebPage"/>
+				<header class="main-header"><h1 itemprop="headline" itemprop="name headline">将 GitHub Pages 从 Redcarpet 切换到 kramdown</h1><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><time class="article-meta" datetime="2016-02-04T00:00:00+08:00"
+          itemprop="datePublished">Feb 04, 2016
+        </time></div>
+  </div>
+</div>
+</header>
+				<div class="m-article-content js-article-content" itemprop="articleBody"><p>GitHub 前不久发布了 New Features 公告，<a href="https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0">GitHub Pages now faster and simpler with Jekyll 3.0</a>，宣布从 2016 年 5 月 1 日起，GitHub Pages 将只支持 kramdown 作为唯一的 Markdown 引擎。</p>
+
+<p>这其实也算得一件好事，之前支持 Rediscount、Redcarpet 和 kramdown 等多种引擎，而它们相互之间和与标准 Markdown 之间又有一些细微却也无法忽视的差异，这让需要在多个平台使用 Markdown 的我头疼不已，早就希望 GitHub Pages 能与 GitHub 的 Issues 和 comments 等地方统一语法，本次更新虽然做不到这一点，但也算是迈出了不小的一步。</p>
+
+<p>我在此前是使用 Redcarpet，配置如下：</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">markdown</span><span class="pi">:</span> <span class="s">redcarpet</span>
+<span class="na">redcarpet</span><span class="pi">:</span> 
+    <span class="na">extensions</span><span class="pi">:</span> 
+        <span class="pi">-</span> <span class="s">no_intra_emphasis</span>
+        <span class="pi">-</span> <span class="s">fenced_code_blocks</span>
+        <span class="pi">-</span> <span class="s">autolink</span>
+        <span class="pi">-</span> <span class="s">tables</span>
+        <span class="pi">-</span> <span class="s">with_toc_data</span>
+        <span class="pi">-</span> <span class="s">strikethrough</span>
+
+<span class="na">pygments</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<p>切换到 kramdown 之后的配置如下：</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">markdown</span><span class="pi">:</span> <span class="s">kramdown</span>
+<span class="na">kramdown</span><span class="pi">:</span>
+    <span class="na">input</span><span class="pi">:</span> <span class="s">GFM</span>
+<span class="na">highlighter</span><span class="pi">:</span> <span class="s">rouge</span>
+</code></pre></div></div>
+
+<p>切换过程中有若干需要处理的差异问题，现将它们及解决方法记录如下。</p>
+
+<h2 id="列表项里嵌套的代码块">列表项里嵌套的代码块</h2>
+
+<p>嵌套在列表项中的代码块在 Redcarpet 中使用 Tab 进行缩进即可，而在 kramdown 中需要根据列表项的内容开始位置决定缩进的字符数。</p>
+
+<p>关于此问题的讨论见 <a href="https://github.com/gettalong/kramdown/issues/209">Embedding codeblocks in lists</a>。</p>
+
+<p>in Redcarpet:</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">1.</span> list item one<span class="sb">
+
+    ```python
+    print 'hello, world'
+    ```
+
+</span><span class="p">2.</span> list item two<span class="sb">
+
+
+</span><span class="p">*</span> unordered list item one<span class="sb">
+
+    ```python
+    print 'hello, world'
+    ```
+
+</span><span class="p">*</span> unordered list item two
+</code></pre></div></div>
+
+<p>in kramdown:</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">1.</span> list item one
+
+   <span class="sb">```</span>python
+   print 'hello, world'
+</code></pre></div></div>
+
+<ol>
+  <li>list item two</li>
+</ol>
+
+<ul>
+  <li>
+    <p>unordered list item one</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="s">'hello, world'</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>unordered list item two
+```</p>
+  </li>
+</ul>
+
+<h2 id="遍历-collections">遍历 Collections</h2>
+
+<p>我在本博客做了一个 wiki collection，在 Redcarpet 中用 <code class="highlighter-rouge">for doc in site.documents</code> 可遍历所有 wiki。</p>
+
+<p>而切换到 kramdown 后这样的写法将遍历所有的 wiki 和 posts，需要使用 <code class="highlighter-rouge">for wiki in site.wiki</code> 来遍历 wiki。</p>
+
+<p>不过这点其实严格说起来应该是我在使用 Redcarpet 时的写法没有遵循 Jekyll 的文档，参考 <a href="http://jekyllrb.com/docs/collections/">Collections</a>。</p>
+
+<h2 id="toc-链接">TOC 链接</h2>
+
+<p>在我之前的一篇文章 <a href="http://mazhuang.org/2015/12/05/diff-between-gfm-and-redcarpet/#section-1">GFM 与 Redcarpet 的不同点</a> 中，描述了 Redcarpet 与 GFM 自动生成的 TOC 链接的区别，而 kramdown 即使启用了 <code class="highlighter-rouge">input: GFM</code> 生成的链接与 GFM 也还是不同，处理 GFM 与 Redcarpet 生成的 TOC 链接的区别已经让我心累了，不想再多记一种。</p>
+
+<p>不过谢天谢地，kramdown 支持自动生成 TOC，只需在想放置 TOC 的地方放置如下内容即可，非常方便。</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">*</span> TOC
+{:toc}
+</code></pre></div></div>
+
+<h2 id="删除线">删除线</h2>
+
+<p>在 Redcarpet 中使用如下语法能自动为文字加上删除线：</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~~hello world~~
+</code></pre></div></div>
+
+<p>但切换到 kramdown 后这种写法失效了，浏览了一下文档之后并没有找到 kramdown 对应的语法，这个用得也少，遂直接用 HTML 元素解决问题：</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;del&gt;</span>hello world<span class="nt">&lt;/del&gt;</span>
+</code></pre></div></div>
+
+<p><del>hello world</del></p>
+
+<p><strong>update 2016/03/02:</strong> kramdown 主分支已经解决了这个问题，见 <a href="https://github.com/gettalong/kramdown/issues/304">gettalong/kramdown#304</a>，坐等 Release 后 GitHub Pages 更新就能用了。</p>
+
+<p><strong>update 2016/03/29:</strong> <a href="https://github.com/github/pages-gem">pages-gem</a> 当前使用的 1.10.0 版本的 kramdown 已经包含了主分支对此的修复，已经可以愉快地使用 <code class="highlighter-rouge">~~hello world~~</code> 来表示 <del>hello world</del> 了。</p>
+
+<h2 id="表格">表格</h2>
+
+<p>在 Redcarpet 中如下写法能直接显示你写的内容：</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>READ|WRITE|SHARE
+</code></pre></div></div>
+
+<p>但在 kramdown 中会解析成表格：</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>READ</td>
+      <td>WRITE</td>
+      <td>SHARE</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>所以需要将 <code class="highlighter-rouge">|</code> 转义。</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>READ<span class="se">\|</span>WRITE<span class="se">\|</span>SHARE
+</code></pre></div></div>
+
+<p>相关讨论见：<a href="https://github.com/gettalong/kramdown/issues/151">gettalong/kramdown#151</a></p>
+
+<h2 id="高亮的语言名称">高亮的语言名称</h2>
+
+<p>使用 Redcarpet + pygments 的组合时，<code class="highlighter-rouge">cpp</code>、<code class="highlighter-rouge">C++</code> 和 <code class="highlighter-rouge">c++</code> 都能对 C++ 代码片断进行语法高亮。</p>
+
+<p>而改为 kramdown + rouge 的组合后，只能使用 <code class="highlighter-rouge">cpp</code>。</p>
+
+<p>rouge 支持的语言列表可以参考如下链接：</p>
+
+<ul>
+  <li><a href="https://github.com/jneen/rouge/wiki/List-of-supported-languages-and-lexers">List of supported languages and lexers</a></li>
+</ul>
+
+<h2 id="图片上面空行">图片上面空行</h2>
+
+<p>在 Redcarpet 中，如下写法的图片和文字之间会换行：</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello, world!
+!<span class="err">[</span>](/img.png)
+</code></pre></div></div>
+
+<p>而 kramdown 中这种写法图片会直接接在文字后面显示，不换行。如果需要换行则应在图片上面空一行：</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello, world!
+
+!<span class="err">[</span>](/img.png)
+</code></pre></div></div>
+
+</div>
+				<footer><meta itemprop="dateModified" content="2016-02-04T00:00:00+08:00"><div class="article-license"><div class="m-license"><div class="clearfix"><p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> license.</p><a class="license" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+      <img alt="Creative Commons License" src="/assets/images/license-cc4.png" />
+    </a><p></p>
+  </div>
+</div></div>
+				</footer>
+			</article>
+			<div class="article-previous-next clearfix"><div class="article-previous"><span>PREVIOUS</span><a href="/android/2016/02/10/am-start-user-parameter.html">从 am start 的 --user 参数说到 Android 多用户</a></div><div class="article-next"><span>NEXT</span><a href="/mac/2016/01/16/build-zeal-for-mac-osx.html">Build Zeal for Mac OS X</a></div></div></div>
+	</div>
+</div></div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script><script>
+  (function() {
+    function scrollAnimateTo(destination, duration, callback) {
+      var $body = $('html, body'), bodyScrollTop = $body.scrollTop();
+      if(bodyScrollTop === destination) { return; }
+      $body.animate({ scrollTop: destination }, duration, callback);
+    }
+    window.scrollTopAnchor = function(anchor, callback) {
+      scrollAnimateTo($(anchor).offset().top, 400, function() {
+        window.history.replaceState(null, '', window.location.href.split('#')[0] + anchor);
+        callback && callback();
+      });
+    }
+  })();
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $articleContent = $('.m-post, .m-page').find('.m-article-content'), $this;
+    $articleContent.children('.highlight').each(function() {
+      $this = $(this);
+      $this.attr('data-lang', $this.find('code').attr('data-lang'));
+    });
+
+    $articleContent.children('h1, h2, h3, h4, h5, h6').each(function() {
+      $this = $(this);
+      $this.append($('<a class="anchor" aria-hidden="true"></a>').html('<svg fill="#000000" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>'));
+    });
+    $articleContent.on('click', '.anchor', function() {
+      window.scrollTopAnchor('#' + $(this).parent().attr('id'));
+    });
+  });
+</script><script>
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $window = $(window);
+    var $pageStage = $('.js-page-stage');
+    var $pageMain = $('.js-main');
+    var $pageFooter = $('.js-page-footer');
+    var $articleContent = $('.js-article-content');
+    var $articleAside = $('.js-article-aside');
+    var $toc = $('.js-toc');
+    var $col2 = $('.js-col-2');
+    var hasTitle = $articleContent.find('h1,h2,h3').length > 0;
+    function asideSticky() {
+      return $col2.css('display') !== 'none' && $pageStage.hasClass('has-toc');
+    }
+    function setTocClass() {
+      if (hasTitle) {
+        !$pageStage.hasClass('has-toc') && $pageStage.addClass('has-toc');
+      }
+    }
+    function setAsideTOC() {
+      var asideTop, asideLeft, scrollBottom, asideBottomTop, lastScrollTop;
+      function init() {
+        var asideOffset = $articleAside.offset();
+        var footerOffset = $pageFooter.offset();
+        var mainOffset = $pageMain.offset();
+        asideTop = mainOffset.top;
+        asideHeight = $toc.outerHeight() + parseInt($articleAside.css('padding-top'), 10) + parseInt($articleAside.css('padding-bottom'), 10);
+        asideLeft = mainOffset.left + $pageMain.outerWidth() - $articleAside.outerWidth() - parseInt($pageMain.css('padding-right'), 10);
+        scrollBottom = footerOffset.top - asideHeight;
+        asideBottomTop = scrollBottom - mainOffset.top;
+      }
+      function setAside(force) {
+        force !== true && (force = false);
+        var scrollTop = $window.scrollTop();
+        if (scrollTop >= asideTop && scrollTop <= scrollBottom) {
+          (!force && lastScrollTop >= asideTop && lastScrollTop <= scrollBottom) ||
+          $articleAside.addClass('fixed').css({
+            left: asideLeft + 'px',
+            top: 0
+          });
+        } else if (scrollTop < asideTop) {
+          (!force && lastScrollTop < asideTop) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: 0
+          });
+        } else {
+          (!force && lastScrollTop > scrollBottom) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: asideBottomTop + 'px'
+          });
+        }
+        lastScrollTop = scrollTop;
+      }
+      asideSticky() && (init(), setAside());
+      $window.on('scroll', function() {
+        asideSticky() && setAside();
+      });
+      $window.on('resize', window.throttle(function() {
+        setTocClass();
+        asideSticky() && (init(), setAside(true));
+      }, 100));
+      setTimeout(init, 4000);
+    }
+    function toc() {
+      var $tocUl = $('<ul></ul>'), $tocLi, $headings = $articleContent.find('h1,h2,h3'), headingsTop = [],
+        scrolling, activeLast, activeCur, rendered = false;
+      function init() {
+        $headings.each(function() {
+          headingsTop.push(Math.floor($(this).offset().top));
+        });
+      }
+      function setActiveHeading(element, disabled) {
+        var scrollTop = $window.scrollTop(), i;
+        if (disabled || headingsTop.length < 1) { return; }
+        if (element) {
+          activeCur = element;
+        } else {
+          for (i = 0; i < headingsTop.length; i++) {
+            if (scrollTop >= headingsTop[i]) {
+              activeCur = $tocLi.eq(i);
+            } else {
+              activeCur || (activeCur = $tocLi.eq(i));
+              break;
+            }
+          }
+        }
+        activeLast && activeLast.removeClass('toc-active');
+        (activeLast = activeCur).addClass('toc-active');
+      }
+      function render() {
+        $toc.append($tocUl);
+        $headings.each(function() {
+          var $this = $(this);
+          $tocUl.append($('<li></li>').addClass('toc-' + $this.prop("tagName").toLowerCase())
+            .append($('<a></a>').text($this.text()).attr('href', '#' + $this.prop('id'))));
+        });
+        $tocLi = $tocUl.children('li');
+        $tocUl.on('click', 'a', function(e) {
+          e.preventDefault();
+          var $this = $(this);
+          scrolling = true;
+          setActiveHeading($this.parent());
+          window.scrollTopAnchor($this.attr('href'), function() {
+            scrolling = false;
+          });
+        });
+        rendered = true;
+      }
+      asideSticky() && (render(), $window.on('load', function() {
+        setTimeout(function() {
+          init();
+          setActiveHeading(null, scrolling);
+        }, 1000);
+      }));
+      $window.on('resize', window.throttle(function() {
+        if (asideSticky()) {
+          rendered || render();
+          init();
+          setActiveHeading(null, scrolling);
+        }
+      }));
+      $window.on('scroll', function() {
+        asideSticky() && setActiveHeading(null, scrolling);
+      });
+    }
+    setTocClass();
+    toc();
+    setTimeout(function() {
+      setAsideTOC();
+    }, 1000);
+  });</script></body>
+</html>

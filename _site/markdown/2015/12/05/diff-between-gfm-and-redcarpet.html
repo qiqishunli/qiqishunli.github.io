@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>GFM 与 Redcarpet 的不同点 - 浅浅蓝's blog</title>
+<meta name="description" content="GFM 即 GitHub Flavored Markdown，是 GitHub 用在 Respository、Issues、Comments 和 Pull requests 里的一种 Markdown 引擎，它与标准 Markdown 有所区别，增加了一些 GitHub 自己扩展的功能。Redcarpet 是另一...">
+<link rel="canonical" href="http://localhost:4000/markdown/2015/12/05/diff-between-gfm-and-redcarpet.html">
+<link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png">
+<link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png">
+<link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png">
+<meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png">
+<meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png">
+<meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png">
+<meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee">
+<link rel="stylesheet" href="/assets/css/blog.css">
+<script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script>
+</head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content">
+<header class="m-page-header">
+  <div class="main clearfix">
+    <div class="site-logo">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="24px" viewbox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"></path>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a>
+</div>
+    <nav>
+      <ul>
+<li><a href="/">Home</a></li>
+<li><a href="/all.html">All</a></li>
+<li><a href="/about.html">About</a></li>
+<li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-post">
+	<div class="main clearfix js-main">
+		<div class="col-2 js-col-2">
+			<aside class="js-article-aside"><div class="m-toc js-toc"></div></aside>
+		</div>
+		<div class="col-1">
+			<article class="js-article" itemscope itemtype="http://schema.org/BlogPosting">
+				<meta itemprop="mainEntityOfPage" itemscope itemtype="https://schema.org/WebPage">
+				<header class="main-header"><h1 itemprop="headline">GFM 与 Redcarpet 的不同点</h1>
+<div class="m-article-data clearfix">
+<meta itemprop="author" itemscope itemtype="https://schema.org/Person">
+<meta itemprop="name" content="Someone">
+<div class="other-wrapper">
+<div class="date-wrapper"><time class="article-meta" datetime="2015-12-05T00:00:00+08:00" itemprop="datePublished">Dec 05, 2015
+        </time></div>
+  </div>
+</div>
+</header>
+				<div class="m-article-content js-article-content" itemprop="articleBody">
+<p>GFM 即 <a href="https://help.github.com/articles/github-flavored-markdown/">GitHub Flavored Markdown</a>，是 GitHub 用在 Respository、Issues、Comments 和 Pull requests 里的一种 Markdown 引擎，它与标准 Markdown 有所区别，增加了一些 GitHub 自己扩展的功能。</p>
+
+<p><a href="https://github.com/vmg/redcarpet">Redcarpet</a> 是另一种 Markdown 引擎，我的基于 GitHub Pages 的<a href="http://mzlog.com">博客</a>采用它来解析 md 文件，_config.yml 文件里的配置如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>markdown: redcarpet
+redcarpet:
+    extensions: 
+        - no_intra_emphasis
+        - fenced_code_blocks
+        - autolink
+        - tables
+        - with_toc_data
+        - strikethrough
+</code></pre></div></div>
+
+<p>在 <a href="https://github.com/vmg/redcarpet/issues/379">vmg/redcarpet#379</a> 的讨论中可以得知 GFM 其实是基于 Redcarpet 的一个非开源子集开发的，Redcarpet 也支持众多自定义的扩展，本文记录的是当前 GFM 与使用如上配置的 Redcarpet 的一些差异，以备在 GitHub 不同的地方写作时参考。</p>
+
+<p><strong>目录</strong></p>
+
+<ul id="markdown-toc">
+  <li><a href="#%E6%8D%A2%E8%A1%8C" id="markdown-toc-换行">换行</a></li>
+  <li><a href="#%E9%94%9A%E7%82%B9%E9%93%BE%E6%8E%A5" id="markdown-toc-锚点链接">锚点链接</a></li>
+  <li><a href="#%E5%88%97%E8%A1%A8%E4%B8%8B%E5%B5%8C%E5%A5%97%E5%86%85%E5%AE%B9" id="markdown-toc-列表下嵌套内容">列表下嵌套内容</a></li>
+  <li><a href="#yml-%E8%A7%A3%E6%9E%90" id="markdown-toc-yml-解析">YML 解析</a></li>
+  <li>
+<a href="#gfm-%E7%8B%AC%E6%9C%89%E7%89%B9%E6%80%A7" id="markdown-toc-gfm-独有特性">GFM 独有特性</a>    <ul>
+      <li><a href="#task-lists" id="markdown-toc-task-lists">Task Lists</a></li>
+      <li><a href="#%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E5%BC%95%E7%94%A8%E9%93%BE%E6%8E%A5" id="markdown-toc-自动生成引用链接">自动生成引用链接</a></li>
+      <li><a href="#emoji" id="markdown-toc-emoji">Emoji</a></li>
+    </ul>
+  </li>
+  <li><a href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5" id="markdown-toc-参考链接">参考链接</a></li>
+</ul>
+
+<h3 id="换行">换行</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>第一行（后面没有空格）
+第二行
+</code></pre></div></div>
+
+<p>在 GFM 里会显示成跟上面一样。</p>
+
+<p>而在 Redcarpet 里会显示成</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>第一行（后面没有空格）第二行
+</code></pre></div></div>
+
+<p>在 Redcarpet 里如果需要换行，要么在行尾加两个空格，要么在下面空一行新开一个段落。</p>
+
+<h3 id="锚点链接">锚点链接</h3>
+
+<p>GFM 与 Redcarpet 支持对 <code class="highlighter-rouge">#</code>、<code class="highlighter-rouge">##</code> 和 <code class="highlighter-rouge">###</code> 这样的标题自动生成锚点链接，只不过在生成的链接 url 上会有少许差异。</p>
+
+<p><strong>当然，强烈建议在标题中不要使用奇怪的符号。</strong></p>
+
+<blockquote>
+  <p>在这里做个小广告：如果你使用 Vim 编辑 Markdown，那可以试试我写的能自动生成 GFM 和 Redcarpet 这两种风格 TOC 的 Vim 插件 <a href="https://github.com/mzlogin/vim-markdown-toc">vim-markdown-toc</a>。</p>
+</blockquote>
+
+<p><em>共同点：</em></p>
+
+<ol>
+  <li>
+    <p>反引号（即 1 左边那个符号）会直接忽略掉。</p>
+  </li>
+  <li>
+    <p>字母要全小写。</p>
+  </li>
+  <li>
+    <p>空格会转换成 <code class="highlighter-rouge">-</code>。</p>
+  </li>
+</ol>
+
+<p><em>不同点：</em></p>
+
+<p>下面的表格列举了一些我曾经遇到过的案例，并不全，完整的实现逻辑在表格下方有说明。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>字符</th>
+      <th>GFM</th>
+      <th>Redcarpet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">"</code></td>
+      <td>忽略</td>
+      <td>替换成 <code class="highlighter-rouge">quot</code>，如果前后有字符，用 <code class="highlighter-rouge">-</code> 连接</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">'</code></td>
+      <td>忽略</td>
+      <td>替换成 <code class="highlighter-rouge">39</code>，如果前后有字符，用 <code class="highlighter-rouge">-</code> 连接</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">&amp;</code></td>
+      <td>忽略</td>
+      <td>替换成 <code class="highlighter-rouge">amp</code>，如果前后有字符，用 <code class="highlighter-rouge">-</code> 连接</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">/</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">@</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">#</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">$</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">%</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">^</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">+</code></td>
+      <td>忽略</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">\*</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">~</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">;</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">.</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">,</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">?</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">:</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td>竖线</td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">!</code></td>
+      <td>忽略</td>
+      <td>首尾的忽略，中间的替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">()</code></td>
+      <td>忽略</td>
+      <td>替换成 <code class="highlighter-rouge">-</code>
+</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">(</code></td>
+      <td>忽略</td>
+      <td>忽略</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">)</code></td>
+      <td>忽略</td>
+      <td>忽略</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">？</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">，</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">。</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">、</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">！</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">：</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">；</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">“</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">”</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">《</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">》</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">「</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">」</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">『</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">』</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">——</code></td>
+      <td>忽略</td>
+      <td>保留</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>总的来说就是 GFM 遇到奇怪的字符就忽略，而 Redcarpet 应用了几种不同的规则来处理。</p>
+
+<p>当然这只是表面上看起来的现象，这里简单说一下它们的实现逻辑：</p>
+
+<p><strong>GFM 的 TOC 链接处理实现</strong></p>
+
+<p><a href="https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/toc_filter.rb">参考链接（by Ruby）</a></p>
+
+<ol>
+  <li>使用 Ruby 的正则表达式 <code class="highlighter-rouge">/[^\p{Word}\- ]/u</code> 过滤掉所有中英文标点符号、特殊符号等。</li>
+  <li>将空格替换为 <code class="highlighter-rouge">-</code>。</li>
+  <li>如果相同的链接 id 已经存在了，那在链接 id 后面添加 <code class="highlighter-rouge">-{num}</code>，比如标题 <code class="highlighter-rouge">hello,world</code> 生成链接 <code class="highlighter-rouge">#helloworld</code>，而标题 <code class="highlighter-rouge">hello!world</code> 生成链接 <code class="highlighter-rouge">#helloworld-1</code>。</li>
+</ol>
+
+<p><strong>Redcarpet 的 TOC 链接处理实现</strong></p>
+
+<p><a href="https://github.com/vmg/redcarpet/blob/master/ext/redcarpet/html.c#L274">参考链接（by C）</a></p>
+
+<ol>
+  <li>将 HTML 标签，即成对的 <code class="highlighter-rouge">&lt;</code> 与 <code class="highlighter-rouge">&gt;</code> 及它们之间的内容删除。</li>
+  <li>进行 HTML Encode，即将 <code class="highlighter-rouge">&amp;</code>、<code class="highlighter-rouge">"</code> 和 <code class="highlighter-rouge">'</code> 等转换为相应 HTML 实体。</li>
+  <li>将字符 <code class="highlighter-rouge">-&amp;+$,/:;=?@"#{}|^~[]`\*()%.!</code> 和空格替换为 <code class="highlighter-rouge">-</code>，有两个及以上 <code class="highlighter-rouge">-</code> 的地方修复成一个，将链接串首尾的 <code class="highlighter-rouge">-_</code> 删除。</li>
+</ol>
+
+<h3 id="列表下嵌套内容">列表下嵌套内容</h3>
+
+<p>在 Redcarpet 中有如下规则：</p>
+
+<ul>
+  <li>如果嵌套非列表，需要缩进并且空行。</li>
+  <li>如果嵌套列表，需要缩进，但不空行。</li>
+</ul>
+
+<p>而 GFM 则没有。</p>
+
+<h3 id="yml-解析">YML 解析</h3>
+
+<p>在 Redcarpet 中，解析头部 YML 里的内容有些需要转义：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+keywords: C\+\+
+---
+</code></pre></div></div>
+
+<p>而 GFM 则不需要。</p>
+
+<h3 id="gfm-独有特性">GFM 独有特性</h3>
+
+<p>GFM 自己添加的一些特性我甚是喜欢，可惜在 GitHub Pages 里使用 Redcarpet 享受不到了。</p>
+
+<h4 id="task-lists">Task Lists</h4>
+
+<p>这货真是个好东西，用 <code class="highlighter-rouge">- [  ]</code> 和 <code class="highlighter-rouge">- [ x ]</code> 就能做出清单列表项的显示效果来，而且如果你有编辑权限的话点选后文本能自动更新。</p>
+
+<p><img src="https://camo.githubusercontent.com/09cbc14d7458e0e2c52f1a66fb8890152da978c9/68747470733a2f2f662e636c6f75642e6769746875622e636f6d2f6173736574732f3138322f35343631302f66326530656131382d356139612d313165322d383236642d6635663562663033663032652e676966" alt=""></p>
+
+<p>用法参见 <a href="https://github.com/blog/1375%0A-task-lists-in-gfm-issues-pulls-comments">Task Lists in GFM: Issues/Pulls, Comments</a></p>
+
+<h4 id="自动生成引用链接">自动生成引用链接</h4>
+
+<p><em>Update 2015-12-06 参见 <a href="https://help.github.com/articles/mentions-on-github-pages">@Mentions on GitHub Pages</a>，GitHub Pages 现在也支持使用 <code class="highlighter-rouge">@username</code> 来 at 一个 GitHub 用户了，只是用户不会收到通知。我对此功能并无需求，而且貌似会对其它使用 <code class="highlighter-rouge">@</code> 号的地方产生非预期的解析，所以本博客当前并未启用。</em></p>
+
+<p>对于如下格式的文本，GFM 会自动创建到对应用户对应仓库的对应链接。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* SHA: a5c3785ed8d6a35868bc169f07e40e889087fd2e
+* User@SHA: jlord@a5c3785ed8d6a35868bc169f07e40e889087fd2e
+* User/Repository@SHA: jlord/sheetsee.js@a5c3785ed8d6a35868bc169f07e40e889087fd2e
+* #Num: #26
+* GH-Num: GH-26
+* User#Num: jlord#26
+* User/Repository#Num: jlord/sheetsee.js#26
+</code></pre></div></div>
+
+<h4 id="emoji">Emoji</h4>
+
+<p><em>Update 2015-12-06 参见 <a href="https://help.github.com/articles/emoji-on-github-pages">Emoji on GitHub Pages</a>, GitHub Pages 现在也支持使用 Emoji 表情啦！<img class="emoji" title=":+1:" alt=":+1:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png" height="20" width="20"><img class="emoji" title=":+1:" alt=":+1:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png" height="20" width="20"><img class="emoji" title=":+1:" alt=":+1:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png" height="20" width="20"></em></p>
+
+<p>GitHub Pages 如果能使用这个，文章一定生动不少。</p>
+
+<h3 id="参考链接">参考链接</h3>
+
+<ul>
+  <li><a href="https://help.github.com/articles/github-flavored-markdown/">GitHub Flavored Markdown</a></li>
+  <li><a href="https://help.github.com/articles/writing-on-github/">Writing on GitHub</a></li>
+</ul>
+
+</div>
+				<footer><meta itemprop="dateModified" content="2015-12-05T00:00:00+08:00">
+<div class="article-license"><div class="m-license">
+<div class="clearfix">
+<p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> license.</p>
+<a class="license" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+      <img alt="Creative Commons License" src="/assets/images/license-cc4.png">
+    </a><p></p>
+  </div>
+</div></div>
+				</footer>
+			</article>
+			<div class="article-previous-next clearfix">
+<div class="article-previous">
+<span>PREVIOUS</span><a href="/java/2015/12/15/java-object-finalize.html">Java 对象释放与 finalize 方法</a>
+</div>
+<div class="article-next">
+<span>NEXT</span><a href="/excel/2015/12/02/excel-sift.html">Excel 保留行号的去重</a>
+</div>
+</div>
+</div>
+	</div>
+</div></div>
+      </div>
+    </div>
+<div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/">
+</ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> &amp; <a title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div>
+<script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script><script>
+  (function() {
+    function scrollAnimateTo(destination, duration, callback) {
+      var $body = $('html, body'), bodyScrollTop = $body.scrollTop();
+      if(bodyScrollTop === destination) { return; }
+      $body.animate({ scrollTop: destination }, duration, callback);
+    }
+    window.scrollTopAnchor = function(anchor, callback) {
+      scrollAnimateTo($(anchor).offset().top, 400, function() {
+        window.history.replaceState(null, '', window.location.href.split('#')[0] + anchor);
+        callback && callback();
+      });
+    }
+  })();
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $articleContent = $('.m-post, .m-page').find('.m-article-content'), $this;
+    $articleContent.children('.highlight').each(function() {
+      $this = $(this);
+      $this.attr('data-lang', $this.find('code').attr('data-lang'));
+    });
+
+    $articleContent.children('h1, h2, h3, h4, h5, h6').each(function() {
+      $this = $(this);
+      $this.append($('<a class="anchor" aria-hidden="true"></a>').html('<svg fill="#000000" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>'));
+    });
+    $articleContent.on('click', '.anchor', function() {
+      window.scrollTopAnchor('#' + $(this).parent().attr('id'));
+    });
+  });
+</script><script>
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $window = $(window);
+    var $pageStage = $('.js-page-stage');
+    var $pageMain = $('.js-main');
+    var $pageFooter = $('.js-page-footer');
+    var $articleContent = $('.js-article-content');
+    var $articleAside = $('.js-article-aside');
+    var $toc = $('.js-toc');
+    var $col2 = $('.js-col-2');
+    var hasTitle = $articleContent.find('h1,h2,h3').length > 0;
+    function asideSticky() {
+      return $col2.css('display') !== 'none' && $pageStage.hasClass('has-toc');
+    }
+    function setTocClass() {
+      if (hasTitle) {
+        !$pageStage.hasClass('has-toc') && $pageStage.addClass('has-toc');
+      }
+    }
+    function setAsideTOC() {
+      var asideTop, asideLeft, scrollBottom, asideBottomTop, lastScrollTop;
+      function init() {
+        var asideOffset = $articleAside.offset();
+        var footerOffset = $pageFooter.offset();
+        var mainOffset = $pageMain.offset();
+        asideTop = mainOffset.top;
+        asideHeight = $toc.outerHeight() + parseInt($articleAside.css('padding-top'), 10) + parseInt($articleAside.css('padding-bottom'), 10);
+        asideLeft = mainOffset.left + $pageMain.outerWidth() - $articleAside.outerWidth() - parseInt($pageMain.css('padding-right'), 10);
+        scrollBottom = footerOffset.top - asideHeight;
+        asideBottomTop = scrollBottom - mainOffset.top;
+      }
+      function setAside(force) {
+        force !== true && (force = false);
+        var scrollTop = $window.scrollTop();
+        if (scrollTop >= asideTop && scrollTop <= scrollBottom) {
+          (!force && lastScrollTop >= asideTop && lastScrollTop <= scrollBottom) ||
+          $articleAside.addClass('fixed').css({
+            left: asideLeft + 'px',
+            top: 0
+          });
+        } else if (scrollTop < asideTop) {
+          (!force && lastScrollTop < asideTop) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: 0
+          });
+        } else {
+          (!force && lastScrollTop > scrollBottom) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: asideBottomTop + 'px'
+          });
+        }
+        lastScrollTop = scrollTop;
+      }
+      asideSticky() && (init(), setAside());
+      $window.on('scroll', function() {
+        asideSticky() && setAside();
+      });
+      $window.on('resize', window.throttle(function() {
+        setTocClass();
+        asideSticky() && (init(), setAside(true));
+      }, 100));
+      setTimeout(init, 4000);
+    }
+    function toc() {
+      var $tocUl = $('<ul></ul>'), $tocLi, $headings = $articleContent.find('h1,h2,h3'), headingsTop = [],
+        scrolling, activeLast, activeCur, rendered = false;
+      function init() {
+        $headings.each(function() {
+          headingsTop.push(Math.floor($(this).offset().top));
+        });
+      }
+      function setActiveHeading(element, disabled) {
+        var scrollTop = $window.scrollTop(), i;
+        if (disabled || headingsTop.length < 1) { return; }
+        if (element) {
+          activeCur = element;
+        } else {
+          for (i = 0; i < headingsTop.length; i++) {
+            if (scrollTop >= headingsTop[i]) {
+              activeCur = $tocLi.eq(i);
+            } else {
+              activeCur || (activeCur = $tocLi.eq(i));
+              break;
+            }
+          }
+        }
+        activeLast && activeLast.removeClass('toc-active');
+        (activeLast = activeCur).addClass('toc-active');
+      }
+      function render() {
+        $toc.append($tocUl);
+        $headings.each(function() {
+          var $this = $(this);
+          $tocUl.append($('<li></li>').addClass('toc-' + $this.prop("tagName").toLowerCase())
+            .append($('<a></a>').text($this.text()).attr('href', '#' + $this.prop('id'))));
+        });
+        $tocLi = $tocUl.children('li');
+        $tocUl.on('click', 'a', function(e) {
+          e.preventDefault();
+          var $this = $(this);
+          scrolling = true;
+          setActiveHeading($this.parent());
+          window.scrollTopAnchor($this.attr('href'), function() {
+            scrolling = false;
+          });
+        });
+        rendered = true;
+      }
+      asideSticky() && (render(), $window.on('load', function() {
+        setTimeout(function() {
+          init();
+          setActiveHeading(null, scrolling);
+        }, 1000);
+      }));
+      $window.on('resize', window.throttle(function() {
+        if (asideSticky()) {
+          rendered || render();
+          init();
+          setActiveHeading(null, scrolling);
+        }
+      }));
+      $window.on('scroll', function() {
+        asideSticky() && setActiveHeading(null, scrolling);
+      });
+    }
+    setTocClass();
+    toc();
+    setTimeout(function() {
+      setAsideTOC();
+    }, 1000);
+  });</script>
+</body>
+</html>

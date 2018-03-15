@@ -1,0 +1,558 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>定制 Fiddler 之按设备过滤请求 - 浅浅蓝's blog</title>
+<meta name="description" content="需求在开发/测试过程中有多台设备（PC/手机/模拟器）通过 Fiddler 代理上网时，如何方便地从满屏纷飞的 Session 中筛选出自己关心的那台设备的请求？设想通过 FiddlerScript 扩展，在 Session 的右键弹出菜单中添加一项，作为「查看所有设备请求」和「查看单个设备请求」的切换开关。设计...">
+<link rel="canonical" href="http://localhost:4000/fiddler/2015/07/08/fiddler-filter-by-device.html"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-post">
+	<div class="main clearfix js-main">
+		<div class="col-2 js-col-2">
+			<aside class="js-article-aside"><div class="m-toc js-toc"></div></aside>
+		</div>
+		<div class="col-1">
+			<article class="js-article" itemscope itemtype="http://schema.org/BlogPosting">
+				<meta itemprop="mainEntityOfPage" itemscope itemType="https://schema.org/WebPage"/>
+				<header class="main-header"><h1 itemprop="headline" itemprop="name headline">定制 Fiddler 之按设备过滤请求</h1><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><time class="article-meta" datetime="2015-07-08T00:00:00+08:00"
+          itemprop="datePublished">Jul 08, 2015
+        </time></div>
+  </div>
+</div>
+</header>
+				<div class="m-article-content js-article-content" itemprop="articleBody"><h3 id="需求">需求</h3>
+
+<p>在开发/测试过程中有多台设备（PC/手机/模拟器）通过 Fiddler 代理上网时，如何方便地从满屏纷飞的 Session 中筛选出自己关心的那台设备的请求？</p>
+
+<h3 id="设想">设想</h3>
+
+<p>通过 FiddlerScript 扩展，在 Session 的右键弹出菜单中添加一项，作为「查看所有设备请求」和「查看单个设备请求」的切换开关。</p>
+
+<p><em>设计操作流程：</em></p>
+
+<ol>
+  <li>
+    <p>找到自己关心的设备发出的某一条请求，在它的右键弹出菜单里有我们添加的菜单项「开/关过滤单设备请求」。</p>
+  </li>
+  <li>
+    <p>点击该菜单项后：</p>
+    <ul>
+      <li>若当前状态为「查看所有设备请求」，则切换为「查看单个设备请求」状态，该设备为此条请求的发送者，并清除当前已显示的所有不关心的设备的请求。</li>
+      <li>若当前状态为「查看单个设备请求」，则切换为「查看所有设备请求」状态。</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="实现">实现</h3>
+
+<p><em>实现思路：</em></p>
+
+<ul>
+  <li>
+    <p>通过修改 CustomRules.js，在右键弹出菜单上添加一个菜单项来切换请求筛选状态。</p>
+  </li>
+  <li>
+    <p>每一条请求都带有 ClientIP，它在没有网络切换之类的情况发生时能较好地唯一标识一台设备。</p>
+  </li>
+  <li>
+    <p>筛选规则是将非来自该 ClientIP 的请求隐藏掉。</p>
+  </li>
+</ul>
+
+<p><em>实现步骤：</em></p>
+
+<ol>
+  <li>
+    <p>打开 CustomRules.js。</p>
+
+    <p>启动Fiddler，依次选择菜单 Rules &gt; Customize Rules…</p>
+  </li>
+  <li>
+    <p>在 <code class="highlighter-rouge">OnBeforeRequest</code> 前添加如下代码：</p>
+
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 是否过滤单设备请求标志</span>
+<span class="kr">public</span> <span class="kr">static</span> <span class="kd">var</span> <span class="nx">gs_FilterDevice</span><span class="p">:</span> <span class="kr">boolean</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="c1">// 显示请求的设备的 ClientIP</span>
+<span class="kr">public</span> <span class="kr">static</span> <span class="kd">var</span> <span class="nx">gs_FilterClientIP</span><span class="p">:</span> <span class="nb">String</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+<span class="kr">static</span> <span class="kd">function</span> <span class="nx">IsUnMatchClientIP</span><span class="p">(</span><span class="nx">oS</span><span class="p">:</span><span class="nx">Session</span><span class="p">):</span><span class="nb">Boolean</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">oS</span><span class="p">.</span><span class="nx">m_clientIP</span> <span class="o">!=</span> <span class="nx">gs_FilterClientIP</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kr">public</span> <span class="kr">static</span> <span class="nx">ContextAction</span><span class="p">(</span><span class="s2">"开/关过滤单设备请求"</span><span class="p">)</span>
+<span class="kd">function</span> <span class="nx">ToggleDeviceFilter</span><span class="p">(</span><span class="nx">oSessions</span><span class="p">:</span> <span class="nx">Fiddler</span><span class="p">.</span><span class="nx">Session</span><span class="p">[]){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">gs_FilterDevice</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">gs_FilterDevice</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">oS</span><span class="p">:</span> <span class="nx">Session</span> <span class="o">=</span> <span class="nx">FiddlerApplication</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">GetFirstSelectedSession</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="kc">null</span> <span class="o">==</span> <span class="nx">oS</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">gs_FilterDevice</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">gs_FilterDevice</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">gs_FilterClientIP</span> <span class="o">=</span> <span class="nx">oS</span><span class="p">.</span><span class="nx">clientIP</span><span class="p">;</span>
+
+    <span class="c1">// 删除当前已显示的非所关心设备的请求</span>
+    <span class="nx">FiddlerApplication</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">actSelectSessionsMatchingCriteria</span><span class="p">(</span><span class="nx">IsUnMatchClientIP</span><span class="p">);</span>
+    <span class="nx">FiddlerApplication</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">actRemoveSelectedSessions</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>在 <code class="highlighter-rouge">OnBeforeRequest</code> 函数里添加如下代码，用于在「查看单个设备请求」状态时将不关心的设备产生的新请求隐藏：</p>
+
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">gs_FilterDevice</span> <span class="o">&amp;&amp;</span> <span class="nx">oSession</span><span class="p">.</span><span class="nx">m_clientIP</span> <span class="o">!=</span> <span class="nx">gs_FilterClientIP</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">oSession</span><span class="p">[</span><span class="s2">"ui-hide"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"true"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p><em>最终效果如下图：</em></p>
+
+<ul>
+  <li>
+    <p>筛选前</p>
+
+    <p><img src="/images/posts/fiddler/fiddler-filter-by-device-before.png" alt="" /></p>
+  </li>
+  <li>
+    <p>筛选后</p>
+
+    <p><img src="/images/posts/fiddler/fiddler-filter-by-device-after.png" alt="" /></p>
+  </li>
+</ul>
+
+<h3 id="缺陷">缺陷</h3>
+
+<p>当前做法有如下缺陷，尚未想到好办法解决：</p>
+
+<ul>
+  <li>
+    <p>菜单项并不能标明当前的状态，不知道筛选是开是关，这可以通过查看当前 Session 列表里是否有多种设备的请求来判断。</p>
+  </li>
+  <li>
+    <p>当设备有网络切换时，比如重启了路由或者离开又回到某 Wifi，ClientIP 可能发生了变化，需要关闭筛选后在设备以新的 ClientIP 产生的请求上右键再次开启筛选。</p>
+  </li>
+</ul>
+
+<h3 id="附注">附注</h3>
+
+<p>我使用的完整最新的 CustomRules.js 文件我上传到了一个 Gist 里，详见：<a href="https://gist.github.com/mzlogin/3c5f9781c5bedff3fcfb">https://gist.github.com/mzlogin/3c5f9781c5bedff3fcfb</a>，如果想直接使用可以复制脚本内容后放置到「我的文档/Fiddler 2/Scripts/CustomRules.js」，也可以在此目录下使用 git 抓取我的最新定制 js 文件。</p>
+</div>
+				<footer><meta itemprop="dateModified" content="2015-07-08T00:00:00+08:00"><div class="article-license"><div class="m-license"><div class="clearfix"><p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> license.</p><a class="license" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+      <img alt="Creative Commons License" src="/assets/images/license-cc4.png" />
+    </a><p></p>
+  </div>
+</div></div>
+				</footer>
+			</article>
+			<div class="article-previous-next clearfix"><div class="article-previous"><span>PREVIOUS</span><a href="/blog/2015/07/23/busy-smart.html">你忙得踏实吗？</a></div><div class="article-next"><span>NEXT</span><a href="/vim/2015/06/23/vim-taglist-smali.html">为 Vim 添加 Smali 语法高亮和 Taglist 支持</a></div></div></div>
+	</div>
+</div></div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script><script>
+  (function() {
+    function scrollAnimateTo(destination, duration, callback) {
+      var $body = $('html, body'), bodyScrollTop = $body.scrollTop();
+      if(bodyScrollTop === destination) { return; }
+      $body.animate({ scrollTop: destination }, duration, callback);
+    }
+    window.scrollTopAnchor = function(anchor, callback) {
+      scrollAnimateTo($(anchor).offset().top, 400, function() {
+        window.history.replaceState(null, '', window.location.href.split('#')[0] + anchor);
+        callback && callback();
+      });
+    }
+  })();
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $articleContent = $('.m-post, .m-page').find('.m-article-content'), $this;
+    $articleContent.children('.highlight').each(function() {
+      $this = $(this);
+      $this.attr('data-lang', $this.find('code').attr('data-lang'));
+    });
+
+    $articleContent.children('h1, h2, h3, h4, h5, h6').each(function() {
+      $this = $(this);
+      $this.append($('<a class="anchor" aria-hidden="true"></a>').html('<svg fill="#000000" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>'));
+    });
+    $articleContent.on('click', '.anchor', function() {
+      window.scrollTopAnchor('#' + $(this).parent().attr('id'));
+    });
+  });
+</script><script>
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $window = $(window);
+    var $pageStage = $('.js-page-stage');
+    var $pageMain = $('.js-main');
+    var $pageFooter = $('.js-page-footer');
+    var $articleContent = $('.js-article-content');
+    var $articleAside = $('.js-article-aside');
+    var $toc = $('.js-toc');
+    var $col2 = $('.js-col-2');
+    var hasTitle = $articleContent.find('h1,h2,h3').length > 0;
+    function asideSticky() {
+      return $col2.css('display') !== 'none' && $pageStage.hasClass('has-toc');
+    }
+    function setTocClass() {
+      if (hasTitle) {
+        !$pageStage.hasClass('has-toc') && $pageStage.addClass('has-toc');
+      }
+    }
+    function setAsideTOC() {
+      var asideTop, asideLeft, scrollBottom, asideBottomTop, lastScrollTop;
+      function init() {
+        var asideOffset = $articleAside.offset();
+        var footerOffset = $pageFooter.offset();
+        var mainOffset = $pageMain.offset();
+        asideTop = mainOffset.top;
+        asideHeight = $toc.outerHeight() + parseInt($articleAside.css('padding-top'), 10) + parseInt($articleAside.css('padding-bottom'), 10);
+        asideLeft = mainOffset.left + $pageMain.outerWidth() - $articleAside.outerWidth() - parseInt($pageMain.css('padding-right'), 10);
+        scrollBottom = footerOffset.top - asideHeight;
+        asideBottomTop = scrollBottom - mainOffset.top;
+      }
+      function setAside(force) {
+        force !== true && (force = false);
+        var scrollTop = $window.scrollTop();
+        if (scrollTop >= asideTop && scrollTop <= scrollBottom) {
+          (!force && lastScrollTop >= asideTop && lastScrollTop <= scrollBottom) ||
+          $articleAside.addClass('fixed').css({
+            left: asideLeft + 'px',
+            top: 0
+          });
+        } else if (scrollTop < asideTop) {
+          (!force && lastScrollTop < asideTop) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: 0
+          });
+        } else {
+          (!force && lastScrollTop > scrollBottom) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: asideBottomTop + 'px'
+          });
+        }
+        lastScrollTop = scrollTop;
+      }
+      asideSticky() && (init(), setAside());
+      $window.on('scroll', function() {
+        asideSticky() && setAside();
+      });
+      $window.on('resize', window.throttle(function() {
+        setTocClass();
+        asideSticky() && (init(), setAside(true));
+      }, 100));
+      setTimeout(init, 4000);
+    }
+    function toc() {
+      var $tocUl = $('<ul></ul>'), $tocLi, $headings = $articleContent.find('h1,h2,h3'), headingsTop = [],
+        scrolling, activeLast, activeCur, rendered = false;
+      function init() {
+        $headings.each(function() {
+          headingsTop.push(Math.floor($(this).offset().top));
+        });
+      }
+      function setActiveHeading(element, disabled) {
+        var scrollTop = $window.scrollTop(), i;
+        if (disabled || headingsTop.length < 1) { return; }
+        if (element) {
+          activeCur = element;
+        } else {
+          for (i = 0; i < headingsTop.length; i++) {
+            if (scrollTop >= headingsTop[i]) {
+              activeCur = $tocLi.eq(i);
+            } else {
+              activeCur || (activeCur = $tocLi.eq(i));
+              break;
+            }
+          }
+        }
+        activeLast && activeLast.removeClass('toc-active');
+        (activeLast = activeCur).addClass('toc-active');
+      }
+      function render() {
+        $toc.append($tocUl);
+        $headings.each(function() {
+          var $this = $(this);
+          $tocUl.append($('<li></li>').addClass('toc-' + $this.prop("tagName").toLowerCase())
+            .append($('<a></a>').text($this.text()).attr('href', '#' + $this.prop('id'))));
+        });
+        $tocLi = $tocUl.children('li');
+        $tocUl.on('click', 'a', function(e) {
+          e.preventDefault();
+          var $this = $(this);
+          scrolling = true;
+          setActiveHeading($this.parent());
+          window.scrollTopAnchor($this.attr('href'), function() {
+            scrolling = false;
+          });
+        });
+        rendered = true;
+      }
+      asideSticky() && (render(), $window.on('load', function() {
+        setTimeout(function() {
+          init();
+          setActiveHeading(null, scrolling);
+        }, 1000);
+      }));
+      $window.on('resize', window.throttle(function() {
+        if (asideSticky()) {
+          rendered || render();
+          init();
+          setActiveHeading(null, scrolling);
+        }
+      }));
+      $window.on('scroll', function() {
+        asideSticky() && setActiveHeading(null, scrolling);
+      });
+    }
+    setTocClass();
+    toc();
+    setTimeout(function() {
+      setAsideTOC();
+    }, 1000);
+  });</script></body>
+</html>

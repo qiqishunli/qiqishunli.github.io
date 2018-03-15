@@ -1,0 +1,395 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Blog - 浅浅蓝's blog</title>
+<meta name="description" content="一个热爱前端开发的小姑娘
+">
+<link rel="canonical" href="http://localhost:4000/blog/page7/"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-home">
+  <div class="main">
+    <div class="m-post-list"><article><h1><a href="/blog/2015/06/01/sogou-hackathon.html">黑客马拉松参赛总结</a></h1>
+          <div class="m-article-content">
+
+五月的最后一个周末，和同事一起组队参加了我司举办的首届黑客马拉松大赛，经过几十个小时的奋战，我和队友们一起完成度较高地准备好了演示 Demo、ppt 等，在大家一致看好、觉得在首轮评审表现出色的情况下止步首轮，说不遗憾肯定是假的，想想和小伙伴们为了完成 Demo 的通宵达旦，四个人短时间内提交的上万行代码，三十多个小时不曾睡觉的情况下，听到评审结果宣判的那一刻，倦意趁我的一丝失落情绪铺天盖地地袭来。
+
+时间仍然欢快地往前流淌，我在沉睡十多个小时后也满血复活，过去的就让它过去吧，收拾收拾心情，总结总结经验教训，继续前行。
+
+比赛中有幸被小伙伴们推举为我们小组的 CTO，作为需要在技术方面掌控全局的角色，回想一下自己的表现，算是中规中矩，有亮点，也暴露了很多问题。
+
+先臭屁一下自己的优...</div><a href="/blog/2015/06/01/sogou-hackathon.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Jun 01, 2015</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/blog/2015/05/28/leader-art.html">领导与员工的艺术</a></h1>
+          <div class="m-article-content">
+
+工作远非简单的完成任务而已，如何成为一名合格的员工？如何成为一名令下属信服的领导？朋友圈里的鸡汤似乎经常试图告诉我答案，但是在这个看见鸡汤文就神烦的年代，还是自己稍作总结来得更靠谱一点。
+
+合格员工
+
+如何成为一名合格的员工？
+
+面对这样一个问题，很多人的答案可能是「干好手上的活呗」，此话固然不错，但是如何干好，相信不同的人心里有不同的原则与好建议。
+
+我的版本是：
+
+
+  不要只是提出问题，带着思考后的方案去。
+  对自己跟进的任务要随时心里有数，比如当前进度，预计完成时间，关键数据等。
+  敢于行权。一些在自己能力和职责范围内的事情，主动推动解决，将重要节点和结果向领导汇报即可。
+  抬高眼光层次，在自己的思考之外，尝试以你的直接领导的眼光来分析和解决问题。
+  图生存之外，还...</div><a href="/blog/2015/05/28/leader-art.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">May 28, 2015</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/svn/2015/05/27/svn-exception.html">TortoiseSVN 从 GitHub 更新时发生异常</a></h1>
+          <div class="m-article-content">问题描述
+
+使用 TortoiseSVN 从 GitHub 仓库 Update 时，弹出错误提示对话框：
+
+---------------------------
+Subversion Exception!
+---------------------------
+Subversion encountered a serious problem.
+Please take the time to report this on the Subversion mailing list
+with as much information as possible about what
+you were trying to do.
+But please first search the mailing...</div><a href="/svn/2015/05/27/svn-exception.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">May 27, 2015</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/java/2015/05/15/java-compare.html">Java 中的比较运算符</a></h1>
+          <div class="m-article-content">小菜鸟才学习 Java 没多久，这天要写一个存储长整形的列表，于是这样写：
+
+List&lt;long&gt; listData = new ArrayList&lt;long&gt;();
+
+
+这时 Android Studio 不高兴了，在 long 下面打上红色波浪线，然后提示小菜鸟：
+
+Type argument cannot be of primitive type
+
+
+赶紧进 List 的定义看了一下，发现类型参数必须是引用类型，不能用原始数值类型。
+
+于是就改为：
+
+List&lt;Long&gt; listData = new ArrayList&lt;Long&gt;();
+
+
+这时 Android Studio 不说什么了，于是小菜鸟很开心地继续往下写，往 list...</div><a href="/java/2015/05/15/java-compare.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">May 15, 2015</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/emacs/2015/05/10/emacs.html">Emacs 折腾记</a></h1>
+          <div class="m-article-content">作为一名在 Windows 下使用了多年 gVim 的少年，已然把它在我需要的地方都收拾得服服贴贴，可以说 Vim 经过配置配置，上得厅堂下得厨房，基本能满足我的所有幻想。
+
+直到那天突然产生了新的需求——Lisp。我工作中倒并没有用得到 Lisp 的地方，但是最近眼前晃过的一些书，比如《计算机程序的构造和解释》、《码农》杂志第 13 期，都对这门古老的语言推崇备至，还有垠神也撰文《Lisp 已死，Lisp 万岁！》历数现代 Lisp 方言的先进性，再者我也一直有学习一门函数式编程语言的想法，看起来，Lisp 是不二之选。但是在用 Vim 配置 Lisp 开发环境时遇到些问题，虽然有 Slimv，可用起来还是感觉各种不便。
+
+在搜索网友们对此的经验之谈的时候，自然而然地，目光逐渐聚集到...</div><a href="/emacs/2015/05/10/emacs.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">May 10, 2015</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/blog/2015/05/09/no-need-to-tangle.html">一些不必纠结的事情</a></h1>
+          <div class="m-article-content">这里记录的都是一些我曾经反复思考的问题，可能我某一天已经做好了决定，但是后来忘了这个决定，然后再纠结一遍，这耗费了大量的脑力却没有任何帮助。当再次因为一个事情纠结的时候，看一看这里，是不是这个问题已经纠结过了，有结论了。
+
+一本书该不该看
+
+虽然我们需要高效地安排自己的时间，用有限的时间换来最大的收益，但是既然会纠结，就说明至少这本书要么是兴趣所在，要么是内心觉得看了会有用。即如此，那就看吧，因为可以记住一点：
+
+投入地看一本书，即使只是利用工作之余的时间，一般有几天也就看完了。
+
+即使这本书以后并没有给你带来什么，但是你也并没有失去什么。
+
+Emacs 还是 Vim
+
+用合适的工具正确地干活，它俩各有优点，所以我选择都用。在需要快速启动编辑配置文件的几个字段时 ，显然 Vim 更合适...</div><a href="/blog/2015/05/09/no-need-to-tangle.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">May 09, 2015</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/android/2015/05/06/android-studio.html">Android Studio 遇到问题集锦</a></h1>
+          <div class="m-article-content">打开 Android Studio 卡在「Fetching Android SDK component information」界面。
+
+如图：
+
+
+
+Android Studio First Run 检测 Android SDK 及更新，由于众所周知的原因，我们会「Unable to access Android SDK add-on list」，而且大家一般也已经提前配置好了 Android SDK，真正需要更新的时候手动去 SDK Manager 更新就好了。
+
+解决方案：
+
+在 Android Studio 安装目录 bin/idea.properties 文件最后追加一句
+
+disable.android.first.run=true
+
+
+参考： http://ask.and...</div><a href="/android/2015/05/06/android-studio.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">May 06, 2015</span></div>
+  </div>
+</div>
+</article></div><nav class="m-pagination"><p>103 post articles, 15 pages.</p>
+          <ul><li><a class="round-button" href="/blog/page6">
+                <div class="icon icon--previous"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+</svg>
+</div></a>
+              </li><li>
+                  <a class="round-button" href="/"><span>1</span></a>
+                </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
+                      <a class="round-button" href="/blog/page6"><span>6</span></a>
+                    </li><li>
+                  <div class="round-button cur"><span>7</span></div>
+                </li><li>
+                      <a class="round-button" href="/blog/page8"><span>8</span></a>
+                    </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
+                      <a class="round-button" href="/blog/page15"><span>15</span></a>
+                    </li><li>
+                <a class="round-button" href="/blog/page8">
+                  <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+</svg>
+</div>
+                </a>
+              </li></ul>
+        </nav></div>
+</div>
+</div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script></body>
+</html>

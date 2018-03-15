@@ -1,0 +1,472 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Blog - 浅浅蓝's blog</title>
+<meta name="description" content="一个热爱前端开发的小姑娘
+">
+<link rel="canonical" href="http://localhost:4000/blog/page13/"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-home">
+  <div class="main">
+    <div class="m-post-list"><article><h1><a href="/cplusplus/2013/10/26/namespace-with-a-static-variable.html">有 static 变量的 namespace 被多个 cpp 包含</a></h1>
+          <div class="m-article-content">有如下三个文件
+header.h
+
+#pragma once
+namespace NS1
+{
+	static int var = 10;
+}
+void print_var();
+
+
+src.cpp
+
+#include &lt;stdio.h&gt;
+#include "header.h"
+
+void print_var()
+{
+	printf("%d\n", NS1::var);
+}
+
+
+main.cpp
+
+#include &lt;stdio.h&gt;
+#include "header.h"
+
+int main()
+{
+	printf("%d\n", NS1::var);
+	NS1::var = 0;
+	print_var();
+	return 0;
+}
+
+
+这三个文件是尝试的基础...</div><a href="/cplusplus/2013/10/26/namespace-with-a-static-variable.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Oct 26, 2013</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/cplusplus/2013/06/22/multi-included-source-file.html">文件被多个中间文件输出目录相同的工程包含</a></h1>
+          <div class="m-article-content">case
+
+两个工程 Proj1 和 Proj2，同时包含 demo.cpp，其中 Proj1 在工程配置里预定义宏 MACRO_PROJ1，Proj2 在工程配置里预定义宏 MACRO_PROJ2，两个工程的中间文件输出目录为同一个，文件 demo.cpp 内容如下：
+
+#include &lt;stdio.h&gt;
+
+int main()
+{
+#ifdef MACRO_PROJ1
+    printf("output by proj1");
+#elif defined MACRO_PROJ2
+    printf("output by proj2");
+#endif
+    return 0;
+}
+
+
+然后编译两工程生成 Proj1.exe 和 Proj2.exe，期望的结果是 ...</div><a href="/cplusplus/2013/06/22/multi-included-source-file.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Jun 22, 2013</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/windows/2013/05/19/when-your-exe-name-contains-install-or-setup.html">可执行文件名中包含 install 或 setup</a></h1>
+          <div class="m-article-content">问题描述
+
+在 Windows Vista+ 系统下，若 EXE 文件名中包含有「install」、「update」或「setup」等字样，可能出现如下问题：
+
+
+  
+    每次软件运行完退出后会弹出「程序兼容性助手」（Program Compatibility Assistant, 简称 PCA），提示软件未正确安装。
+
+    
+  
+  
+    在 Vista+ 的操作系统下任务栏右键该程序缺少「将此程序锁定到任务栏」和软件名同名项。
+
+    
+      
+        
+          程序名
+          运行时任务栏右键
+        
+      
+      
+        
+          a.exe
+          
+       ...</div><a href="/windows/2013/05/19/when-your-exe-name-contains-install-or-setup.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">May 19, 2013</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/windows/2013/04/18/windows-ui-notes.html">Windows 界面相关小知识点</a></h1>
+          <div class="m-article-content">
+  
+    禁止 Win7 下窗口被拖到顶部时自动飘到左上角
+
+    去掉窗口的 WS_THICKFRAME 风格
+  
+  
+    将最小化或者不是在最前面的窗口激活到前面
+
+    SwitchToThisWindow
+  
+  
+    禁止双击标题栏最大化窗口
+
+    屏蔽 WM_NCLBUTTONDBLCLK 消息
+  
+  
+    禁止 XP 下右键任务栏的「最大化」菜单项
+
+    去掉窗口的 WS_MAXIMIZEBOX 风格
+  
+  
+    在任务管理器下「应用程序」标签栏不显示程序，但是在「进程」里显示进程
+
+    一个可能的原因是窗口标题为空
+  
+  
+    在 XP 任务栏右键无菜单，在 Win7 任务栏右键只有一个关闭项
+
+    给窗口...</div><a href="/windows/2013/04/18/windows-ui-notes.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Apr 18, 2013</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/gecko/2012/06/19/gecko-use-profile.html">为基于 xulrunner 的内嵌 Gecko 程序启用 Profile</a></h1>
+          <div class="m-article-content">Mozilla 自带的 Profile 支持实际上是非常给力的，看看 %appdata%/Mozilla/Firefox 下的文件就能知道，这里存放着许多的信息，它们提供了很多东西，例如：
+
+
+  
+    可以通过 Profiles/…default/chrome 下的 userchrome.css 文件来定制自己的 firefox 外观，比如用 #appmenu-button { display:none !important;} 这样一句就可以去掉 firefox 左上角难看的按钮菜单
+  
+  
+    安装的 extensions，Addon 放在这里
+  
+  
+    证书相关、组件列表、cookie、插件列表等等都可以在这里找到
+  
+
+
+等等等等。
+
+合理利用这些文件...</div><a href="/gecko/2012/06/19/gecko-use-profile.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Jun 19, 2012</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/windows/2012/06/17/windows-skills.html">Windows 实用技巧汇总</a></h1>
+          <div class="m-article-content">目录
+
+
+  Win7 不按 Shift，右键显示 “在此处打开命令窗口 (W)”
+  Win7 搜索文件内容
+  将 Caps Lock 映射为 Ctrl
+  将任务栏库图标变成打开计算机
+  Win10 x64 下使用 ComMonitor
+
+
+Win7 不按 Shift，右键显示 “在此处打开命令窗口 (W)”
+
+
+
+图上的这条右键命令一般在 Win7 下是需要 Shift + 右键在弹出菜单里才能看到的，怎么省掉这个 Shift，直接就能出来呢？
+
+先说方法：
+
+将如下代码保存为 .reg 文件然后执行即可。
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\shell\cmd]
+"Exten...</div><a href="/windows/2012/06/17/windows-skills.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Jun 17, 2012</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/python/2012/04/08/learn-python-practise.html">Python 核心编程中文第二版课后练习 3.8 答案</a></h1>
+          <div class="m-article-content">3-1 变量在第一次被赋值时自动声明。在赋值时解释器会根据语法和右侧的操作数来决定新对象的类型。
+
+3-2 函数总是返回一个值，显式 return 的值或者 None。返回的值的类型也是动态确定。
+
+3-3 因为变量名 xxx 对 Python 来说有特殊含义，对于普通的变量应当避免这种命名风格。
+
+3-4 可以，使用 “;”
+
+3-5 可以，使用 “" 或者括号
+
+3-6
+
+(a)x = 1, y = 2, z = 3
+
+(b)z = 2, x = 3, y = 1
+
+3-7 40XL, $aving$, 0x40L, thisIsn’tAVar, big-daddy, 2hot2touch, counter-1 不合法。不是以字母或者下划线开头，或者有非字母下划线数字的字符。pri...</div><a href="/python/2012/04/08/learn-python-practise.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Apr 08, 2012</span></div>
+  </div>
+</div>
+</article></div><nav class="m-pagination"><p>103 post articles, 15 pages.</p>
+          <ul><li><a class="round-button" href="/blog/page12">
+                <div class="icon icon--previous"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+</svg>
+</div></a>
+              </li><li>
+                  <a class="round-button" href="/"><span>1</span></a>
+                </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
+                      <a class="round-button" href="/blog/page12"><span>12</span></a>
+                    </li><li>
+                  <div class="round-button cur"><span>13</span></div>
+                </li><li>
+                      <a class="round-button" href="/blog/page14"><span>14</span></a>
+                    </li><li>
+                      <a class="round-button" href="/blog/page15"><span>15</span></a>
+                    </li><li>
+                <a class="round-button" href="/blog/page14">
+                  <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+</svg>
+</div>
+                </a>
+              </li></ul>
+        </nav></div>
+</div>
+</div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script></body>
+</html>

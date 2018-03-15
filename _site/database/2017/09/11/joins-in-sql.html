@@ -1,0 +1,831 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>图解 SQL 里的各种 JOIN - 浅浅蓝's blog</title>
+<meta name="description" content="从业以来主要在做客户端，用到的数据库都是表结构比较简单的 SQLite，以我那还给老师一大半的 SQL 水平倒也能对付。现在偶尔需要到后台的 SQL Server 里追查一些数据问题，就显得有点捉襟见肘了，特别是各种 JOIN，有时候傻傻分不清楚，于是索性弄明白并做个记录。前言在各种问答社区里谈及 SQL 里的各...">
+<link rel="canonical" href="http://localhost:4000/database/2017/09/11/joins-in-sql.html"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-post">
+	<div class="main clearfix js-main">
+		<div class="col-2 js-col-2">
+			<aside class="js-article-aside"><div class="m-toc js-toc"></div></aside>
+		</div>
+		<div class="col-1">
+			<article class="js-article" itemscope itemtype="http://schema.org/BlogPosting">
+				<meta itemprop="mainEntityOfPage" itemscope itemType="https://schema.org/WebPage"/>
+				<header class="main-header"><h1 itemprop="headline" itemprop="name headline">图解 SQL 里的各种 JOIN</h1><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><time class="article-meta" datetime="2017-09-11T00:00:00+08:00"
+          itemprop="datePublished">Sep 11, 2017
+        </time></div>
+  </div>
+</div>
+</header>
+				<div class="m-article-content js-article-content" itemprop="articleBody"><p>从业以来主要在做客户端，用到的数据库都是表结构比较简单的 SQLite，以我那还给老师一大半的 SQL 水平倒也能对付。现在偶尔需要到后台的 SQL Server 里追查一些数据问题，就显得有点捉襟见肘了，特别是各种 JOIN，有时候傻傻分不清楚，于是索性弄明白并做个记录。</p>
+
+<h2 id="前言">前言</h2>
+
+<p>在各种问答社区里谈及 SQL 里的各种 JOIN 之间的区别时，最被广为引用的是 CodeProject 上 <a href="https://www.codeproject.com/script/Membership/View.aspx?mid=5909363">C.L. Moffatt</a> 的文章 <a href="https://www.codeproject.com/Articles/33052/Visual-Representation-of-SQL-Joins">Visual Representation of SQL Joins</a>，他确实讲得简单明了，使用文氏图来帮助理解，效果明显。本文将沿用他的讲解方式，稍有演绎，可以视为该文较为粗糙的中译版。</p>
+
+<h2 id="约定">约定</h2>
+
+<p>下文将使用两个数据库表 Table_A 和 Table_B 来进行示例讲解，其结构与数据分别如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; SELECT * FROM Table_A ORDER BY PK ASC;
++----+---------+
+| PK | Value   |
++----+---------+
+|  1 | both ab |
+|  2 | only a  |
++----+---------+
+2 rows in set (0.00 sec)
+
+mysql&gt; SELECT * from Table_B ORDER BY PK ASC;
++----+---------+
+| PK | Value   |
++----+---------+
+|  1 | both ab |
+|  3 | only b  |
++----+---------+
+2 rows in set (0.00 sec)
+</code></pre></div></div>
+
+<p>其中 PK 为 1 的记录在 Table_A 和 Table_B 中都有，2 为 Table_A 特有，3 为 Table_B 特有。</p>
+
+<h2 id="常用的-join">常用的 JOIN</h2>
+
+<h3 id="inner-join">INNER JOIN</h3>
+
+<p>INNER JOIN 一般被译作内连接。内连接查询能将左表（表 A）和右表（表 B）中能关联起来的数据连接后返回。</p>
+
+<p><strong>文氏图：</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/inner-join.png" alt="INNER JOIN" /></p>
+
+<p><strong>示例查询：</strong></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">A_PK</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">B_PK</span><span class="p">,</span>
+       <span class="n">A</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">A_Value</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">B_Value</span>
+<span class="k">FROM</span> <span class="n">Table_A</span> <span class="n">A</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">Table_B</span> <span class="n">B</span>
+<span class="k">ON</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>查询结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+------+------+---------+---------+
+| A_PK | B_PK | A_Value | B_Value |
++------+------+---------+---------+
+|    1 |    1 | both ab | both ab |
++------+------+---------+---------+
+1 row in set (0.00 sec)
+</code></pre></div></div>
+
+<p><em>注：其中 <code class="highlighter-rouge">A</code> 为 <code class="highlighter-rouge">Table_A</code> 的别名，<code class="highlighter-rouge">B</code> 为 <code class="highlighter-rouge">Table_B</code> 的别名，下同。</em></p>
+
+<h3 id="left-join">LEFT JOIN</h3>
+
+<p>LEFT JOIN 一般被译作左连接，也写作 LEFT OUTER JOIN。左连接查询会返回左表（表 A）中所有记录，不管右表（表 B）中有没有关联的数据。在右表中找到的关联数据列也会被一起返回。</p>
+
+<p><strong>文氏图：</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/left-join.png" alt="LEFT JOIN" /></p>
+
+<p><strong>示例查询：</strong></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">A_PK</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">B_PK</span><span class="p">,</span>
+       <span class="n">A</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">A_Value</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">B_Value</span>
+<span class="k">FROM</span> <span class="n">Table_A</span> <span class="n">A</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">Table_B</span> <span class="n">B</span>
+<span class="k">ON</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>查询结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+------+------+---------+---------+
+| A_PK | B_PK | A_Value | B_Value |
++------+------+---------+---------+
+|    1 |    1 | both ab | both ba |
+|    2 | NULL | only a  | NULL    |
++------+------+---------+---------+
+2 rows in set (0.00 sec)
+</code></pre></div></div>
+
+<h3 id="right-join">RIGHT JOIN</h3>
+
+<p>RIGHT JOIN 一般被译作右连接，也写作 RIGHT OUTER JOIN。右连接查询会返回右表（表 B）中所有记录，不管左表（表 A）中有没有关联的数据。在左表中找到的关联数据列也会被一起返回。</p>
+
+<p><strong>文氏图：</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/right-join.png" alt="RIGHT JOIN" /></p>
+
+<p><strong>示例查询：</strong></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">A_PK</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">B_PK</span><span class="p">,</span>
+       <span class="n">A</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">A_Value</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">B_Value</span>
+<span class="k">FROM</span> <span class="n">Table_A</span> <span class="n">A</span>
+<span class="k">RIGHT</span> <span class="k">JOIN</span> <span class="n">Table_B</span> <span class="n">B</span>
+<span class="k">ON</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>查询结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+------+------+---------+---------+
+| A_PK | B_PK | A_Value | B_Value |
++------+------+---------+---------+
+|    1 |    1 | both ab | both ba |
+| NULL |    3 | NULL    | only b  |
++------+------+---------+---------+
+2 rows in set (0.00 sec)
+</code></pre></div></div>
+
+<h3 id="full-outer-join">FULL OUTER JOIN</h3>
+
+<p>FULL OUTER JOIN 一般被译作外连接、全连接，实际查询语句中可以写作 <code class="highlighter-rouge">FULL OUTER JOIN</code> 或 <code class="highlighter-rouge">FULL JOIN</code>。外连接查询能返回左右表里的所有记录，其中左右表里能关联起来的记录被连接后返回。</p>
+
+<p><strong>文氏图：</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/full-outer-join.png" alt="FULL OUTER JOIN" /></p>
+
+<p><strong>示例查询：</strong></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">A_PK</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">B_PK</span><span class="p">,</span>
+       <span class="n">A</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">A_Value</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">B_Value</span>
+<span class="k">FROM</span> <span class="n">Table_A</span> <span class="n">A</span>
+<span class="k">FULL</span> <span class="k">OUTER</span> <span class="k">JOIN</span> <span class="n">Table_B</span> <span class="n">B</span>
+<span class="k">ON</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>查询结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FULL OUTER JOIN Table_B B
+ON A.PK = B.PK' at line 4
+</code></pre></div></div>
+
+<p><em>注：我当前示例使用的 MySQL 不支持 <code class="highlighter-rouge">FULL OUTER JOIN</code>。</em></p>
+
+<p>应当返回的结果（使用 UNION 模拟）：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; SELECT * 
+    -&gt; FROM Table_A
+    -&gt; LEFT JOIN Table_B 
+    -&gt; ON Table_A.PK = Table_B.PK
+    -&gt; UNION ALL
+    -&gt; SELECT *
+    -&gt; FROM Table_A
+    -&gt; RIGHT JOIN Table_B 
+    -&gt; ON Table_A.PK = Table_B.PK
+    -&gt; WHERE Table_A.PK IS NULL;
++------+---------+------+---------+
+| PK   | Value   | PK   | Value   |
++------+---------+------+---------+
+|    1 | both ab |    1 | both ba |
+|    2 | only a  | NULL | NULL    |
+| NULL | NULL    |    3 | only b  |
++------+---------+------+---------+
+3 rows in set (0.00 sec)
+</code></pre></div></div>
+
+<h3 id="小结">小结</h3>
+
+<p>以上四种，就是 SQL 里常见 JOIN 的种类和概念了，看一下它们的合影：</p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/general-joins.png" alt="" /></p>
+
+<p>有没有感觉少了些什么，学数学集合时完全不止这几种情况？确实如此，继续看。</p>
+
+<h2 id="延伸用法">延伸用法</h2>
+
+<h3 id="left-join-excluding-inner-join">LEFT JOIN EXCLUDING INNER JOIN</h3>
+
+<p>返回左表有但右表没有关联数据的记录集。</p>
+
+<p><strong>文氏图：</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/left-join-excluding-inner-join.png" alt="LEFT JOIN EXCLUDING INNER JOIN" /></p>
+
+<p><strong>示例查询：</strong></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">A_PK</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">B_PK</span><span class="p">,</span>
+       <span class="n">A</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">A_Value</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">B_Value</span>
+<span class="k">FROM</span> <span class="n">Table_A</span> <span class="n">A</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">Table_B</span> <span class="n">B</span>
+<span class="k">ON</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span>
+<span class="k">WHERE</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>查询结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+------+------+---------+---------+
+| A_PK | B_PK | A_Value | B_Value |
++------+------+---------+---------+
+|    2 | NULL | only a  | NULL    |
++------+------+---------+---------+
+1 row in set (0.01 sec)
+</code></pre></div></div>
+
+<h3 id="right-join-excluding-inner-join">RIGHT JOIN EXCLUDING INNER JOIN</h3>
+
+<p>返回右表有但左表没有关联数据的记录集。</p>
+
+<p><strong>文氏图：</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/right-join-excluding-inner-join.png" alt="RIGHT JOIN EXCLUDING INNER JOIN" /></p>
+
+<p><strong>示例查询：</strong></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">A_PK</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">B_PK</span><span class="p">,</span>
+       <span class="n">A</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">A_Value</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">B_Value</span>
+<span class="k">FROM</span> <span class="n">Table_A</span> <span class="n">A</span>
+<span class="k">RIGHT</span> <span class="k">JOIN</span> <span class="n">Table_B</span> <span class="n">B</span>
+<span class="k">ON</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span>
+<span class="k">WHERE</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>查询结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+------+------+---------+---------+
+| A_PK | B_PK | A_Value | B_Value |
++------+------+---------+---------+
+| NULL |    3 | NULL    | only b  |
++------+------+---------+---------+
+1 row in set (0.00 sec)
+</code></pre></div></div>
+
+<h3 id="full-outer-join-excluding-inner-join">FULL OUTER JOIN EXCLUDING INNER JOIN</h3>
+
+<p>返回左表和右表里没有相互关联的记录集。</p>
+
+<p><strong>文氏图：</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/full-outer-join-excluding-inner-join.png" alt="FULL OUTER JOIN EXCLUDING INNER JOIN" /></p>
+
+<p><strong>示例查询：</strong></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">A_PK</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">B_PK</span><span class="p">,</span>
+       <span class="n">A</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">A_Value</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">B_Value</span>
+<span class="k">FROM</span> <span class="n">Table_A</span> <span class="n">A</span>
+<span class="k">FULL</span> <span class="k">OUTER</span> <span class="k">JOIN</span> <span class="n">Table_B</span> <span class="n">B</span>
+<span class="k">ON</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span>
+<span class="k">WHERE</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">IS</span> <span class="k">NULL</span>
+<span class="k">OR</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>因为使用到了 FULL OUTER JOIN，MySQL 在执行该查询时再次报错。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FULL OUTER JOIN Table_B B
+ON A.PK = B.PK
+WHERE A.PK IS NULL
+OR B.PK IS NULL' at line 4
+</code></pre></div></div>
+
+<p>应当返回的结果（用 UNION 模拟）：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; SELECT * 
+    -&gt; FROM Table_A
+    -&gt; LEFT JOIN Table_B
+    -&gt; ON Table_A.PK = Table_B.PK
+    -&gt; WHERE Table_B.PK IS NULL
+    -&gt; UNION ALL
+    -&gt; SELECT *
+    -&gt; FROM Table_A
+    -&gt; RIGHT JOIN Table_B
+    -&gt; ON Table_A.PK = Table_B.PK
+    -&gt; WHERE Table_A.PK IS NULL;
++------+--------+------+--------+
+| PK   | Value  | PK   | Value  |
++------+--------+------+--------+
+|    2 | only a | NULL | NULL   |
+| NULL | NULL   |    3 | only b |
++------+--------+------+--------+
+2 rows in set (0.00 sec)
+</code></pre></div></div>
+
+<h2 id="总结">总结</h2>
+
+<p>以上七种用法基本上可以覆盖各种 JOIN 查询了。七种用法的全家福：</p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/sql-joins.png" alt="SQL JOINS" /></p>
+
+<p>看着它们，我仿佛回到了当年学数学，求交集并集的时代……</p>
+
+<p>顺带张贴一下 <a href="https://www.codeproject.com/script/Membership/View.aspx?mid=5909363">C.L. Moffatt</a> 带 SQL 语句的图片，配合学习，风味更佳：</p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/Visual_SQL_JOINS_orig.jpg" alt="SQL JOINS" /></p>
+
+<h2 id="更新更多的-join">更新：更多的 JOIN</h2>
+
+<p>除以上几种外，还有更多的 JOIN 用法，比如 CROSS JOIN（迪卡尔集）、SELF JOIN，可以参考 <a href="https://www.w3resource.com/slides/sql-joins-slide-presentation.php">SQL JOINS Slide Presentation</a> 学习。</p>
+
+<h3 id="cross-join">CROSS JOIN</h3>
+
+<p>返回左表与右表之间符合条件的记录的迪卡尔集。</p>
+
+<p><strong>图示：</strong></p>
+
+<p><img src="https://raw.githubusercontent.com/mzlogin/mzlogin.github.io/master/images/posts/database/cross-join.png" alt="CORSS JOIN" /></p>
+
+<p><strong>示例查询：</strong></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">A_PK</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">PK</span> <span class="k">AS</span> <span class="n">B_PK</span><span class="p">,</span>
+       <span class="n">A</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">A_Value</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">Value</span> <span class="k">AS</span> <span class="n">B_Value</span>
+<span class="k">FROM</span> <span class="n">Table_A</span> <span class="n">A</span>
+<span class="k">CROSS</span> <span class="k">JOIN</span> <span class="n">Table_B</span> <span class="n">B</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>查询结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+------+------+---------+---------+
+| A_PK | B_PK | A_Value | B_Value |
++------+------+---------+---------+
+|    1 |    1 | both ab | both ba |
+|    2 |    1 | only a  | both ba |
+|    1 |    3 | both ab | only b  |
+|    2 |    3 | only a  | only b  |
++------+------+---------+---------+
+4 rows in set (0.00 sec)
+</code></pre></div></div>
+
+<p>上面讲过的几种 JOIN 查询的结果都可以用 CROSS JOIN 加条件模拟出来，比如 INNER JOIN 对应 <code class="highlighter-rouge">CROSS JOIN ... WHERE A.PK = B.PK</code>。</p>
+
+<h3 id="self-join">SELF JOIN</h3>
+
+<p>返回表与自己连接后符合条件的记录，一般用在表里有一个字段是用主键作为外键的情况。</p>
+
+<p>比如 Table_C 的结构与数据如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+--------+----------+-------------+
+| EMP_ID | EMP_NAME | EMP_SUPV_ID |
++--------+----------+-------------+
+|   1001 | Ma       |        NULL |
+|   1002 | Zhuang   |        1001 |
++--------+----------+-------------+
+2 rows in set (0.00 sec)
+</code></pre></div></div>
+
+<p>EMP_ID 字段表示员工 ID，EMP_NAME 字段表示员工姓名，EMP_SUPV_ID 表示主管 ID。</p>
+
+<p><strong>示例查询：</strong></p>
+
+<p>现在我们想查询所有有主管的员工及其对应的主管 ID 和姓名，就可以用 SELF JOIN 来实现。</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="n">EMP_ID</span> <span class="k">AS</span> <span class="n">EMP_ID</span><span class="p">,</span> <span class="n">A</span><span class="p">.</span><span class="n">EMP_NAME</span> <span class="k">AS</span> <span class="n">EMP_NAME</span><span class="p">,</span> 
+    <span class="n">B</span><span class="p">.</span><span class="n">EMP_ID</span> <span class="k">AS</span> <span class="n">EMP_SUPV_ID</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">EMP_NAME</span> <span class="k">AS</span> <span class="n">EMP_SUPV_NAME</span>
+<span class="k">FROM</span> <span class="n">Table_C</span> <span class="n">A</span><span class="p">,</span> <span class="n">Table_C</span> <span class="n">B</span>
+<span class="k">WHERE</span> <span class="n">A</span><span class="p">.</span><span class="n">EMP_SUPV_ID</span> <span class="o">=</span> <span class="n">B</span><span class="p">.</span><span class="n">EMP_ID</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>查询结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+--------+----------+-------------+---------------+
+| EMP_ID | EMP_NAME | EMP_SUPV_ID | EMP_SUPV_NAME |
++--------+----------+-------------+---------------+
+|   1002 | Zhuang   |        1001 | Ma            |
++--------+----------+-------------+---------------+
+1 row in set (0.00 sec)
+</code></pre></div></div>
+
+<h2 id="补充说明">补充说明</h2>
+
+<ol>
+  <li>
+    <p>文中的图使用 Keynote 绘制；</p>
+  </li>
+  <li>
+    <p>个人的体会是 SQL 里的 JOIN 查询与数学里的求交集、并集等很像；</p>
+  </li>
+  <li>
+    <p>SQLite 不支持 RIGHT JOIN 和 FULL OUTER JOIN，可以使用 LEFT JOIN 和 UNION 来达到相同的效果；</p>
+  </li>
+  <li>
+    <p>MySQL 不支持 FULL OUTER JOIN，可以使用 LEFT JOIN 和 UNION 来达到相同的效果；</p>
+  </li>
+</ol>
+
+<p>假如你对我的文章感兴趣，可以关注我的微信公众号 isprogrammer 随时阅读更多内容。</p>
+
+<h2 id="参考">参考</h2>
+
+<ul>
+  <li><a href="https://www.codeproject.com/Articles/33052/Visual-Representation-of-SQL-Joins">Visual Representation of SQL Joins</a></li>
+  <li><a href="https://stackoverflow.com/questions/4796872/how-to-do-a-full-outer-join-in-mysql">How to do a FULL OUTER JOIN in MySQL?</a></li>
+  <li><a href="https://www.w3resource.com/slides/sql-joins-slide-presentation.php">SQL JOINS Slide Presentation</a></li>
+  <li><a href="https://www.w3resource.com/sql/joins/perform-a-self-join.php">SQL Self Join</a></li>
+</ul>
+
+</div>
+				<footer><meta itemprop="dateModified" content="2017-09-11T00:00:00+08:00"><div class="article-license"><div class="m-license"><div class="clearfix"><p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> license.</p><a class="license" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+      <img alt="Creative Commons License" src="/assets/images/license-cc4.png" />
+    </a><p></p>
+  </div>
+</div></div>
+				</footer>
+			</article>
+			<div class="article-previous-next clearfix"><div class="article-previous"><span>PREVIOUS</span><a href="/android/2017/09/23/rtfsc-android-start.html">Android 源码分析开篇</a></div><div class="article-next"><span>NEXT</span><a href="/markdown/2017/09/01/markdown-odd-skills.html">关于 Markdown 的一些奇技淫巧</a></div></div></div>
+	</div>
+</div></div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script><script>
+  (function() {
+    function scrollAnimateTo(destination, duration, callback) {
+      var $body = $('html, body'), bodyScrollTop = $body.scrollTop();
+      if(bodyScrollTop === destination) { return; }
+      $body.animate({ scrollTop: destination }, duration, callback);
+    }
+    window.scrollTopAnchor = function(anchor, callback) {
+      scrollAnimateTo($(anchor).offset().top, 400, function() {
+        window.history.replaceState(null, '', window.location.href.split('#')[0] + anchor);
+        callback && callback();
+      });
+    }
+  })();
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $articleContent = $('.m-post, .m-page').find('.m-article-content'), $this;
+    $articleContent.children('.highlight').each(function() {
+      $this = $(this);
+      $this.attr('data-lang', $this.find('code').attr('data-lang'));
+    });
+
+    $articleContent.children('h1, h2, h3, h4, h5, h6').each(function() {
+      $this = $(this);
+      $this.append($('<a class="anchor" aria-hidden="true"></a>').html('<svg fill="#000000" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>'));
+    });
+    $articleContent.on('click', '.anchor', function() {
+      window.scrollTopAnchor('#' + $(this).parent().attr('id'));
+    });
+  });
+</script><script>
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $window = $(window);
+    var $pageStage = $('.js-page-stage');
+    var $pageMain = $('.js-main');
+    var $pageFooter = $('.js-page-footer');
+    var $articleContent = $('.js-article-content');
+    var $articleAside = $('.js-article-aside');
+    var $toc = $('.js-toc');
+    var $col2 = $('.js-col-2');
+    var hasTitle = $articleContent.find('h1,h2,h3').length > 0;
+    function asideSticky() {
+      return $col2.css('display') !== 'none' && $pageStage.hasClass('has-toc');
+    }
+    function setTocClass() {
+      if (hasTitle) {
+        !$pageStage.hasClass('has-toc') && $pageStage.addClass('has-toc');
+      }
+    }
+    function setAsideTOC() {
+      var asideTop, asideLeft, scrollBottom, asideBottomTop, lastScrollTop;
+      function init() {
+        var asideOffset = $articleAside.offset();
+        var footerOffset = $pageFooter.offset();
+        var mainOffset = $pageMain.offset();
+        asideTop = mainOffset.top;
+        asideHeight = $toc.outerHeight() + parseInt($articleAside.css('padding-top'), 10) + parseInt($articleAside.css('padding-bottom'), 10);
+        asideLeft = mainOffset.left + $pageMain.outerWidth() - $articleAside.outerWidth() - parseInt($pageMain.css('padding-right'), 10);
+        scrollBottom = footerOffset.top - asideHeight;
+        asideBottomTop = scrollBottom - mainOffset.top;
+      }
+      function setAside(force) {
+        force !== true && (force = false);
+        var scrollTop = $window.scrollTop();
+        if (scrollTop >= asideTop && scrollTop <= scrollBottom) {
+          (!force && lastScrollTop >= asideTop && lastScrollTop <= scrollBottom) ||
+          $articleAside.addClass('fixed').css({
+            left: asideLeft + 'px',
+            top: 0
+          });
+        } else if (scrollTop < asideTop) {
+          (!force && lastScrollTop < asideTop) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: 0
+          });
+        } else {
+          (!force && lastScrollTop > scrollBottom) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: asideBottomTop + 'px'
+          });
+        }
+        lastScrollTop = scrollTop;
+      }
+      asideSticky() && (init(), setAside());
+      $window.on('scroll', function() {
+        asideSticky() && setAside();
+      });
+      $window.on('resize', window.throttle(function() {
+        setTocClass();
+        asideSticky() && (init(), setAside(true));
+      }, 100));
+      setTimeout(init, 4000);
+    }
+    function toc() {
+      var $tocUl = $('<ul></ul>'), $tocLi, $headings = $articleContent.find('h1,h2,h3'), headingsTop = [],
+        scrolling, activeLast, activeCur, rendered = false;
+      function init() {
+        $headings.each(function() {
+          headingsTop.push(Math.floor($(this).offset().top));
+        });
+      }
+      function setActiveHeading(element, disabled) {
+        var scrollTop = $window.scrollTop(), i;
+        if (disabled || headingsTop.length < 1) { return; }
+        if (element) {
+          activeCur = element;
+        } else {
+          for (i = 0; i < headingsTop.length; i++) {
+            if (scrollTop >= headingsTop[i]) {
+              activeCur = $tocLi.eq(i);
+            } else {
+              activeCur || (activeCur = $tocLi.eq(i));
+              break;
+            }
+          }
+        }
+        activeLast && activeLast.removeClass('toc-active');
+        (activeLast = activeCur).addClass('toc-active');
+      }
+      function render() {
+        $toc.append($tocUl);
+        $headings.each(function() {
+          var $this = $(this);
+          $tocUl.append($('<li></li>').addClass('toc-' + $this.prop("tagName").toLowerCase())
+            .append($('<a></a>').text($this.text()).attr('href', '#' + $this.prop('id'))));
+        });
+        $tocLi = $tocUl.children('li');
+        $tocUl.on('click', 'a', function(e) {
+          e.preventDefault();
+          var $this = $(this);
+          scrolling = true;
+          setActiveHeading($this.parent());
+          window.scrollTopAnchor($this.attr('href'), function() {
+            scrolling = false;
+          });
+        });
+        rendered = true;
+      }
+      asideSticky() && (render(), $window.on('load', function() {
+        setTimeout(function() {
+          init();
+          setActiveHeading(null, scrolling);
+        }, 1000);
+      }));
+      $window.on('resize', window.throttle(function() {
+        if (asideSticky()) {
+          rendered || render();
+          init();
+          setActiveHeading(null, scrolling);
+        }
+      }));
+      $window.on('scroll', function() {
+        asideSticky() && setActiveHeading(null, scrolling);
+      });
+    }
+    setTocClass();
+    toc();
+    setTimeout(function() {
+      setAsideTOC();
+    }, 1000);
+  });</script></body>
+</html>

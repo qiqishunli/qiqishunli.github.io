@@ -1,0 +1,698 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>VBA 在 Excel 中的常用操作 - 浅浅蓝's blog</title>
+<meta name="description" content="文件操作引用打开的工作簿使用索引号（从 1 开始）Workbooks(1)使用工作簿名称Workbooks("1.xlsx")创建一个 EXCEL 工作簿对象Dim wd As Excel.ApplicationDim wb As WorkbookSet wd = CreateObject("excel.appl...">
+<link rel="canonical" href="http://localhost:4000/excel/2012/03/22/vba-knowledge.html"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-post">
+	<div class="main clearfix js-main">
+		<div class="col-2 js-col-2">
+			<aside class="js-article-aside"><div class="m-toc js-toc"></div></aside>
+		</div>
+		<div class="col-1">
+			<article class="js-article" itemscope itemtype="http://schema.org/BlogPosting">
+				<meta itemprop="mainEntityOfPage" itemscope itemType="https://schema.org/WebPage"/>
+				<header class="main-header"><h1 itemprop="headline" itemprop="name headline">VBA 在 Excel 中的常用操作</h1><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><time class="article-meta" datetime="2012-03-22T00:00:00+08:00"
+          itemprop="datePublished">Mar 22, 2012
+        </time></div>
+  </div>
+</div>
+</header>
+				<div class="m-article-content js-article-content" itemprop="articleBody"><h2 id="文件操作">文件操作</h2>
+
+<h3 id="引用打开的工作簿">引用打开的工作簿</h3>
+
+<p>使用索引号（从 1 开始）</p>
+
+<pre><code class="language-vbnet">Workbooks(1)
+</code></pre>
+
+<p>使用工作簿名称</p>
+
+<pre><code class="language-vbnet">Workbooks("1.xlsx")
+</code></pre>
+
+<h3 id="创建一个-excel-工作簿对象">创建一个 EXCEL 工作簿对象</h3>
+
+<pre><code class="language-vbnet">Dim wd As Excel.Application
+Dim wb As Workbook
+
+Set wd = CreateObject("excel.application")
+wd.Visible = True
+Set wb = wd.Workbooks.Open(ThisWorkbook.Path &amp; "/test.xls")
+
+' ...
+
+wb.Close
+wd.Quit
+</code></pre>
+
+<h3 id="打开保存关闭工作簿">打开/保存/关闭工作簿</h3>
+
+<pre><code class="language-vbnet">Dim wb As Workbook
+
+wb = Workbooks.Open(ThisWorkbook.Path &amp; "/test.xls")
+
+' ...
+
+wb.Save
+wb.Close
+</code></pre>
+
+<p>关闭所有工作簿</p>
+
+<pre><code class="language-vbnet">Workbooks.close
+</code></pre>
+
+<p>另存为（自动打开新文件关闭源文件）</p>
+
+<pre><code class="language-vbnet">ThisWorkbook.SaveAs FileName:="D:\1.xls"
+</code></pre>
+
+<p>另存为（保留源文件不打开新文件）</p>
+
+<pre><code class="language-vbnet">ThisWorkbook.SaveCopyAs FileName:="D:\1.xls"
+</code></pre>
+
+<h3 id="拷贝文件">拷贝文件</h3>
+
+<pre><code class="language-vbnet">oldfile = ThisWorkBook.Path &amp; "/old.xlsx"
+newfile = ThisWorkBook.Path &amp; "/new.xlsx"
+FileCopy oldfile, newfile
+</code></pre>
+
+<h3 id="删除文件夹下的所有文件">删除文件夹下的所有文件</h3>
+
+<pre><code class="language-vbnet">base = ThisWorkBook.Path &amp; "/文件夹/"
+pattern = base &amp; "*.*"
+file = Dir(pattern, vbReadOnly)
+While file &lt;&gt; ""
+    Kill base &amp; file
+    file = Dir
+Wend
+</code></pre>
+
+<h3 id="创建文件夹">创建文件夹</h3>
+
+<pre><code class="language-vbnet">MkDir(directory)
+</code></pre>
+
+<h3 id="判断文件夹是否存在">判断文件夹是否存在</h3>
+
+<p>以下为不存在即创建</p>
+
+<pre><code class="language-vbnet">If Dir(outputDir, 16) = Empty Then
+    MkDir (outputDir)
+End If
+</code></pre>
+
+<h3 id="判断文件是否存在">判断文件是否存在</h3>
+
+<p>方法 1：</p>
+
+<pre><code class="language-vbnet">Dim fileSystemObject As Object
+
+Set fileSystemObject = CreateObject("Scripting.FileSystemObject")
+
+If fileSystemObject.FileExists(&lt;filepath&gt;) = True Then
+    MsgBox "文件存在"
+End If
+</code></pre>
+
+<p>方法 2：</p>
+
+<pre><code class="language-vbnet">Dim file As String
+
+file = Dir("E:\MyPictures\Pic\logo.gif")
+
+If file &lt;&gt; "" Then
+    MsgBox  "文件存在"
+Endif
+</code></pre>
+
+<h2 id="格式操作">格式操作</h2>
+
+<h3 id="设置边框与自动筛选">设置边框与自动筛选</h3>
+
+<pre><code class="language-vbnet">Set Rng = MyWorkSheet.UsedRange
+With Rng
+    .Borders.LineStyle = xlContinuous
+    .Borders.Weight = xlThin
+    .AutoFilter
+End With
+</code></pre>
+
+<h3 id="获取或者设置单元格背景色">获取或者设置单元格背景色</h3>
+
+<pre><code class="language-vbnet">MyWorkSheet.Cells(i, j).Interior.ColorIndex
+</code></pre>
+
+<h3 id="让某表格选中的单元格变成指定颜色">让某表格选中的单元格变成指定颜色</h3>
+
+<p>在 thisworkbook 中添加如下代码段：</p>
+
+<pre><code class="language-vbnet">Private Sub Workbook_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range)
+    If ActiveSheet.Name = "yoursheet" Then
+        ActiveSheet.UsedRange.Interior.ColorIndex = 0
+        Target.Interior.ColorIndex = 6
+    End If
+End Sub
+</code></pre>
+
+<h3 id="在单元格里回车--换行">在单元格里回车 / 换行</h3>
+
+<p>设置单元格 Value 里使用 <code class="highlighter-rouge">Chr(10)</code> 和 <code class="highlighter-rouge">Chr(13)</code>，分别表示回车、换行。</p>
+
+<h3 id="隐藏行">隐藏行</h3>
+
+<pre><code class="language-vbnet">MyWorkSheet.Rows(i).Hidden = True
+</code></pre>
+
+<h3 id="单元格内容为纯文本">单元格内容为纯文本</h3>
+
+<pre><code class="language-vbnet">sheet.Cells(m, n).NumberFormatLocal = "@"
+</code></pre>
+
+<h2 id="选择">选择</h2>
+
+<h3 id="引用单元格--区域">引用单元格 / 区域</h3>
+
+<pre><code class="language-vbnet">Range("A1") '表示 A1 单元格
+Range("A2:D1") '表示 A2 到 D1 区域
+Range("A2:D1")(3) '表示该区域里的第三个单元格
+Range("D" &amp; i) 'i 为变量
+Range("D3:F4,G10") '引用多个区域
+Range("2:2") '引用第二行
+Range("2:12") '引用第二行到第十二行
+Range("D:A") '引用第 A 到 D 列
+Rows(2) '引用第二行
+Rows("2:4") '引用第二到四行
+Columns("B")
+Columns("B:D")
+Range(Clee1, Cell2) '左上与右下
+Range(Range1, Range2) '取最大范围
+</code></pre>
+
+<h3 id="选中单元格--区域">选中单元格 / 区域</h3>
+
+<pre><code class="language-vbnet">Range("1:1").Select '选中第一行
+</code></pre>
+
+<h3 id="获取当前选中区域">获取当前选中区域</h3>
+
+<pre><code class="language-vbnet">MyWorkSheet.Application.Selection
+</code></pre>
+
+<h2 id="数据结构">数据结构</h2>
+
+<h3 id="dictionary">Dictionary</h3>
+
+<pre><code class="language-vbnet">Dim dict
+Set dict = CreateObject("Scripting.Dictionary")
+
+' 新增，各种类型都可以，包括 Dictionary
+dict.Add "hello", "world"
+
+' 数量
+dict.Count
+
+' 删除
+dict.Remove("hello")
+
+' 判断是否存在
+dict.exists("hello")
+
+' 取值，需要先判断存在再取
+dict.Item("hello")
+
+' 修改、新增
+dict.Item("hello") = "world"
+
+' 循环
+k = dict.Keys
+v = dict.Items
+For i = 0 to dict.count - 1
+    key = k(i)
+    value = v(i)
+Next
+
+' 清空
+dict.RemoveAll
+</code></pre>
+
+<p>参考：<a href="http://www.cnblogs.com/zhjh256/p/6428333.html">Excel vba map/dictionary</a></p>
+
+<h2 id="语言基础">语言基础</h2>
+
+<h3 id="string-to-integerdouble">String to Integer、Double</h3>
+
+<pre><code class="language-vbnet">CInt(MyWorkSheet.Cells(1,7))
+
+CDbl(MyWorkSheet.Cells(1,7))
+</code></pre>
+
+<h3 id="字符串分割获取数组长度">字符串分割/获取数组长度</h3>
+
+<pre><code class="language-vbnet">Dim arr() As String
+arr() = Split(ws.Cells(a, b).Value, "-")
+alen = UBound(arr) - LBound(arr) + 1
+</code></pre>
+
+<h3 id="判断单元格是否为空">判断单元格是否为空</h3>
+
+<p>判断单元格的 value 是否为 ““。</p>
+
+<h3 id="退出">退出</h3>
+
+<p>主要使用 Exit 表达式。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Exit { Do | For | Function | Property | Select | Sub | Try | While }
+</code></pre></div></div>
+
+<p>参见 <a href="https://docs.microsoft.com/en-us/dotnet/visual-basic/language-reference/statements/exit-statement">Exit Statement (Visual Basic)</a></p>
+
+<h2 id="参考">参考</h2>
+
+<ul>
+  <li><a href="http://software-solutions-online.com/converting-data-types/">VBA Converting Data Types</a></li>
+  <li><a href="http://blog.sina.com.cn/s/blog_6d5dcf100101bkhz.html##1">excel vba判断文件是否存在</a></li>
+</ul>
+</div>
+				<footer><meta itemprop="dateModified" content="2012-03-22T00:00:00+08:00"><div class="article-license"><div class="m-license"><div class="clearfix"><p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> license.</p><a class="license" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+      <img alt="Creative Commons License" src="/assets/images/license-cc4.png" />
+    </a><p></p>
+  </div>
+</div></div>
+				</footer>
+			</article>
+			<div class="article-previous-next clearfix"><div class="article-previous"><span>PREVIOUS</span><a href="/python/2012/04/05/learn-python-practise.html">Python 核心编程中文第二版课后练习 2.21 答案</a></div><div class="article-next"><span>NEXT</span><a href="/gecko/2012/03/15/gecko-plugin.html">Firefox 和内嵌 Gecko 程序的 Plugins</a></div></div></div>
+	</div>
+</div></div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script><script>
+  (function() {
+    function scrollAnimateTo(destination, duration, callback) {
+      var $body = $('html, body'), bodyScrollTop = $body.scrollTop();
+      if(bodyScrollTop === destination) { return; }
+      $body.animate({ scrollTop: destination }, duration, callback);
+    }
+    window.scrollTopAnchor = function(anchor, callback) {
+      scrollAnimateTo($(anchor).offset().top, 400, function() {
+        window.history.replaceState(null, '', window.location.href.split('#')[0] + anchor);
+        callback && callback();
+      });
+    }
+  })();
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $articleContent = $('.m-post, .m-page').find('.m-article-content'), $this;
+    $articleContent.children('.highlight').each(function() {
+      $this = $(this);
+      $this.attr('data-lang', $this.find('code').attr('data-lang'));
+    });
+
+    $articleContent.children('h1, h2, h3, h4, h5, h6').each(function() {
+      $this = $(this);
+      $this.append($('<a class="anchor" aria-hidden="true"></a>').html('<svg fill="#000000" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>'));
+    });
+    $articleContent.on('click', '.anchor', function() {
+      window.scrollTopAnchor('#' + $(this).parent().attr('id'));
+    });
+  });
+</script><script>
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $window = $(window);
+    var $pageStage = $('.js-page-stage');
+    var $pageMain = $('.js-main');
+    var $pageFooter = $('.js-page-footer');
+    var $articleContent = $('.js-article-content');
+    var $articleAside = $('.js-article-aside');
+    var $toc = $('.js-toc');
+    var $col2 = $('.js-col-2');
+    var hasTitle = $articleContent.find('h1,h2,h3').length > 0;
+    function asideSticky() {
+      return $col2.css('display') !== 'none' && $pageStage.hasClass('has-toc');
+    }
+    function setTocClass() {
+      if (hasTitle) {
+        !$pageStage.hasClass('has-toc') && $pageStage.addClass('has-toc');
+      }
+    }
+    function setAsideTOC() {
+      var asideTop, asideLeft, scrollBottom, asideBottomTop, lastScrollTop;
+      function init() {
+        var asideOffset = $articleAside.offset();
+        var footerOffset = $pageFooter.offset();
+        var mainOffset = $pageMain.offset();
+        asideTop = mainOffset.top;
+        asideHeight = $toc.outerHeight() + parseInt($articleAside.css('padding-top'), 10) + parseInt($articleAside.css('padding-bottom'), 10);
+        asideLeft = mainOffset.left + $pageMain.outerWidth() - $articleAside.outerWidth() - parseInt($pageMain.css('padding-right'), 10);
+        scrollBottom = footerOffset.top - asideHeight;
+        asideBottomTop = scrollBottom - mainOffset.top;
+      }
+      function setAside(force) {
+        force !== true && (force = false);
+        var scrollTop = $window.scrollTop();
+        if (scrollTop >= asideTop && scrollTop <= scrollBottom) {
+          (!force && lastScrollTop >= asideTop && lastScrollTop <= scrollBottom) ||
+          $articleAside.addClass('fixed').css({
+            left: asideLeft + 'px',
+            top: 0
+          });
+        } else if (scrollTop < asideTop) {
+          (!force && lastScrollTop < asideTop) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: 0
+          });
+        } else {
+          (!force && lastScrollTop > scrollBottom) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: asideBottomTop + 'px'
+          });
+        }
+        lastScrollTop = scrollTop;
+      }
+      asideSticky() && (init(), setAside());
+      $window.on('scroll', function() {
+        asideSticky() && setAside();
+      });
+      $window.on('resize', window.throttle(function() {
+        setTocClass();
+        asideSticky() && (init(), setAside(true));
+      }, 100));
+      setTimeout(init, 4000);
+    }
+    function toc() {
+      var $tocUl = $('<ul></ul>'), $tocLi, $headings = $articleContent.find('h1,h2,h3'), headingsTop = [],
+        scrolling, activeLast, activeCur, rendered = false;
+      function init() {
+        $headings.each(function() {
+          headingsTop.push(Math.floor($(this).offset().top));
+        });
+      }
+      function setActiveHeading(element, disabled) {
+        var scrollTop = $window.scrollTop(), i;
+        if (disabled || headingsTop.length < 1) { return; }
+        if (element) {
+          activeCur = element;
+        } else {
+          for (i = 0; i < headingsTop.length; i++) {
+            if (scrollTop >= headingsTop[i]) {
+              activeCur = $tocLi.eq(i);
+            } else {
+              activeCur || (activeCur = $tocLi.eq(i));
+              break;
+            }
+          }
+        }
+        activeLast && activeLast.removeClass('toc-active');
+        (activeLast = activeCur).addClass('toc-active');
+      }
+      function render() {
+        $toc.append($tocUl);
+        $headings.each(function() {
+          var $this = $(this);
+          $tocUl.append($('<li></li>').addClass('toc-' + $this.prop("tagName").toLowerCase())
+            .append($('<a></a>').text($this.text()).attr('href', '#' + $this.prop('id'))));
+        });
+        $tocLi = $tocUl.children('li');
+        $tocUl.on('click', 'a', function(e) {
+          e.preventDefault();
+          var $this = $(this);
+          scrolling = true;
+          setActiveHeading($this.parent());
+          window.scrollTopAnchor($this.attr('href'), function() {
+            scrolling = false;
+          });
+        });
+        rendered = true;
+      }
+      asideSticky() && (render(), $window.on('load', function() {
+        setTimeout(function() {
+          init();
+          setActiveHeading(null, scrolling);
+        }, 1000);
+      }));
+      $window.on('resize', window.throttle(function() {
+        if (asideSticky()) {
+          rendered || render();
+          init();
+          setActiveHeading(null, scrolling);
+        }
+      }));
+      $window.on('scroll', function() {
+        asideSticky() && setActiveHeading(null, scrolling);
+      });
+    }
+    setTocClass();
+    toc();
+    setTimeout(function() {
+      setAsideTOC();
+    }, 1000);
+  });</script></body>
+</html>

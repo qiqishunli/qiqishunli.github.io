@@ -1,0 +1,444 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Blog - 浅浅蓝's blog</title>
+<meta name="description" content="一个热爱前端开发的小姑娘
+">
+<link rel="canonical" href="http://localhost:4000/blog/page2/"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-home">
+  <div class="main">
+    <div class="m-post-list"><article><h1><a href="/markdown/2017/09/01/markdown-odd-skills.html">关于 Markdown 的一些奇技淫巧</a></h1>
+          <div class="m-article-content">自从几年前开始在 GitHub 玩耍，接触到 Markdown 之后，就一发不可收拾，在各种文档编辑上，有条件用 Markdown 的尽量用，不能用的创造条件也要用——README、博客、公众号、接口文档等等全都是，比如当前这篇文章就是用 Markdown 编辑而成。
+
+这几年也发现越来越多的网站和程序提供了对 Markdown 的支持，从最初接触的 GitHub、Jekyll，到简书、掘金、CSDN 等等，由此也从别人做得好的文档中，学到了一些『奇技淫巧』，所以本文不是对 Markdown 基础语法的介绍，而是一些相对高级、能将 Markdown 玩出更多花样的小技巧。
+
+注：如下技巧大多是利用 Markdown 兼容部分 HTML 标签的特性来完成，不一定在所有网站和软件里都完全支...</div><a href="/markdown/2017/09/01/markdown-odd-skills.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Sep 01, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/java/2017/08/20/java-auto-boxing-unboxing.html">从一个 NullPointerException 探究 Java 的自动装箱拆箱机制</a></h1>
+          <div class="m-article-content">前天遇到了一个 NullPointerException，触发的代码类似下面这样：
+
+public class Test {
+    public static long test(long value) {
+        return value;
+    }
+
+    public static void main(String[] args) {
+        Long value = null;
+        // ...
+        test(value);
+    }
+}
+
+
+main 方法里的代码实际上相当于调用 test(null);，为什么不直接这样写呢？因为编译不过，会报 错误: 不兼容的类型: &lt;空值&gt;无法转换为long。
+
+抛出问题
+
+运行...</div><a href="/java/2017/08/20/java-auto-boxing-unboxing.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Aug 20, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/blog/2017/04/09/a-difficult-decision.html">我做了一个有点艰难的决定</a></h1>
+          <div class="m-article-content">我做了一个有点艰难的决定，离开帝都，回到了武汉工作和生活。
+
+这让我想起近几年在各种新闻流标题里经常看到的两种说法，“逃离北上广”和“逃回北上广”，既然是逃，自然便是有什么东西在后面追，或者是高房价，或者是职业前景，或者是生活压力。回首我自己的决策过程，虽然也像现在好多年轻人一样处在“留不下的城市，回不去的故乡”的尴尬境地里，有一些无奈的成分，庆幸的是选择的成分相对还是更多一点。
+
+身处北京时，常有一种莫名的“临时感”，总感觉生活里的很多东西都是临时不可长久持续的：房子是租来的，不想花钱和精力去提升它的舒适度；工作和同事们很给力，但不知道什么时候会中断，离开；想进行一些学习与深造，会考虑周期那么长，会不会无法在北京待到学完的时候？后来我明白了，这就是一个心态的问题，总认为生活不在北京，...</div><a href="/blog/2017/04/09/a-difficult-decision.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Apr 09, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/blog/2017/02/19/the-kite-runner.html">读书：追风筝的人</a></h1>
+          <div class="m-article-content">
+  《追风筝的人》确实是一部相当优秀而又深刻的作品。——小别老师
+
+
+
+
+图 1. 《追风筝的人》/卡勒德.胡赛尼 封面
+
+当在我用一整个下午读完这本书，印象最深的句子是下面这两个：
+
+
+  那儿有再次成为好人的路。
+
+
+
+  为你，千千万万遍。
+
+
+这样的句子翻译之后总觉得少了点意思，感受下原文：
+
+
+  There is a way to be good again.
+
+
+
+  For you, a thousand times over.
+
+
+就是这两个简单的句子，承载了故事的主要线索——自我救赎与献身。
+
+剧透
+
+小说其实讲述了一个非常简单的故事：
+
+一心只想讨父亲欢心的少爷阿米尔与他忠诚的仆人哈桑从小一起长大，哈桑总是为阿米尔背锅，还在危急关头为他挺身而出，但是在哈桑被反社...</div><a href="/blog/2017/02/19/the-kite-runner.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Feb 19, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/blog/2017/01/01/my-2016.html">我的 2016 盘点</a></h1>
+          <div class="m-article-content">总结是为了更好地再上路。
+
+在我人生的前二十几年是没有做年度计划和总结的习惯的，但在 2015-12-31 时和饭团团员们心血来潮一起做了个 2016 PLAN，现在 2016 已经被完整地甩在身后，是时候回顾以明得失，展望以知进退了。
+
+如果用一句话来概括，这一年是玩得不错，学得不咋样；展开来讲的话，按传统得欲扬先抑，先把批评做在前头，上成绩单：
+
+成绩单
+
+当时制定的计划一共 16 项，现状如下：
+
+
+
+自评
+
+惨，不及格。
+
+当然我的过去就是我存在的基石，一味地全盘否定并不能改变什么，需要认可我自己的是清单里可能最难、但对我提升最大的两项任务完成了。
+
+反思
+
+我对跨度较大的计划的把控能力略差，做这件事情需要的能力跟项目管理很类似，都还需要我有意识地花大力气去培养。
+
+
+  
+ ...</div><a href="/blog/2017/01/01/my-2016.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Jan 01, 2017</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/tools/2016/12/14/rtfsc-with-opengrok.html">搭建大型源码阅读环境——使用 OpenGrok</a></h1>
+          <div class="m-article-content">RTFSC 是程序员打怪升级路上避不开的功课，那营造一个舒适的环境来提升上课的体验就很有必要了。
+
+比如阅读 AOSP 这种大型源码，用什么姿势来阅读才能丝般顺滑，让 F**king Source Code 也变得不那么可恶呢？
+
+工具的选择
+
+阅读源码的工具我尝试过以下几类：
+
+
+  
+    IDE
+
+    在看特定类型项目时这是我的首选。比如它原本就是一个 Visual Studio 工程，那当然用 Visual Studio 来打开阅读，看 Android App 或者 Library 源码当然用 Android Studio 体验更好。
+  
+  
+    编辑器配合插件
+
+    比如 Vim + Ctags + Cscope，再配合文件模糊查找插件 LeaderF 和神...</div><a href="/tools/2016/12/14/rtfsc-with-opengrok.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Dec 14, 2016</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/vim/2016/10/22/vim-markdown-toc-release.html">vim-markdown-toc 发布 v1.0 版</a></h1>
+          <div class="m-article-content">前几天，第一款由我独立开发的 Vim 插件 vim-markdown-toc 升级了功能，发布了 v1.0 版本。
+
+它的主要功能是为 Markdown 文件生成 toc（Table of Contents）、更新已经存在的 toc 和在保存时自动更新 toc。
+
+说它是当前使用 Vim 编辑 Markdown 文件时维护 Table of Contents 的最佳解决方案应该不为过。
+
+下载地址
+
+
+  vim-markdown-toc
+
+
+主要更新
+
+
+  
+    支持使用 :UpdateToc 命令更新已经存在的 toc。
+  
+  
+    支持保存时自动更新 toc。
+  
+
+
+功能演示
+
+
+
+一些体会
+
+
+  
+    相比于 awesome-adb 的一千多个 Star...</div><a href="/vim/2016/10/22/vim-markdown-toc-release.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Oct 22, 2016</span></div>
+  </div>
+</div>
+</article></div><nav class="m-pagination"><p>103 post articles, 15 pages.</p>
+          <ul><li><a class="round-button" href="/">
+                <div class="icon icon--previous"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+</svg>
+</div></a>
+              </li><li>
+                  <a class="round-button" href="/"><span>1</span></a>
+                </li><li>
+                  <div class="round-button cur"><span>2</span></div>
+                </li><li>
+                      <a class="round-button" href="/blog/page3"><span>3</span></a>
+                    </li><li>
+                      <a class="round-button" href="/blog/page4"><span>4</span></a>
+                    </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
+                      <a class="round-button" href="/blog/page15"><span>15</span></a>
+                    </li><li>
+                <a class="round-button" href="/blog/page3">
+                  <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+</svg>
+</div>
+                </a>
+              </li></ul>
+        </nav></div>
+</div>
+</div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script></body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>配置 Node.js 开发环境——使用 Atom - 浅浅蓝's blog</title>
+<meta name="description" content="Node.js 的开发环境选择很多，比如 WebStrom/Visual Studio Code/Atom/HBuilder，还有万能的 Vim/Emacs 等等。根据我个人的试用，WebStorm 应该是配置起来最省心，用起来最顺手的选择，而且有 Android Studio 和 PyCharm 的使用经验上手...">
+<link rel="canonical" href="http://localhost:4000/node.js/2016/04/18/develop-nodejs-with-atom.html"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-post">
+	<div class="main clearfix js-main">
+		<div class="col-2 js-col-2">
+			<aside class="js-article-aside"><div class="m-toc js-toc"></div></aside>
+		</div>
+		<div class="col-1">
+			<article class="js-article" itemscope itemtype="http://schema.org/BlogPosting">
+				<meta itemprop="mainEntityOfPage" itemscope itemType="https://schema.org/WebPage"/>
+				<header class="main-header"><h1 itemprop="headline" itemprop="name headline">配置 Node.js 开发环境——使用 Atom</h1><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><time class="article-meta" datetime="2016-04-18T00:00:00+08:00"
+          itemprop="datePublished">Apr 18, 2016
+        </time></div>
+  </div>
+</div>
+</header>
+				<div class="m-article-content js-article-content" itemprop="articleBody"><p>Node.js 的开发环境选择很多，比如 WebStrom/Visual Studio Code/Atom/HBuilder，还有万能的 Vim/Emacs 等等。</p>
+
+<p>根据我个人的试用，WebStorm 应该是配置起来最省心，用起来最顺手的选择，而且有 Android Studio 和 PyCharm 的使用经验上手毫无障碍。但一来 WebStorm 价格不菲，二来最近刚刚被 Atom 圈粉，而 Visual Studio Code 和 Atom 又是这些编辑器里面与 Node.js 渊源最深的，所以最终决定最近在学习 Node.js 以及写一些练手项目时以使用 Atom 为主，Vim 为辅。</p>
+
+<h2 id="安装-atom-插件">安装 Atom 插件</h2>
+
+<p>主要是它们：</p>
+
+<ul>
+  <li><strong>atom-ternjs</strong> 用于 Javascript 和 Node.js 的自动补全</li>
+  <li><strong>script</strong> 用于一键运行程序</li>
+</ul>
+
+<h3 id="自动补全插件">自动补全插件</h3>
+
+<p>Atom 上的 Javascript 自动补全主要依赖 atom-ternjs 插件，貌似没有什么其它更好的选择。（配合 autocomplete-plus 插件使用，Atom 默认已经安装。）</p>
+
+<p>安装方法与安装其它插件无异，主要有三种选择：</p>
+
+<ol>
+  <li>
+    <p>图形界面。</p>
+
+    <p>在 Atom 的 Settings &gt; Install 里搜索找到 atom-ternjs 并安装。</p>
+
+    <p>这种方法在国内需要科学上网。</p>
+  </li>
+  <li>
+    <p>命令行。</p>
+
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apm install atom-ternjs
+</code></pre></div>    </div>
+
+    <p>这种方法在国内也需要科学上网。</p>
+  </li>
+  <li>
+    <p>本地安装。</p>
+
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/.atom/packages
+git clone https://github.com/tststs/atom-ternjs.git
+<span class="nb">cd </span>atom-ternjs
+npm install
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="一键运行插件">一键运行插件</h3>
+
+<p>安装 script 插件，然后有两种方法可以一键运行/结束程序了：</p>
+
+<ol>
+  <li>
+    <p>Packages &gt; Script &gt; Run Script/Stop Script。</p>
+  </li>
+  <li>
+    <p>快捷键。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th> </th>
+          <th>Mac</th>
+          <th>Windows</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>运行</td>
+          <td><kbd>cmd</kbd>+<kbd>i</kbd></td>
+          <td><kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>b</kbd></td>
+        </tr>
+        <tr>
+          <td>结束</td>
+          <td><kbd>ctrl</kbd>+<kbd>c</kbd></td>
+          <td><kbd>ctrl</kbd>+<kbd>q</kbd></td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<h2 id="配置项目">配置项目</h2>
+
+<p>atom-ternjs 插件对项目配置做了可视化，可以通过菜单来操作。</p>
+
+<ol>
+  <li>
+    <p>File &gt; Open 打开 Node.js 项目文件夹。</p>
+  </li>
+  <li>
+    <p>Package &gt; Atom Ternjs &gt; Configure project</p>
+
+    <p><img src="/images/posts/node/ternjs-configure-project.jpeg" alt="" /></p>
+
+    <p>Save &amp; Restart server 之后会在项目根目录生成 .tern-project 文件，该配置文件里常用字段：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>字段名</th>
+          <th>含义</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ecmaVersion</td>
+          <td>选择 ECMAScript 版本</td>
+        </tr>
+        <tr>
+          <td>libs</td>
+          <td>browser 表示原生 js 补全，jquery 代表 jQuery 补全</td>
+        </tr>
+        <tr>
+          <td>loadEagerly</td>
+          <td>指定加载解析的 js 文件</td>
+        </tr>
+        <tr>
+          <td>dontLoad</td>
+          <td>排除加载的文件</td>
+        </tr>
+        <tr>
+          <td>plugins</td>
+          <td>ternjs 使用的插件，配置的扩展补全的库等</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>目前插件的配置页面暂不支持 plugins 部分配置，需要手动配置。</p>
+
+    <p>比如一份最简单的 .tern-project 文件的示例：</p>
+
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="s2">"ecmaVersion"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="s2">"libs"</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="s2">"loadEagerly"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">"**/*.js"</span>
+  <span class="p">],</span>
+  <span class="s2">"plugins"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"node"</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s2">"node-express"</span><span class="p">:</span> <span class="p">{}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+
+    <p>它代表使用 ECMAScript 6，递归加载项目文件夹下所有的 js 文件（包括 node_modules），使用 ternjs 的 node 插件用于 Node.js 核心库补全，node-express 插件用于 express 补全。</p>
+
+    <p>这部分推荐详细阅读一下 <a href="https://github.com/tststs/atom-ternjs">atom-ternjs</a> 的 README，会更清楚怎么回事。</p>
+  </li>
+  <li>
+    <p>创建/修改 .tern-project 文件后，执行 Packages &gt; Atom Ternjs &gt; Restart server。</p>
+
+    <p>进行完这一步以后，顺利的话你应该已经能愉快地看到原生 js 和 Node.js 的自动补全了；不顺利的话，看看下面的 Q &amp; A 一节，有我遇到的问题的记录。</p>
+  </li>
+</ol>
+
+<p>最终效果：</p>
+
+<p><img src="/images/posts/node/ternjs-auto-completion.jpeg" alt="" /></p>
+
+<h2 id="q--a">Q &amp; A</h2>
+
+<ol>
+  <li>
+    <p>在 Mac 下按步骤官方的 README 操作后自动提示出不来？</p>
+
+    <p>我在 Windows 下按官方指南配置 atom-ternjs 倒是很顺利，按默认步骤操作完，然后在 plugins 一节添加 node 就一切 OK 了，但在 Mac 下貌似不配置 loadEagerly 为 <code class="highlighter-rouge">**/*.js</code> 智能提示出不来。</p>
+
+    <p>另外就是 .tern-project 文件放置的位置，最好与 package.json 放在同级目录。</p>
+  </li>
+  <li>
+    <p>安装 atom-ternjs 总是失败。</p>
+
+    <p>科学上网。</p>
+  </li>
+  <li>
+    <p>Vim 也有 <a href="https://github.com/ternjs/tern_for_vim">tern_for_vim</a>，作为主力编辑器，为何不使用它来写 Node.js 呢？</p>
+
+    <p>别提了，如果没有把 .tern-project 文件配置好，打一个 <code class="highlighter-rouge">.</code> 之后能卡五秒，严重拉低 Vim 编辑速度。</p>
+
+    <p>不过 tern_for_vim 也有一个好处，那就是不用像 atom-ternjs 这样每次改完配置后都要手动 Restart server。</p>
+  </li>
+</ol>
+
+<h2 id="后话">后话</h2>
+
+<p>ternjs 功能强大，包括：</p>
+
+<ul>
+  <li>自动补全方法和变量</li>
+  <li>查找引用/定义</li>
+  <li>显示方法详情，包括方法签名和文档等</li>
+  <li>简单的重构</li>
+</ul>
+
+<p>把它用好了还是能不错地提升开发效率的。</p>
+
+</div>
+				<footer><meta itemprop="dateModified" content="2016-04-18T00:00:00+08:00"><div class="article-license"><div class="m-license"><div class="clearfix"><p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> license.</p><a class="license" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+      <img alt="Creative Commons License" src="/assets/images/license-cc4.png" />
+    </a><p></p>
+  </div>
+</div></div>
+				</footer>
+			</article>
+			<div class="article-previous-next clearfix"><div class="article-previous"><span>PREVIOUS</span><a href="/android/2016/04/20/determine-if-my-activities-foreground.html">判断前台 Activity 是否属于本进程</a></div><div class="article-next"><span>NEXT</span><a href="/github/2016/04/07/how-to-use-github-effective.html">如何有效使用 GitHub</a></div></div></div>
+	</div>
+</div></div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script><script>
+  (function() {
+    function scrollAnimateTo(destination, duration, callback) {
+      var $body = $('html, body'), bodyScrollTop = $body.scrollTop();
+      if(bodyScrollTop === destination) { return; }
+      $body.animate({ scrollTop: destination }, duration, callback);
+    }
+    window.scrollTopAnchor = function(anchor, callback) {
+      scrollAnimateTo($(anchor).offset().top, 400, function() {
+        window.history.replaceState(null, '', window.location.href.split('#')[0] + anchor);
+        callback && callback();
+      });
+    }
+  })();
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $articleContent = $('.m-post, .m-page').find('.m-article-content'), $this;
+    $articleContent.children('.highlight').each(function() {
+      $this = $(this);
+      $this.attr('data-lang', $this.find('code').attr('data-lang'));
+    });
+
+    $articleContent.children('h1, h2, h3, h4, h5, h6').each(function() {
+      $this = $(this);
+      $this.append($('<a class="anchor" aria-hidden="true"></a>').html('<svg fill="#000000" width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>'));
+    });
+    $articleContent.on('click', '.anchor', function() {
+      window.scrollTopAnchor('#' + $(this).parent().attr('id'));
+    });
+  });
+</script><script>
+  window.Lazyload.js('https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js', function() {
+    var $window = $(window);
+    var $pageStage = $('.js-page-stage');
+    var $pageMain = $('.js-main');
+    var $pageFooter = $('.js-page-footer');
+    var $articleContent = $('.js-article-content');
+    var $articleAside = $('.js-article-aside');
+    var $toc = $('.js-toc');
+    var $col2 = $('.js-col-2');
+    var hasTitle = $articleContent.find('h1,h2,h3').length > 0;
+    function asideSticky() {
+      return $col2.css('display') !== 'none' && $pageStage.hasClass('has-toc');
+    }
+    function setTocClass() {
+      if (hasTitle) {
+        !$pageStage.hasClass('has-toc') && $pageStage.addClass('has-toc');
+      }
+    }
+    function setAsideTOC() {
+      var asideTop, asideLeft, scrollBottom, asideBottomTop, lastScrollTop;
+      function init() {
+        var asideOffset = $articleAside.offset();
+        var footerOffset = $pageFooter.offset();
+        var mainOffset = $pageMain.offset();
+        asideTop = mainOffset.top;
+        asideHeight = $toc.outerHeight() + parseInt($articleAside.css('padding-top'), 10) + parseInt($articleAside.css('padding-bottom'), 10);
+        asideLeft = mainOffset.left + $pageMain.outerWidth() - $articleAside.outerWidth() - parseInt($pageMain.css('padding-right'), 10);
+        scrollBottom = footerOffset.top - asideHeight;
+        asideBottomTop = scrollBottom - mainOffset.top;
+      }
+      function setAside(force) {
+        force !== true && (force = false);
+        var scrollTop = $window.scrollTop();
+        if (scrollTop >= asideTop && scrollTop <= scrollBottom) {
+          (!force && lastScrollTop >= asideTop && lastScrollTop <= scrollBottom) ||
+          $articleAside.addClass('fixed').css({
+            left: asideLeft + 'px',
+            top: 0
+          });
+        } else if (scrollTop < asideTop) {
+          (!force && lastScrollTop < asideTop) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: 0
+          });
+        } else {
+          (!force && lastScrollTop > scrollBottom) ||
+          $articleAside.removeClass('fixed').css({
+            left: 0,
+            top: asideBottomTop + 'px'
+          });
+        }
+        lastScrollTop = scrollTop;
+      }
+      asideSticky() && (init(), setAside());
+      $window.on('scroll', function() {
+        asideSticky() && setAside();
+      });
+      $window.on('resize', window.throttle(function() {
+        setTocClass();
+        asideSticky() && (init(), setAside(true));
+      }, 100));
+      setTimeout(init, 4000);
+    }
+    function toc() {
+      var $tocUl = $('<ul></ul>'), $tocLi, $headings = $articleContent.find('h1,h2,h3'), headingsTop = [],
+        scrolling, activeLast, activeCur, rendered = false;
+      function init() {
+        $headings.each(function() {
+          headingsTop.push(Math.floor($(this).offset().top));
+        });
+      }
+      function setActiveHeading(element, disabled) {
+        var scrollTop = $window.scrollTop(), i;
+        if (disabled || headingsTop.length < 1) { return; }
+        if (element) {
+          activeCur = element;
+        } else {
+          for (i = 0; i < headingsTop.length; i++) {
+            if (scrollTop >= headingsTop[i]) {
+              activeCur = $tocLi.eq(i);
+            } else {
+              activeCur || (activeCur = $tocLi.eq(i));
+              break;
+            }
+          }
+        }
+        activeLast && activeLast.removeClass('toc-active');
+        (activeLast = activeCur).addClass('toc-active');
+      }
+      function render() {
+        $toc.append($tocUl);
+        $headings.each(function() {
+          var $this = $(this);
+          $tocUl.append($('<li></li>').addClass('toc-' + $this.prop("tagName").toLowerCase())
+            .append($('<a></a>').text($this.text()).attr('href', '#' + $this.prop('id'))));
+        });
+        $tocLi = $tocUl.children('li');
+        $tocUl.on('click', 'a', function(e) {
+          e.preventDefault();
+          var $this = $(this);
+          scrolling = true;
+          setActiveHeading($this.parent());
+          window.scrollTopAnchor($this.attr('href'), function() {
+            scrolling = false;
+          });
+        });
+        rendered = true;
+      }
+      asideSticky() && (render(), $window.on('load', function() {
+        setTimeout(function() {
+          init();
+          setActiveHeading(null, scrolling);
+        }, 1000);
+      }));
+      $window.on('resize', window.throttle(function() {
+        if (asideSticky()) {
+          rendered || render();
+          init();
+          setActiveHeading(null, scrolling);
+        }
+      }));
+      $window.on('scroll', function() {
+        asideSticky() && setActiveHeading(null, scrolling);
+      });
+    }
+    setTocClass();
+    toc();
+    setTimeout(function() {
+      setAsideTOC();
+    }, 1000);
+  });</script></body>
+</html>

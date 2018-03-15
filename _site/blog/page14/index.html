@@ -1,0 +1,455 @@
+<!DOCTYPE html><html lang="en">
+  <head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Blog - 浅浅蓝's blog</title>
+<meta name="description" content="一个热爱前端开发的小姑娘
+">
+<link rel="canonical" href="http://localhost:4000/blog/page14/"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
+<!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
+<meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
+<!-- for Edge on Windows 10 https://msdn.microsoft.com/en-us/library/dn255024(v=vs.85).aspx --><meta name="msapplication-TileImage" content="/assets/images/logo/icon-144x144.png"><meta name="msapplication-square310x310logo" content="/assets/images/logo/icon-310x310.png"><meta name="msapplication-wide310x150logo" content="/assets/images/logo/icon-310x150.png"><meta name="msapplication-square150x150logo" content="/assets/images/logo/icon-150x150.png"><meta name="msapplication-square70x70logo" content="/assets/images/logo/icon-70x70.png">
+<meta name="msapplication-TileColor" content="#eeeeee"><link rel="stylesheet" href="/assets/css/blog.css"><script>
+  window.isArray = function(val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+  };
+  window.isString = function(val) {
+    return typeof val === 'string';
+  };
+  window.Lazyload = (function(doc) {
+    var queue = {js: [], css: []}, sources = {js: {}, css: {}}, context = this;
+    var Set = (function() {
+      var add = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (data[i] === item) {
+            return;
+          }
+        }
+        this.size ++;
+        data.push(item);
+        return data;
+      }
+
+      var Set = function(data) {
+        this.size = 0;
+        this._data = [];
+        if (data.length > 0) {
+          for (i = 0; i < data.length; i++) {
+            add.call(this, data[i]);
+          }
+        }
+      }
+      Set.prototype.add = add;
+      Set.prototype.get = function(index) { return this._data[index]; };
+      Set.prototype.has = function(item) {
+        var i, data = this._data;
+        for (i = 0; i < data.length; i++) {
+          if (this.get(i) === item) {
+            return true;
+          }
+        }
+        return false;
+      };
+      Set.prototype.is = function(map) {
+        if (map._data.length !== this._data.length) { return false; }
+        var i, j, flag, tData = this._data, mData = map._data;
+        for (i = 0; i < tData.length; i++) {
+          for (flag = false, j = 0; j < mData.length; j++) {
+            if (tData[i] === mData[j]) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag) { return false; }
+        }
+        return true;
+      };
+      Set.prototype.values = function() {
+        return this._data;
+      };
+      return Set;
+    })();
+
+    var createNode = function(name, attrs) {
+      var node = doc.createElement(name), attr;
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          node.setAttribute(attr, attrs[attr]);
+        }
+      }
+      return node;
+    }
+    var end = function(type, url, urls) {
+      var s, q, qi, cbs, i, j, cur,
+        val, flag;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        s[url] = true;
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (cur.urls.has(url)) {
+            qi = cur, val = qi.urls.values();
+            qi && (cbs = qi.callbacks);
+            for (flag = true, j = 0; j < val.length; j++) {
+              cur = val[j]
+              if (!s[cur]) {
+                flag = false;
+              }
+            }
+            if (flag && cbs && cbs.length > 0) {
+              for (j = 0; j < cbs.length; j++) {
+                cbs[j].call(context);
+              }
+              qi.load = true;
+            }
+          }
+        }
+      }
+    };
+    var load = function(type, urls, callback) {
+      var s, si, q, qi, node, i, cur, flag,
+        _urls = typeof urls === 'string' ? new Set([urls]) : new Set(urls), val, url;
+      if (type === 'js' || type ==='css') {
+        s = sources[type], q = queue[type];
+        for (i = 0; i < q.length; i++) {
+          cur = q[i];
+          if (_urls.is(cur.urls)) {
+            qi = cur;
+            break;
+          }
+        }
+        val = _urls.values();
+        if (qi) {
+          callback && (qi.load || qi.callbacks.push(callback));
+          callback && (qi.load && callback());
+        } else {
+          q.push({
+            urls: _urls,
+            callbacks: callback ? [callback] : [],
+            load: false
+          });
+          for (i = 0; i < val.length; i++) {
+            node = null, url = val[i];
+            if (s[url] === undefined) {
+              (type === 'js' ) && (node = createNode('script', { src: url }));
+              (type === 'css') && (node = createNode('link', { rel: 'stylesheet', href: url }));
+              if (node) {
+                node.onload = (function(type, url) {
+                  return function() {
+                    end(type, url);
+                  }
+                })(type, url);
+                (doc.head || doc.body).appendChild(node);
+                s[url] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    return {
+      js: function(url, callback) {
+        load('js', url, callback);
+      },
+      css: function(url, callback) {
+        load('css', url, callback);
+      }
+    };
+  })(this.document);
+
+  window.throttle = function(func, wait) {
+    var args, result, thisArg, timeoutId, lastCalled = 0;
+
+    function trailingCall() {
+      lastCalled = new Date;
+      timeoutId = null;
+      result = func.apply(thisArg, args);
+    }
+    return function() {
+      var now = new Date,
+        remaining = wait - (now - lastCalled);
+
+      args = arguments;
+      thisArg = this;
+
+      if (remaining <= 0) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        lastCalled = now;
+        result = func.apply(thisArg, args);
+      } else if (!timeoutId) {
+        timeoutId = setTimeout(trailingCall, remaining);
+      }
+      return result;
+    };
+  };
+
+  window.hasEvent = function(event) {
+    return 'on'.concat(event) in window.document;
+  }
+</script></head>
+  <body>
+    <div class="m-page-stage js-page-stage">
+      <div class="m-page-content"><header class="m-page-header">
+  <div class="main clearfix">
+    <div class='site-logo'><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24">
+<style type="text/css">
+	.st0{fill:#666666;}
+</style>
+<path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
+	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
+</svg><a title="一个热爱前端开发的小姑娘
+" href="/">浅浅蓝's blog</a></div>
+    <nav>
+      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<div class="m-page-main"><div class="m-home">
+  <div class="main">
+    <div class="m-post-list"><article><h1><a href="/python/2012/04/05/learn-python-practise.html">Python 核心编程中文第二版课后练习 2.21 答案</a></h1>
+          <div class="m-article-content">2-2
+
+(a) 计算 1 + 2 * 4
+
+(b) 无输出
+
+(c) 一样。无输出语句。
+
+(d) 单独执行无输出，在交互解释器里执行输出结果。
+
+(e)print 1 + 2 * 4
+
+2-4
+
+(a)
+
+str = raw_input('input a str:')
+print str
+
+
+(b)
+
+str = raw_input('input a int:')
+print int(str)
+
+
+2-5
+
+(a)
+
+i = 0
+while i &lt;= 10:
+    print i,
+    i += 1
+
+
+(b)
+
+for eachNum in range(11):
+    print eachNum,
+
+
+2-6
+
+num = raw_input('input a nu...</div><a href="/python/2012/04/05/learn-python-practise.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Apr 05, 2012</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/excel/2012/03/22/vba-knowledge.html">VBA 在 Excel 中的常用操作</a></h1>
+          <div class="m-article-content">文件操作
+
+引用打开的工作簿
+
+使用索引号（从 1 开始）
+
+Workbooks(1)
+
+
+使用工作簿名称
+
+Workbooks("1.xlsx")
+
+
+创建一个 EXCEL 工作簿对象
+
+Dim wd As Excel.Application
+Dim wb As Workbook
+
+Set wd = CreateObject("excel.application")
+wd.Visible = True
+Set wb = wd.Workbooks.Open(ThisWorkbook.Path &amp; "/test.xls")
+
+' ...
+
+wb.Close
+wd.Quit
+
+
+打开/保存/关闭工作簿
+
+Dim wb As Workbook
+
+wb = Workbooks.Open...</div><a href="/excel/2012/03/22/vba-knowledge.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Mar 22, 2012</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/gecko/2012/03/15/gecko-plugin.html">Firefox 和内嵌 Gecko 程序的 Plugins</a></h1>
+          <div class="m-article-content">昨日在 JumuFENG 同学建的 firefox 交流群 (81424441) 里与群友们说起插件相关的一些东西，自己在本地测试了一下，然后推论出一些粗浅认识总结如下：（欢迎有兴趣和正在进行 mozilla 相关的一些开发的朋友加群交流）
+
+一般来讲，对于 firefox 和其它内嵌 Gecko 内核的应用程序来讲，其插件的注册和搜索的机制应该与如下内容有关（windows 下）:
+
+(1) 程序会优先考虑可执行文件同级的 plugins 目录下的 DLL 等类型文件，判断文件的命名是否符合插件特征且通过某种机制确定其是否为插件。命名规范：如 flash 插件的 dll 名为 NPSWF32.DLL，改成 asdfjljlk.dll 则无法识别，NPSWF311112.dll 这种则...</div><a href="/gecko/2012/03/15/gecko-plugin.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Mar 15, 2012</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/gecko/2012/03/01/mozilla-file-tree.html">Moziila 文件结构概览（译）</a></h1>
+          <div class="m-article-content">/**
+ * 文件名：Moziila 文件结构概览
+ * 来  源：https://developer.mozilla.org/en/Source_code_directories_overview
+ * 翻  译：mzlogin#qq.com
+ * 日  期：2012 年 2 月 22 日
+ *
+ */
+
+源码目录概览
+
+这个文档是一份为开发人员提供的 Mozilla 源码目录结构树的指南。它提供源码的鸟瞰以方便开发人员理解 Mozilla 里有什么，到哪里去找想要的东西。它对一个刚刚学习 Mozilla 源码的开发人员来讲是一份不错的文档。
+
+这份文档包含 SeaMonkey，Firefox 和 Toolkit 的相关材料。
+
+这是一份根据 Mozilla 的源码树按月更新的文档。...</div><a href="/gecko/2012/03/01/mozilla-file-tree.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Mar 01, 2012</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/gecko/2012/02/24/gecko-embed.html">将 Mozilla 源码里的 winEmbed 工程移植到 VC</a></h1>
+          <div class="m-article-content">最近在学习怎么将 Gecko 嵌入到自己的应用程序中，下载了一份比较早一点的源码在对照官方文档痛苦地推进——网上相关资料确实相当缺乏，难道大家都各种 webkit 去了？我的计划是先弄清怎么用，让程序跑起来，然后再根据官方文档结构说明去定制，削减掉不需要的部分，折腾这个移植就花了我不少时间，果断觉得应该跟大家分享之。废话不说,直接上过程。
+
+下载xulrunner源码并编译。
+
+我这里用的 1.9.2rc1 版本，对应 firefox 3.6.X。
+
+源码下载地址：ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/releases/1.9.2rc1/source/
+
+编译环境 mozilla-build 下载地址：http://ftp.mo...</div><a href="/gecko/2012/02/24/gecko-embed.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Feb 24, 2012</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/hge/2012/02/12/hge.html">HGE 引擎学习笔记 1——如何模拟物理碰撞</a></h1>
+          <div class="m-article-content">模拟物理碰撞要解决的几个问题：
+
+
+  
+    怎样模拟速度的变化？
+
+    设置一个摩擦系数 friction(0&lt;friction&lt;1.0) 和响应用户按键之后的一个 X 坐标单时间片增量 dx，一个 Y 坐标单时间片增量 dy，每隔一个时间片 dx *= friction; dy *= friction; 只要参数设置得当，看起来就会觉得速度自然地减慢。因为我们所用的浮点数的数据类型的精度限制，物体在经过一定数量时间片后就会停下来。
+  
+  
+    怎样模拟碰撞？
+
+    每个时间片处理过程中，判断物体的边缘坐标加上 dx 与 dy 后有没有超过屏幕边缘，如果超过，则采取一定的策略重新设置物体坐标让其在正常范围内，如 X 轴超过，则对 dx 取反；如 Y 轴...</div><a href="/hge/2012/02/12/hge.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Feb 12, 2012</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/algorithm/2011/11/20/permutation.html">简单的全排列算法实现</a></h1>
+          <div class="m-article-content">问题描述
+
+实现一个简单的全排列算法，以整形数组{1,2,3,4,5}为例，假设元素无重复。
+
+问题分析
+
+如果用多层循环来实现，那么……有多少个元素将需要有多少层循环，这样作为实现一个算法的角度来看显然是不可取的。
+
+以 a[] = {1,2,3,4,5}为例，它的全排列是
+
+1　{2,3,4,5}的全排列
+2  {1,3,4,5}的全排列
+3  {1,2,4,5}的全排列
+4  {1,2,3,5}的全排列
+5  {1,2,3,4}的全排列
+
+
+由子数组的全排列得到母数组的全排列结果，可以考虑用递归实现，具体可以设计为将 a 依次变换为
+
+12345
+21345
+31245
+41235
+51234
+
+
+然后分别求它们后四个元素的全排列，依此类推。
+
+简单的 C++ 实现
+
+#incl...</div><a href="/algorithm/2011/11/20/permutation.html">Click to read more ...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">Nov 20, 2011</span></div>
+  </div>
+</div>
+</article></div><nav class="m-pagination"><p>103 post articles, 15 pages.</p>
+          <ul><li><a class="round-button" href="/blog/page13">
+                <div class="icon icon--previous"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+</svg>
+</div></a>
+              </li><li>
+                  <a class="round-button" href="/"><span>1</span></a>
+                </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
+                      <a class="round-button" href="/blog/page12"><span>12</span></a>
+                    </li><li>
+                      <a class="round-button" href="/blog/page13"><span>13</span></a>
+                    </li><li>
+                  <div class="round-button cur"><span>14</span></div>
+                </li><li>
+                      <a class="round-button" href="/blog/page15"><span>15</span></a>
+                    </li><li>
+                <a class="round-button" href="/blog/page15">
+                  <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+</svg>
+</div>
+                </a>
+              </li></ul>
+        </nav></div>
+</div>
+</div>
+      </div>
+    </div><div class="m-page-footer js-page-footer">
+  <div class="main">
+    <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Someone">
+    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+</aside>
+    <footer class="site-info">
+      <p>© 浅浅蓝's blog 2018</p>
+      <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
+        title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
+    </footer>
+  </div>
+</div><script>
+  (function () {
+    var root = document.body
+    function classnames(classes) {
+      var i, cur, _classes = '';
+      if (window.isString(classes)) {
+        _classes =  classes;
+      } else if (window.isArray(classes)) {
+        for (i = 0; i < classes.length; i++) {
+          cur = classes[i];
+          if (window.isString(cur)) {
+            _classes = _classes.concat(_classes ? ' ' + cur : cur);
+          }
+        }
+      } else {
+        return '';
+      }
+      return _classes;
+    }
+    function addClass(dom, classname) {
+      dom.setAttribute('class', classnames([dom.getAttribute('class'), classname]));
+    }
+    if (window.hasEvent('touchstart')) {
+      addClass(root, 'is-touch');
+      document.addEventListener("touchstart", function(){}, false);
+    } else {
+      addClass(root, 'not-touch');
+    }
+  })();
+</script></body>
+</html>
