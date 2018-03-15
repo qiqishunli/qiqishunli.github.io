@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html><html lang="zh">
   <head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>设计模式学习之装饰者模式 - 浅浅蓝's blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>设计模式学习之装饰者模式 - 浅浅蓝的博客</title>
 <meta name="description" content="如下内容是学习《Head First 设计模式》第三部分《装饰者模式》所得，主要就是一些原文摘抄和少量自己的总结。装饰者模式定义  装饰者模式动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性的替代方案。OO 原则  对扩展开放，对修改关闭。书中示例的 C++ 实现版源码这个 Solution 的...">
-<link rel="canonical" href="http://localhost:4000/designpattern/2013/12/22/HFDP-Notes3.html"><link rel="alternate" type="application/rss+xml" title="浅浅蓝's blog" href="http://localhost:4000/feed.xml">
+<link rel="canonical" href="http://localhost:4000/designpattern/2013/12/22/HFDP-Notes3.html"><link rel="alternate" type="application/rss+xml" title="浅浅蓝的博客" href="http://localhost:4000/feed.xml">
 <!-- for Safari on iOS https://developer.apple.com/ios/human-interface-guidelines/icons-and-images/app-icon/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/icon-180x180.png"><link rel="apple-touch-icon" sizes="167x167" href="/assets/images/logo/icon-167x167.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/images/logo/icon-152x152.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/images/logo/icon-120x120.png"><link rel="shortcut icon" href="/assets/images/logo/icon-120x120.png">
 <!-- for Chrome on Android https://developer.chrome.com/multidevice/android/installtohomescreen -->
 <meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="/assets/images/logo/icon-192x192.png">
@@ -200,9 +200,9 @@
 <path class="st0" d="M1.7,22.3c5.7-5.7,11.3-5.7,17,0c3.3-3.3,3.5-5.3,0.8-6c2.7,0.7,3.5-1.1,2.3-5.6s-3.3-5.2-6.3-2.1
 	c3-3,2.3-5.2-2.1-6.3S7,1.8,7.7,4.6C7,1.8,5,2.1,1.7,5.3C7.3,11,7.3,16.7,1.7,22.3"/>
 </svg><a title="一个热爱前端开发的小姑娘
-" href="/">浅浅蓝's blog</a></div>
+" href="/">浅浅蓝的博客</a></div>
     <nav>
-      <ul><li><a href="/">Home</a></li><li><a href="/all.html">All</a></li><li><a href="/about.html">About</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
+      <ul><li><a href="/">主页</a></li><li><a href="/all.html">归档</a></li><li><a href="/about.html">关于</a></li><li><a type="application/rss+xml" href="/feed.xml">RSS</a></li>
       </ul>
     </nav>
   </div>
@@ -215,8 +215,8 @@
 		<div class="col-1">
 			<article class="js-article" itemscope itemtype="http://schema.org/BlogPosting">
 				<meta itemprop="mainEntityOfPage" itemscope itemType="https://schema.org/WebPage"/>
-				<header class="main-header"><h1 itemprop="headline" itemprop="name headline">设计模式学习之装饰者模式</h1><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Someone"/></meta><div class="other-wrapper"><div class="date-wrapper"><time class="article-meta" datetime="2013-12-22T00:00:00+08:00"
-          itemprop="datePublished">Dec 22, 2013
+				<header class="main-header"><h1 itemprop="headline" itemprop="name headline">设计模式学习之装饰者模式</h1><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><time class="article-meta" datetime="2013-12-22T00:00:00+08:00"
+          itemprop="datePublished">2013年 12月22日
         </time></div>
   </div>
 </div>
@@ -245,25 +245,25 @@
 
 <p><img src="/images/posts/designpattern/DecoratorPattern.png" width="80%" alt="Decorator Pattern UML Class Diagram" /></p>
 </div>
-				<footer><meta itemprop="dateModified" content="2013-12-22T00:00:00+08:00"><div class="article-license"><div class="m-license"><div class="clearfix"><p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> license.</p><a class="license" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+				<footer><meta itemprop="dateModified" content="2013-12-22T00:00:00+08:00"><div class="article-license"><div class="m-license"><div class="clearfix"><p>本文遵守 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> 许可协议。</p><a class="license" rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
       <img alt="Creative Commons License" src="/assets/images/license-cc4.png" />
-    </a><p></p>
+    </a><p>欢迎转载，转载需注明出处，且禁止用于商业目的。</p>
   </div>
 </div></div>
 				</footer>
 			</article>
-			<div class="article-previous-next clearfix"><div class="article-previous"><span>PREVIOUS</span><a href="/excel/2014/02/19/excel-incommonuse.html">Excel 常用操作</a></div><div class="article-next"><span>NEXT</span><a href="/designpattern/2013/12/03/HFDP-Notes2.html">设计模式学习之观察者模式</a></div></div></div>
+			<div class="article-previous-next clearfix"><div class="article-previous"><span>上篇</span><a href="/excel/2014/02/19/excel-incommonuse.html">Excel 常用操作</a></div><div class="article-next"><span>下篇</span><a href="/designpattern/2013/12/03/HFDP-Notes2.html">设计模式学习之观察者模式</a></div></div></div>
 	</div>
 </div></div>
       </div>
     </div><div class="m-page-footer js-page-footer">
   <div class="main">
     <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Someone">
+    <meta itemprop="name" content="qishunli">
     <link itemprop="url" href="http://localhost:4000/"></ul></div>
 </aside>
     <footer class="site-info">
-      <p>© 浅浅蓝's blog 2018</p>
+      <p>© 浅浅蓝的博客 2018</p>
       <p>Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
         title="TeXt is a succinct theme for blogging." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.</p>
     </footer>
