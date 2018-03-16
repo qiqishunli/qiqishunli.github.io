@@ -210,162 +210,185 @@
 </header>
 <div class="m-page-main"><div class="m-home">
   <div class="main">
-    <div class="m-post-list"><article><h1><a href="/fiddler/2014/07/20/fiddlercontextmenu.html">定制 Fiddler 之将请求发往另一服务器</a></h1>
-          <div class="m-article-content">需求
+    <div class="m-post-list"><article><h1><a href="/gecko/2012/06/19/gecko-use-profile.html">为基于 xulrunner 的内嵌 Gecko 程序启用 Profile</a></h1>
+          <div class="m-article-content">Mozilla 自带的 Profile 支持实际上是非常给力的，看看 %appdata%/Mozilla/Firefox 下的文件就能知道，这里存放着许多的信息，它们提供了很多东西，例如：
 
-对 Fiddler 抓取的某个特定 SESSION 能在必要时手动操作发往另一个服务器。
 
-设想
+  
+    可以通过 Profiles/…default/chrome 下的 userchrome.css 文件来定制自己的 firefox 外观，比如用 #appmenu-button { display:none !important;} 这样一句就可以去掉 firefox 左上角难看的按钮菜单
+  
+  
+    安装的 extensions，Addon 放在这里
+  
+  
+    证书相关、组件列表、cookie、插件列表等等都可以在这里找到
+  
 
-在 SESSION 上点击右键弹出的菜单中添加一项，让它对应的响应事件来完成此操作。而联想到 Fiddler 的 Composer 功能能够将某条 SESSION 按自己的需要修改后重新发出，那利用 Composer 来做应该是比较容易实现且便捷的方式。
 
-实现
+等等等等。
 
-对 Fiddler 的扩展比较方便的是使用 FiddlerScript，修改 CustomRules.js 来做。比如希望在 hostname 为www.mazhuang.org的 SESSION 上右键后利用自己添加的菜单项将此 SESSION 的 hostname 修改为mazhuang.org后重新发送请求，最终...</div><a href="/fiddler/2014/07/20/fiddlercontextmenu.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 07月20日</span></div>
+合理利用这些文件...</div><a href="/gecko/2012/06/19/gecko-use-profile.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2012年 06月19日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/fiddler/2014/07/19/fiddlerwithwinhttp.html">定制 Fiddler 之抓获 WinHTTP 请求</a></h1>
-          <div class="m-article-content">背景
+</article><article><h1><a href="/windows/2012/06/17/windows-skills.html">Windows 实用技巧汇总</a></h1>
+          <div class="m-article-content">目录
 
-发现使用 Fiddler 进行抓包时有一部分请求总是没抓到，查看了一下源代码，发现使用 WinINET 这套 API 发送的请求都能正常抓到，而使用 WinHTTP 这套 API 发送的请求都没有抓到，遂搜索了一下，果然前人们早已给出答案，解决方案原文可以参看 Fiddler 作者 Eric Lawrence 大神的一篇博客 Using Fiddler with WinHTTP，博客里表示 Fiddler 对各种 HTTP(s) stacks 都是能支持的，只是默认启动时只是接管了 WinINET 代理设置。
 
-Eric 的那篇博客里已经列出了相关的方法和代码，本文只是对其略做改进，让同一段代码可以适配不同的 Windows 版本。
+  Win7 不按 Shift，右键显示 “在此处打开命令窗口 (W)”
+  Win7 搜索文件内容
+  将 Caps Lock 映射为 Ctrl
+  将任务栏库图标变成打开计算机
+  Win10 x64 下使用 ComMonitor
 
-分析
 
-我们需要让 Fiddler 抓取 ...</div><a href="/fiddler/2014/07/19/fiddlerwithwinhttp.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 07月19日</span></div>
+Win7 不按 Shift，右键显示 “在此处打开命令窗口 (W)”
+
+
+
+图上的这条右键命令一般在 Win7 下是需要 Shift + 右键在弹出菜单里才能看到的，怎么省掉这个 Shift，直接就能出来呢？
+
+先说方法：
+
+将如下代码保存为 .reg 文件然后执行即可。
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\shell\cmd]
+"Exten...</div><a href="/windows/2012/06/17/windows-skills.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2012年 06月17日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/windows/2014/07/13/dllsearch.html">默认的 DLL 搜索路径优先级</a></h1>
-          <div class="m-article-content">结论
+</article><article><h1><a href="/python/2012/04/08/learn-python-practise.html">Python 核心编程中文第二版课后练习 3.8 答案</a></h1>
+          <div class="m-article-content">3-1 变量在第一次被赋值时自动声明。在赋值时解释器会根据语法和右侧的操作数来决定新对象的类型。
 
-在默认情况下，Windows 加载程序在用户磁盘上搜索 DLL 的搜索顺序：
+3-2 函数总是返回一个值，显式 return 的值或者 None。返回的值的类型也是动态确定。
 
+3-3 因为变量名 xxx 对 Python 来说有特殊含义，对于普通的变量应当避免这种命名风格。
 
-  包含可执行文件的目录。
-  Windows 的系统目录，该目录可以通过 GetSystemDirectory 得到，一般为 System32 目录，若为 32 位程序跑在 64 位系统下，则为 SysWOW64 目录。
-  16 位的系统目录，即 Windows 目录中的 System 目录。
-  Windows 目录，该目录可以通过 GetWindowsDirectory 得到。
-  进程的当前目录。
-  PATH 环境变量中所列出的目录。
+3-4 可以，使用 “;”
 
+3-5 可以，使用 “" 或者括号
 
-如果调用 LoadLibrary 时传入的是绝对路径，那么加载程序将只尝试从该绝对路径搜索 DLL。
+3-6
 
-附注
+(a)x = 1, y = 2, z = 3
 
-以上结论在「Windows 核心编程...</div><a href="/windows/2014/07/13/dllsearch.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 07月13日</span></div>
+(b)z = 2, x = 3, y = 1
+
+3-7 40XL, $aving$, 0x40L, thisIsn’tAVar, big-daddy, 2hot2touch, counter-1 不合法。不是以字母或者下划线开头，或者有非字母下划线数字的字符。pri...</div><a href="/python/2012/04/08/learn-python-practise.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2012年 04月08日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/cplusplus/2014/07/13/cppinit.html">C++ 类成员变量初始化</a></h1>
-          <div class="m-article-content">本文是对《Effective C++》的”Item 4: Make sure that objects are initialized before they’re used”的笔记和验证。
+</article><article><h1><a href="/python/2012/04/05/learn-python-practise.html">Python 核心编程中文第二版课后练习 2.21 答案</a></h1>
+          <div class="m-article-content">2-2
 
-结论
+(a) 计算 1 + 2 * 4
+
+(b) 无输出
+
+(c) 一样。无输出语句。
+
+(d) 单独执行无输出，在交互解释器里执行输出结果。
+
+(e)print 1 + 2 * 4
+
+2-4
+
+(a)
+
+str = raw_input('input a str:')
+print str
 
 
-  在进入构造函数体之前，数据成员的初始化就已完成。
-  数据成员的初始化顺序取决于声明顺序。
+(b)
+
+str = raw_input('input a int:')
+print int(str)
 
 
-结论 1 证明
+2-5
 
-证明代码片段：
+(a)
 
-#include &lt;stdio.h&gt;
+i = 0
+while i &lt;= 10:
+    print i,
+    i += 1
 
-class CA
-{
-public:
-    CA(const char* pName = "default")
-    {
-        printf("CA::CA(const char*) pName = %s\n", pName);
-    }
 
-    CA(const CA&amp; a...</div><a href="/cplusplus/2014/07/13/cppinit.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 07月13日</span></div>
+(b)
+
+for eachNum in range(11):
+    print eachNum,
+
+
+2-6
+
+num = raw_input('input a nu...</div><a href="/python/2012/04/05/learn-python-practise.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2012年 04月05日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/lisp/2014/06/29/acl-chapter2.html">ANSI Common Lisp 第二章习题解答</a></h1>
-          <div class="m-article-content">本文是个人对第二章：欢迎来到 Lisp——ANSI Common Lisp 中文版 一文中习题的解答。
+</article><article><h1><a href="/excel/2012/03/22/vba-knowledge.html">VBA 在 Excel 中的常用操作</a></h1>
+          <div class="m-article-content">文件操作
 
-1. 描述下列表达式求值之后的结果：
+引用打开的工作簿
 
-(a) (+ (- 5 1) (+ 3 7))
+使用索引号（从 1 开始）
 
-答案：14
+Workbooks(1)
 
-(b) (list 1 (+ 2 3))
 
-答案：(1 5)
+使用工作簿名称
 
-(c) (if (listp 1) (+ 1 2) (+ 3 4))
+Workbooks("1.xlsx")
 
-答案：7
 
-(d) (list (and (listp 3) t) (+ 1 2))
+创建一个 EXCEL 工作簿对象
 
-答案：(NIL 3)
+Dim wd As Excel.Application
+Dim wb As Workbook
 
-2. 给出 3 种不同表示 (a b c) 的 cons 表达式 。
+Set wd = CreateObject("excel.application")
+wd.Visible = True
+Set wb = wd.Workbooks.Open(ThisWorkbook.Path &amp; "/test.xls")
 
-答案：
+' ...
 
-(cons 'a '(b c))
-(cons 'a (cons 'b '(c)))
-(cons 'a (cons 'b (cons 'c nil)))
+wb.Close
+wd.Quit
 
-...</div><a href="/lisp/2014/06/29/acl-chapter2.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 06月29日</span></div>
+
+打开/保存/关闭工作簿
+
+Dim wb As Workbook
+
+wb = Workbooks.Open...</div><a href="/excel/2012/03/22/vba-knowledge.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2012年 03月22日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/com/2014/06/01/comsketch.html">COM 原理与应用学习笔记</a></h1>
-          <div class="m-article-content">略读完了潘爱民老师的《COM 原理与应用》一书，将书中个人认为一些比较重要的概念摘引如下，附少量自己的标注。
+</article><article><h1><a href="/gecko/2012/03/15/gecko-plugin.html">Firefox 和内嵌 Gecko 程序的 Plugins</a></h1>
+          <div class="m-article-content">昨日在 JumuFENG 同学建的 firefox 交流群 (81424441) 里与群友们说起插件相关的一些东西，自己在本地测试了一下，然后推论出一些粗浅认识总结如下：（欢迎有兴趣和正在进行 mozilla 相关的一些开发的朋友加群交流）
 
-COM 对象的接口原则
+一般来讲，对于 firefox 和其它内嵌 Gecko 内核的应用程序来讲，其插件的注册和搜索的机制应该与如下内容有关（windows 下）:
 
-书中总共列举了五条原则，其它几条我觉得理所当然，符合我「想当然」中的理解，故略去不记，这一条认为比较实用。
-
-
-  对于同一个对象的不同的接口指针，查询得到的 IUnknown 接口必须完全相同。也就是说，每个对象的 IUnknown 接口指针是唯一的，因此，对两个接口指针，我们可以通过判断其查询到的 IUnknown 接口是否相等来判断它们是否指向同一个对象。
-
-
-
-  反之，如果查询的不是 IUnknown 接口，而是其它接口，则通过不同的途径得到的接口指针允许不一样。这就允许有的对象可以在必要的时候才动态生成接口指针，当不用的时候可以把接口指针...</div><a href="/com/2014/06/01/comsketch.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 06月01日</span></div>
+(1) 程序会优先考虑可执行文件同级的 plugins 目录下的 DLL 等类型文件，判断文件的命名是否符合插件特征且通过某种机制确定其是否为插件。命名规范：如 flash 插件的 dll 名为 NPSWF32.DLL，改成 asdfjljlk.dll 则无法识别，NPSWF311112.dll 这种则...</div><a href="/gecko/2012/03/15/gecko-plugin.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2012年 03月15日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/designpattern/2014/05/31/HFDP-Note4.html">设计模式学习之单件模式</a></h1>
-          <div class="m-article-content">如下内容是学习《Head First 设计模式》第五部分《单件模式》所得，主要就是一些原文摘抄和少量自己的总结。
+</article><article><h1><a href="/gecko/2012/03/01/mozilla-file-tree.html">Moziila 文件结构概览（译）</a></h1>
+          <div class="m-article-content">/**
+ * 文件名：Moziila 文件结构概览
+ * 来  源：https://developer.mozilla.org/en/Source_code_directories_overview
+ * 翻  译：mzlogin#qq.com
+ * 日  期：2012 年 2 月 22 日
+ *
+ */
 
-单件模式定义
+源码目录概览
 
+这个文档是一份为开发人员提供的 Mozilla 源码目录结构树的指南。它提供源码的鸟瞰以方便开发人员理解 Mozilla 里有什么，到哪里去找想要的东西。它对一个刚刚学习 Mozilla 源码的开发人员来讲是一份不错的文档。
 
-  单件模式确保类只有一个实例，并提供一个全局访问点。
+这份文档包含 SeaMonkey，Firefox 和 Toolkit 的相关材料。
 
-
-书中示例的 C++ 实现版源码
-
-这个 Solution 的 SingletonPattern 工程里。
-
-书中示例的类图
-
-Visio 原图见这里:
-
-
-
-关键代码片断
-
-class CSingleton
-{
-public:
-    static CSingleton* GetInstance();
-
-    /**
-    释放单例，应仅限于所有对单例对象的使用完成后调用
-    */
-    static void ReleaseInstance();
-
-    void DoSometh...</div><a href="/designpattern/2014/05/31/HFDP-Note4.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 05月31日</span></div>
+这是一份根据 Mozilla 的源码树按月更新的文档。...</div><a href="/gecko/2012/03/01/mozilla-file-tree.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2012年 03月01日</span></div>
   </div>
 </div>
-</article></div><nav class="m-pagination"><p>共计 103 篇文章，15 页。</p>
+</article></div><nav class="m-pagination"><p>共计 85 篇文章，13 页。</p>
           <ul><li><a class="round-button" href="/blog/page10">
                 <div class="icon icon--previous"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
@@ -379,8 +402,8 @@ public:
                   <div class="round-button cur"><span>11</span></div>
                 </li><li>
                       <a class="round-button" href="/blog/page12"><span>12</span></a>
-                    </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
-                      <a class="round-button" href="/blog/page15"><span>15</span></a>
+                    </li><li>
+                      <a class="round-button" href="/blog/page13"><span>13</span></a>
                     </li><li>
                 <a class="round-button" href="/blog/page12">
                   <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -397,7 +420,30 @@ public:
   <div class="main">
     <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="qishunli">
-    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+    <link itemprop="url" href="http://localhost:4000/"><li title="在 Weibo 上关注我。">
+        <div class="floating-action-round-button weibo">
+          <a itemprop="sameAs" href="https://weibo.com/浅浅蓝_qsl" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<path d="M769.226164 496.610234c-14.420098-4.330228-24.309277-7.266877-16.746482-26.214823 16.350218-41.133578 18.046881-76.626289 0.307181-101.939024-33.242099-47.500415-124.194284-44.928286-228.44638-1.280945 0-0.056317-32.73525 14.323848-24.371737-11.64523 16.042013-51.54906 13.626547-94.739726-11.332929-119.662341-56.566349-56.601163-206.976479 2.134908-335.954595 131.078209-96.594075 96.61353-152.681222 198.989775-152.681222 287.52035 0 169.337597 217.152361 272.292366 429.593589 272.292366 278.498445 0 463.752111-161.808592 463.752111-290.273715C893.345701 558.867622 827.968378 514.820945 769.226164 496.610234zM430.163922 866.063936c-169.51781 16.728051-315.851649-59.899262-326.864086-171.202185-11.010389-111.275277 117.530505-215.061482 287.031932-231.823323 169.537265-16.761841 315.876224 59.866496 326.86511 171.119247C728.190884 745.495411 599.705282 849.291856 430.163922 866.063936z" />
+	<path d="M954.16753 186.714824c-67.256246-74.565105-166.457264-102.990607-258.020739-83.522502l-0.037886 0c-21.188318 4.535015-34.695065 25.37929-30.159026 46.527675 4.516584 21.166816 25.352668 34.691993 46.54201 30.174385 65.139769-13.832358 135.634727 6.400627 183.442323 59.368863 47.765615 52.96414 60.740938 125.206957 40.282686 188.537431l0.011263 0.012287c-6.666851 20.629249 4.617954 42.698153 25.271777 49.366027 20.570885 6.662755 42.687913-4.607714 49.362955-25.188838 0-0.037886 0-0.116729 0.011263-0.150519C1039.577146 362.756133 1021.443231 261.206205 954.16753 186.714824" />
+	<path d="M850.886125 279.919669c-32.732179-36.315956-81.068126-50.108381-125.685136-40.621609-18.234261 3.885839-29.856965 21.833398-25.946551 40.085067 3.89915 18.173849 21.833398 29.851845 40.024654 25.893307l0 0.037886c21.809848-4.610786 45.459709 2.113405 61.461789 19.83365 16.018463 17.757107 20.323092 41.949655 13.45043 63.178931l0.035838 0c-5.715614 17.717174 3.983113 36.770584 21.717694 42.511796 17.7397 5.677728 36.76956-3.992328 42.493365-21.756603C892.458972 365.691759 883.686907 316.228458 850.886125 279.919669" />
+	<path d="M447.103928 548.691741c-80.666743-20.985579-171.84317 19.215193-206.880229 90.291746-35.685212 72.492657-1.180599 152.963828 80.321676 179.268757 84.41947 27.224424 183.926645-14.492797 218.521364-92.744074C573.187374 649.021137 530.586496 570.268131 447.103928 548.691741zM385.506979 733.819463c-16.398343 26.160554-51.51015 37.623523-77.954335 25.54824-26.066352-11.868448-33.760211-42.248645-17.360844-67.757975 16.197652-25.400793 50.129884-36.716316 76.378497-25.711046C393.129162 677.216253 401.60838 707.401901 385.506979 733.819463zM439.522702 664.493841c-5.929616 10.131852-19.03498 15.010909-29.304039 10.785123-10.096014-4.15411-13.261002-15.495231-7.522862-25.454038 5.906066-9.908634 18.500485-14.747758 28.572948-10.750309C441.502995 642.817105 445.180975 654.283146 439.522702 664.493841z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li><li title="在 Github 上关注我。">
+        <div class="floating-action-round-button github">
+          <a itemprop="sameAs" href="https://github.com/qiqishunli" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path class="svgpath" data-index="path_0" fill="#272636" d="M0 525.2c0 223.6 143.3 413.7 343 483.5 26.9 6.8 22.8-12.4 22.8-25.4l0-88.7c-155.3 18.2-161.5-84.6-172-101.7-21.1-36-70.8-45.2-56-62.3 35.4-18.2 71.4 4.6 113.1 66.3 30.2 44.7 89.1 37.2 119 29.7 6.5-26.9 20.5-50.9 39.7-69.6C248.8 728.2 181.7 630 181.7 513.2c0-56.6 18.7-108.7 55.3-150.7-23.3-69.3 2.2-128.5 5.6-137.3 66.5-6 135.5 47.6 140.9 51.8 37.8-10.2 80.9-15.6 129.1-15.6 48.5 0 91.8 5.6 129.8 15.9 12.9-9.8 77-55.8 138.8-50.2 3.3 8.8 28.2 66.7 6.3 135 37.1 42.1 56 94.6 56 151.4 0 117-67.5 215.3-228.8 243.7 26.9 26.6 43.6 63.4 43.6 104.2l0 128.8c0.9 10.3 0 20.5 17.2 20.5C878.1 942.4 1024 750.9 1024 525.3c0-282.9-229.3-512-512-512C229.1 13.2 0 242.3 0 525.2L0 525.2z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li></ul><p class="email">
+      <a title="给我发邮件。" href="mailto:shunliqi@163.com" target="_self">shunliqi@163.com</a>
+    </p></div>
 </aside>
     <footer class="site-info">
       <p>© 浅浅蓝的博客 2018</p>

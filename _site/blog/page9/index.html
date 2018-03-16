@@ -210,168 +210,190 @@
 </header>
 <div class="m-page-main"><div class="m-home">
   <div class="main">
-    <div class="m-post-list"><article><h1><a href="/android/2014/12/31/simplify-apk.html">如何让 HelloWorld.apk 体积最小</a></h1>
-          <div class="m-article-content">按照最新 ADT 的默认设置（如下图所示）创建一个最简单的 HelloWorld 程序，会发现最后生成的 apk 文件大小就已经达到了惊人的 903KB。如果只是想做一个功能非常简单的 APP，体积也这么大的话那太让人沮丧了，那我们就来探索一下如何让这个 HelloWorld.apk 体积最小。
+    <div class="m-post-list"><article><h1><a href="/lisp/2014/06/29/acl-chapter2.html">ANSI Common Lisp 第二章习题解答</a></h1>
+          <div class="m-article-content">本文是个人对第二章：欢迎来到 Lisp——ANSI Common Lisp 中文版 一文中习题的解答。
 
+1. 描述下列表达式求值之后的结果：
 
+(a) (+ (- 5 1) (+ 3 7))
 
-（注：本文所述方法是以牺牲新的 API 为代价的。）
+答案：14
 
-默认生成的 apk 文件大小（903KB）：
+(b) (list 1 (+ 2 3))
 
+答案：(1 5)
 
+(c) (if (listp 1) (+ 1 2) (+ 3 4))
 
-移除 appcompat_v7 依赖
+答案：7
 
-创建一个 Minimum Required SDK 低于 API level 11（对应 Android 3.0），Target SDK 高于 API Level 11 的工程，ADT 会自动生成一个名为 appcompat_v7 的库工程并...</div><a href="/android/2014/12/31/simplify-apk.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 12月31日</span></div>
+(d) (list (and (listp 3) t) (+ 1 2))
+
+答案：(NIL 3)
+
+2. 给出 3 种不同表示 (a b c) 的 cons 表达式 。
+
+答案：
+
+(cons 'a '(b c))
+(cons 'a (cons 'b '(c)))
+(cons 'a (cons 'b (cons 'c nil)))
+
+...</div><a href="/lisp/2014/06/29/acl-chapter2.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 06月29日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/vim/2014/12/21/vim-python-autocomplete.html">使用 gVim 的 Python 自动补全时遇到的问题</a></h1>
-          <div class="m-article-content">问题描述
+</article><article><h1><a href="/com/2014/06/01/comsketch.html">COM 原理与应用学习笔记</a></h1>
+          <div class="m-article-content">略读完了潘爱民老师的《COM 原理与应用》一书，将书中个人认为一些比较重要的概念摘引如下，附少量自己的标注。
 
-环境：Win7 x64
+COM 对象的接口原则
 
-从 gVim 7.4 的安装目录 /path/to/Vim/Vim74/autoload 下的 pythoncomplete.vim 看出，Vim 在这个版本已经默认内置了对 Python 的自动补全的支持。然而我在自己的笔记本上用得很好的配置，同样的、_vimrc 和插件平移到工作机上以后就出问题了， &lt;C-x&gt;&lt;C-o&gt; 的时候 gVim 底部提示：
-
-Error: Required vim compiled with +python
-E117: Unknown function: pythoncomplete#Complete
+书中总共列举了五条原则，其它几条我觉得理所当然，符合我「想当然」中的理解，故略去不记，这一条认为比较实用。
 
 
-解决过程
+  对于同一个对象的不同的接口指针，查询得到的 IUnknown 接口必须完全相同。也就是说，每个对象的 IUnknown 接口指针是唯一的，因此，对两个接口指针，我们可以通过判断其查询到的 IUnknown 接口是否相等来判断它们是否指向同一个对象。
 
 
-  
-    排查 Vim 版本编译时的 Python 支持
 
-    根...</div><a href="/vim/2014/12/21/vim-python-autocomplete.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 12月21日</span></div>
+  反之，如果查询的不是 IUnknown 接口，而是其它接口，则通过不同的途径得到的接口指针允许不一样。这就允许有的对象可以在必要的时候才动态生成接口指针，当不用的时候可以把接口指针...</div><a href="/com/2014/06/01/comsketch.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 06月01日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/blog/2014/12/14/find-a-girl-friend.html">工科男难找对象的那点事儿</a></h1>
-          <div class="m-article-content">想讲的那点事儿其实可以用时下一句很火的话概括的：
+</article><article><h1><a href="/designpattern/2014/05/31/HFDP-Note4.html">设计模式学习之单件模式</a></h1>
+          <div class="m-article-content">如下内容是学习《Head First 设计模式》第五部分《单件模式》所得，主要就是一些原文摘抄和少量自己的总结。
+
+单件模式定义
 
 
-  No zuo no die!
+  单件模式确保类只有一个实例，并提供一个全局访问点。
 
 
-当然，这是一条很厉害的真理，感觉能解释这世间所有事情的样子……
+书中示例的 C++ 实现版源码
 
-缘起
+这个 Solution 的 SingletonPattern 工程里。
 
-决定写这么一篇笔记当然不是大周末独自在床上辗转反侧纠结半天要不要起床而凭空蹦出来的念头，而是源自 Connie 酱发给我的一个挺火的天涯讨论帖，它让我想起大学时代的自己和身边的一群人在夕阳下的奔跑，那是我们的青春啊扯远了……把帖子里的一些观点拿过来往那时（也许包括现在）的我们身上套用一下，惊奇地发现中了好多枪但却并不冤枉。
+书中示例的类图
 
-虽然现在一般的天涯帖子都已经无法逃脱楼主爆料——楼主被喷——楼主回喷——路人莫名秀优越——路人被喷——喷子互喷的宿命了，但机智的我还是尽量客观地提炼出了其中有用的观点，有兴致有时间的童鞋们可以看原链接...</div><a href="/blog/2014/12/14/find-a-girl-friend.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 12月14日</span></div>
+Visio 原图见这里:
+
+
+
+关键代码片断
+
+class CSingleton
+{
+public:
+    static CSingleton* GetInstance();
+
+    /**
+    释放单例，应仅限于所有对单例对象的使用完成后调用
+    */
+    static void ReleaseInstance();
+
+    void DoSometh...</div><a href="/designpattern/2014/05/31/HFDP-Note4.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 05月31日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/blog/2014/12/07/habit-training-1.html">好习惯 one by one 之一</a></h1>
-          <div class="m-article-content">习惯
+</article><article><h1><a href="/cplusplus/2014/05/24/virtualfunctions.html">对象内存结构及虚函数表分析</a></h1>
+          <div class="m-article-content">最近抽空浏览了一遍《COM 原理与应用》，一本老书了，COM 技术在我工作中运用得不多，但是接口设计规范和标准这一套东西还是能带给我一些有用的实践经验和启发的。在读到第二章《COM 对象和接口》的时候，看到虚函数表的一些相关知识，这些之前倒是也都知道，但是从来没有试着自己描述过，所以老觉得理解得不够彻底，那么……就试着结合一些小的代码段描述一下看，权当笔记加深记忆。
 
-早睡早起。
-
-好处
-
-
-  
-    好心情的基调
-
-    不知道对别人来讲是如何，反正晚睡会导致我第二天情绪不佳。
-  
-  
-    对身体好
-
-    熬夜伤身，这个相信很多人都深有体会。
-  
-  
-    良好作息的基石
-
-    一旦晚睡，第二天里的计划都会受影响，陷入被动，然后又需要干到很晚才能消停，陷入恶性循环。
-  
-
-
-实践
-
-作息
-
-
-  
-    
-      时间
-      事项
-    
-  
-  
-    
-      7:40
-      起床、Plank、洗漱
-    
-    
-      8:40
-      出门
-    
-    
-      9:30
-      到公司，写日记，看数据，调整状态
-    
-    
-      1...</div><a href="/blog/2014/12/07/habit-training-1.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 12月07日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/blog/2014/12/06/emotion-manage.html">情绪管理的建议</a></h1>
-          <div class="m-article-content">应对很多事情时情绪都会跑出来作怪，或多或少地影响我对事情的判断，有些时候直接导致了不良结果的发生，所以逐渐形成自己的情绪管理的原则和套路是必要的。
-
-概念
-
-情绪管理不是指对情绪的压抑，而是一个逐渐改造自己的应激反应链的过程，让自己面对以前会造成不良情绪的场景，经过一些原则和想法的自我解释与消化，不再产生不良情绪。
-
-建议
-
-
-  
-    因为一件事情跟人争论不休感觉火大打算讥讽对方的时候，脑子里先用一瞬间思考一个问题：这件事情往他（她）意愿的方向发展的结果我真的不能接受吗？也许事情本身怎么发展并不是我关注的重点，我只是觉得按我的想法做才是对的。别人的三观没有义务与你一致，他（她）选择的肯定也是自己认为的最优解，这是别人的自由。为此类事情觉得愤怒和不高兴是不必要的。
-  
-  
-  ...</div><a href="/blog/2014/12/06/emotion-manage.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 12月06日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/blog/2014/11/25/jestem.html">Jestem</a></h1>
-          <div class="m-article-content">
-
-知道这部电影是从一个名叫「容易忽视的豆瓣高分电影」的豆列里，从豆列的名字我就知道它注定不热闹，果然在剧情结束后屏幕上出现了这行字：
-
-
-  谨以此献给每一个孤独的灵魂。
-
-
-这恐怕是该片的豆瓣影评里出现频率最高的一个句子了，我觉得它配得起这句话。
-
-注：以下内容有剧透，介意慎读。
-
-这部电影最令我感到特别的地方是当我看完后试图去用里面人物的名字去帮助描述一些事情的时候，发现貌似整部电影都没有出现过几个主要人物的名字，好吧就用小正太、萝莉和御姐来分别代表男、女主和她的女神姐姐吧。
-
-不管是否是导演本意，不得不说最先感受到的还是这世界满满的恶意。小正太被妈妈的驱逐，在孤儿院遭受的嘲笑，大人们有意或者无意的「小杂种」的称呼，同龄小孩们起哄的追打欺负，无不透露出一阵阵的绝望。幸而小正太不是...</div><a href="/blog/2014/11/25/jestem.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 11月25日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/blog/2014/10/28/sevenhabits.html">习惯成就高效能</a></h1>
-          <div class="m-article-content">首先需要说明的是，我并不相信成功有什么方法论，不过生活中很多的事情确是有套路可以遵循借鉴的，正如公元前两三百年的时候，亚里士多德就说过的话：
-
-
-  人的行为总是一再重复，因此卓越不是单一的举动，而是习惯。
-
-
-这应该就是之前我引用到说说而被某人说矫情的一句话的源头——优秀是一种习惯。
-
-两个自身条件、机遇等等差不多的人，随着时间的流逝逐渐拉开差距，也许只是其中一个有意识地让自己形成了一些良好的习惯与套路，而另一个迷迷糊糊地就将自己也不知道为什么这么做、是对是错的动作坚持了很多年。
-
-如下内容是根据前几天参加的培训总结的笔记，是我认为比较实用的套路和惯例，迄今为止我尚未拜读过史蒂芬.柯维的大作《高效能人士的七个习惯》。
+以下代码及运行结果基于 Win7_64 + GCC 4.7.2 环境，其它环境下可能程序运行结果等有出入，但是原理相通。
 
 目录
 
 
-  有鹅才能有金蛋
-  反射弧里加一环
-  解决问题三...</div><a href="/blog/2014/10/28/sevenhabits.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 10月28日</span></div>
+  无继承类对象的内存结构
+  单继承的类对象的内存结构
+  普通多继承的类对象的内存结构
+  单虚继承的类对象的内存结构
+  钻石结构的类对象的内存结构
+
+
+无继承类对象的内存结构
+
+先...</div><a href="/cplusplus/2014/05/24/virtualfunctions.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 05月24日</span></div>
   </div>
 </div>
-</article></div><nav class="m-pagination"><p>共计 103 篇文章，15 页。</p>
+</article><article><h1><a href="/cplusplus/2014/05/10/numbersign.html">C++ 中的#，##，和"</a></h1>
+          <div class="m-article-content">想要灵活应用宏，离不开#和##。
+
+”
+在学习#和##之前，先来看一个关于"的例子：
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main()
+{
+    const char* p1 = "Hello," "World!";     // 一个空格
+    const char* p2 = "Hello,"    "World!";  // 多个空格
+    const char* p3 = "Hello,""World!";      // 没有空格
+    const char* p4 = "Hello,World!";        // 一个整串
+    const char* p5 = "Nihao,""...</div><a href="/cplusplus/2014/05/10/numbersign.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 05月10日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/windows/2014/03/07/pits-in-windows.html">Windows API 中的坑</a></h1>
+          <div class="m-article-content">ExpandEnvironmentStrings
+
+风险：
+
+进程会继承其父进程的环境变量，在展开如 %APPDATA% 等目录时，有可能父进程对此环境变量进行过修改，那么可能你获取的就不是你想要的当前 SESSION 的 %APPDATA% 了。
+
+建议：
+
+使用 SHGetFolderPath 系列函数来做这件事。
+
+GetModuleFileName
+
+风险：
+
+在 DLL 中调用时，若传入的 instance 参数为 NULL，那获取的将是加载 DLL 的进程的 EXE 的路径，若需要获取 DLL 的路径，传入的 instance 参数需为 DLL 的 hModule。
+
+RegQueryValueEx
+
+风险：
+
+最后一个参数为 inout 参数，需要带入 Buffer 的 ...</div><a href="/windows/2014/03/07/pits-in-windows.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 03月07日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/excel/2014/02/19/excel-incommonuse.html">Excel 常用操作</a></h1>
+          <div class="m-article-content">查找
+
+
+  
+    FIND 函数
+
+    作用：
+
+    用于在第二个文本串中定位第一个文本串，并返回第一个文本串的起始位置的值，该值从第二个文本串的第一个字符算起。
+
+    语法：
+
+    FIND(find_text, within_text, [start_num])
+
+    示例：
+
+    =FIND("ha", B2)
+  
+
+
+替换
+
+
+  
+    REPLACE 函数
+
+    作用：
+
+    使用其它文本字符串并根据所指定的字符数替换某文本字符串中的部分文本。
+
+    语法：
+
+    REPLACE(old_text, start_num, num_chars, new_text)
+
+    示例：
+
+    =REPLACE(B2, FIND...</div><a href="/excel/2014/02/19/excel-incommonuse.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 02月19日</span></div>
+  </div>
+</div>
+</article></div><nav class="m-pagination"><p>共计 85 篇文章，13 页。</p>
           <ul><li><a class="round-button" href="/blog/page8">
                 <div class="icon icon--previous"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
@@ -386,7 +408,7 @@ E117: Unknown function: pythoncomplete#Complete
                 </li><li>
                       <a class="round-button" href="/blog/page10"><span>10</span></a>
                     </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
-                      <a class="round-button" href="/blog/page15"><span>15</span></a>
+                      <a class="round-button" href="/blog/page13"><span>13</span></a>
                     </li><li>
                 <a class="round-button" href="/blog/page10">
                   <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -403,7 +425,30 @@ E117: Unknown function: pythoncomplete#Complete
   <div class="main">
     <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="qishunli">
-    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+    <link itemprop="url" href="http://localhost:4000/"><li title="在 Weibo 上关注我。">
+        <div class="floating-action-round-button weibo">
+          <a itemprop="sameAs" href="https://weibo.com/浅浅蓝_qsl" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<path d="M769.226164 496.610234c-14.420098-4.330228-24.309277-7.266877-16.746482-26.214823 16.350218-41.133578 18.046881-76.626289 0.307181-101.939024-33.242099-47.500415-124.194284-44.928286-228.44638-1.280945 0-0.056317-32.73525 14.323848-24.371737-11.64523 16.042013-51.54906 13.626547-94.739726-11.332929-119.662341-56.566349-56.601163-206.976479 2.134908-335.954595 131.078209-96.594075 96.61353-152.681222 198.989775-152.681222 287.52035 0 169.337597 217.152361 272.292366 429.593589 272.292366 278.498445 0 463.752111-161.808592 463.752111-290.273715C893.345701 558.867622 827.968378 514.820945 769.226164 496.610234zM430.163922 866.063936c-169.51781 16.728051-315.851649-59.899262-326.864086-171.202185-11.010389-111.275277 117.530505-215.061482 287.031932-231.823323 169.537265-16.761841 315.876224 59.866496 326.86511 171.119247C728.190884 745.495411 599.705282 849.291856 430.163922 866.063936z" />
+	<path d="M954.16753 186.714824c-67.256246-74.565105-166.457264-102.990607-258.020739-83.522502l-0.037886 0c-21.188318 4.535015-34.695065 25.37929-30.159026 46.527675 4.516584 21.166816 25.352668 34.691993 46.54201 30.174385 65.139769-13.832358 135.634727 6.400627 183.442323 59.368863 47.765615 52.96414 60.740938 125.206957 40.282686 188.537431l0.011263 0.012287c-6.666851 20.629249 4.617954 42.698153 25.271777 49.366027 20.570885 6.662755 42.687913-4.607714 49.362955-25.188838 0-0.037886 0-0.116729 0.011263-0.150519C1039.577146 362.756133 1021.443231 261.206205 954.16753 186.714824" />
+	<path d="M850.886125 279.919669c-32.732179-36.315956-81.068126-50.108381-125.685136-40.621609-18.234261 3.885839-29.856965 21.833398-25.946551 40.085067 3.89915 18.173849 21.833398 29.851845 40.024654 25.893307l0 0.037886c21.809848-4.610786 45.459709 2.113405 61.461789 19.83365 16.018463 17.757107 20.323092 41.949655 13.45043 63.178931l0.035838 0c-5.715614 17.717174 3.983113 36.770584 21.717694 42.511796 17.7397 5.677728 36.76956-3.992328 42.493365-21.756603C892.458972 365.691759 883.686907 316.228458 850.886125 279.919669" />
+	<path d="M447.103928 548.691741c-80.666743-20.985579-171.84317 19.215193-206.880229 90.291746-35.685212 72.492657-1.180599 152.963828 80.321676 179.268757 84.41947 27.224424 183.926645-14.492797 218.521364-92.744074C573.187374 649.021137 530.586496 570.268131 447.103928 548.691741zM385.506979 733.819463c-16.398343 26.160554-51.51015 37.623523-77.954335 25.54824-26.066352-11.868448-33.760211-42.248645-17.360844-67.757975 16.197652-25.400793 50.129884-36.716316 76.378497-25.711046C393.129162 677.216253 401.60838 707.401901 385.506979 733.819463zM439.522702 664.493841c-5.929616 10.131852-19.03498 15.010909-29.304039 10.785123-10.096014-4.15411-13.261002-15.495231-7.522862-25.454038 5.906066-9.908634 18.500485-14.747758 28.572948-10.750309C441.502995 642.817105 445.180975 654.283146 439.522702 664.493841z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li><li title="在 Github 上关注我。">
+        <div class="floating-action-round-button github">
+          <a itemprop="sameAs" href="https://github.com/qiqishunli" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path class="svgpath" data-index="path_0" fill="#272636" d="M0 525.2c0 223.6 143.3 413.7 343 483.5 26.9 6.8 22.8-12.4 22.8-25.4l0-88.7c-155.3 18.2-161.5-84.6-172-101.7-21.1-36-70.8-45.2-56-62.3 35.4-18.2 71.4 4.6 113.1 66.3 30.2 44.7 89.1 37.2 119 29.7 6.5-26.9 20.5-50.9 39.7-69.6C248.8 728.2 181.7 630 181.7 513.2c0-56.6 18.7-108.7 55.3-150.7-23.3-69.3 2.2-128.5 5.6-137.3 66.5-6 135.5 47.6 140.9 51.8 37.8-10.2 80.9-15.6 129.1-15.6 48.5 0 91.8 5.6 129.8 15.9 12.9-9.8 77-55.8 138.8-50.2 3.3 8.8 28.2 66.7 6.3 135 37.1 42.1 56 94.6 56 151.4 0 117-67.5 215.3-228.8 243.7 26.9 26.6 43.6 63.4 43.6 104.2l0 128.8c0.9 10.3 0 20.5 17.2 20.5C878.1 942.4 1024 750.9 1024 525.3c0-282.9-229.3-512-512-512C229.1 13.2 0 242.3 0 525.2L0 525.2z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li></ul><p class="email">
+      <a title="给我发邮件。" href="mailto:shunliqi@163.com" target="_self">shunliqi@163.com</a>
+    </p></div>
 </aside>
     <footer class="site-info">
       <p>© 浅浅蓝的博客 2018</p>

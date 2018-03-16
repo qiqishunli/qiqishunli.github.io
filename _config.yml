@@ -44,12 +44,12 @@ timezone: Asia/Shanghai #see https://en.wikipedia.org/wiki/List_of_tz_database_t
 ## Author & social ##
 author:
   name: qishunli
-  # email:  #your Email address e.g. someone@site.com
+  email: shunliqi@163.com  #your Email address e.g. someone@site.com
   # facebook:  #your Facebook username
   # twitter:  #your Twitter username
-  # github:  #your GitHub username
+  github: qiqishunli  #your GitHub username
   # googleplus:  #your Google+ username
-  # weibo:  #your Weibo username
+  weibo: 浅浅蓝_qsl #your Weibo username
   # douban:  #your Douban username
   # linkedin:  #your Linkedin username
 
@@ -64,12 +64,12 @@ disqus:
 ## Comment system (gitalk) ##
 # please refer to https://github.com/gitalk/gitalk for more info.
 gitalk:
-  # clientID:  #Github Application Client ID
-  # clientSecret:  #Github Application Client Secret
-  # repository:  #Github repo
-  # owner:  #Github repo owner
-  # admin: #Github repo owner and collaborators, only these guys can initialize github issues, IT IS A LIST.
-    # - owner
+  clientID: 36d2bb3e66075117772f #Github Application Client ID
+  clientSecret: ad2d64c10c95d86a4f74df8b0b8e19fdee3c34a9 #Github Application Client Secret
+  repository: qiqishunli.github.io #Github repo
+  owner: qiqishunli #Github repo owner
+  admin:  #Github repo owner and collaborators, only these guys can initialize github issues, IT IS A LIST.
+    - qiqishunli
 
 ## Google Analytics ##
 # ga_tracking_id:  #Google analytics id for the site

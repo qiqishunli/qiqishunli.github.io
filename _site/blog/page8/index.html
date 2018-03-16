@@ -210,146 +210,140 @@
 </header>
 <div class="m-page-main"><div class="m-home">
   <div class="main">
-    <div class="m-post-list"><article><h1><a href="/android/2015/04/06/dp-sp-px.html">Android UI 开发里的尺寸单位理解</a></h1>
-          <div class="m-article-content">在学习 Android UI 开发的初期，经常被一些常用概念如 dp、sp 和它们与 px 的换算等虐，要避免被虐，最好的方法当然是知其所以然，再见到它们就胸中有料心不慌了。
+    <div class="m-post-list"><article><h1><a href="/windows/2014/10/09/path-after-rename.html">获取运行过程中改名的文件的路径</a></h1>
+          <div class="m-article-content">需求
 
-背景知识
+一个 EXE 在运行过程中（被）改名了，需要准确地获取它的文件名。
 
-参考 http://developer.android.com/guide/practices/screens_support.html#terms
+尝试
+
+原本以为这是一个非常简单的 CASE，直接用 GetModuleFileName 不就行了吗？结果还真不如我所想。无论程序运行过程中被改名成什么样子，GetModuleFileName 返回的都是 EXE 开始运行时的名字。然后又尝试了 GetProcessImageFileName，也是如此，直到最后找到了 QueryFullProcessImageName。
+
+示例代码
+
+#include &lt;Windows.h&gt;
+#include &lt;Psapi.h&gt;
+#include &lt;stdio.h&gt;
+
+#pragma comment(lib, "Psapi.lib")
+
+v...</div><a href="/windows/2014/10/09/path-after-rename.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 10月09日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/windows/2014/09/13/make-exe-small.html">如何让你的 EXE/DLL 足够小</a></h1>
+          <div class="m-article-content">为了节省大量用户下载占用的带宽，又不便使用 P2P 技术，需要做一个尽量小的独立 EXE，这里是对如何让一个简单的 EXE 体积尽量小的部分方法与每一步的实际效果。
+
+初始 DEMO
+
+用 VC++ 生成一个最简单的 Win32 Console Application，调用少量简单的 CRT 函数，因为要独立 EXE，所以使用 /MT，示例代码部分如下，然后 Release 编译看看体积。
+
+#include "stdafx.h"
+#include &lt;string.h&gt;
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	const char* pStr = "hello, world";
+	char szArray[64] = {0};
+	s...</div><a href="/windows/2014/09/13/make-exe-small.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 09月13日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/windbg/2014/08/01/deadlock.html">TaobaoProtectSE.dll 注入引起的死锁分析</a></h1>
+          <div class="m-article-content">案例背景
+
+一个以前运行良好的 Windows 程序，在添加了少量功能之后，在若干台测试机中的某一台上运行后一直得不到预期结果，并且能比较高机率地复现。排错过程如下：
 
 
   
-    屏幕大小（Screen size）
-
-    屏幕对角线的实际物理大小。通常以英寸（inch）为单位。
+    听完测试同学的描述后，以为是程序执行完了但是没有结果不对，于是以为是因为什么原因提前退出了，就复查代码中的分支逻辑，发现必经的路径中都有没有执行到的，而且写了一个小例过去发现必经路径能正常执行，感觉很诡异也很纳闷。
   
   
-    屏幕密度（Screen density）
-
-    每英寸上的像素个数。通常被称作多少 dpi（dots per inch）或多少 ppi（pixels per inch）。
-
-    比如，LG Nexus 5...</div><a href="/android/2015/04/06/dp-sp-px.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 04月06日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/java/2015/04/03/java-date.html">Java 日期类常用写法小结</a></h1>
-          <div class="m-article-content">Date 和 Calendar 转 String
-
-借助 SimpleDateFormat 类的 format 方法，Calendar.getTime() 返回 Date，最终 Calendar 也是转化为 Date 后转 String。
-
-// see SimpleDateFormat in Java API
-String format = new String("yyyy-MM-dd HH:mm:ss");
-SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
-
-// Date
-String strDate = sdf.format(new Date());
-
-Calendar cal = Calendar....</div><a href="/java/2015/04/03/java-date.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 04月03日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/windows/2015/03/31/singleton-process.html">Windows 实现单实例进程的两种方法</a></h1>
-          <div class="m-article-content">方法一：共享静态数据。
-
-此方法参见《Windows 核心编程》第 5 版 17.1.2 章节《在同一个可执行文件或 DLL 的多个实例间共享静态数据》。
-
-实现原理：
-
-创建一个自己命名的段，将其属性改为 READ|WRITE|SHARED，其中 SHARED 属性表示该段的内容为多个实例所共享（实际上关闭了写时复制机制），将变量放在该段内若值被改变，多个实例间都会受到改变的影响。
-
-注意点：
-
-
-  最好使用 volatile 修饰变量。
-  对变量的增减推荐使用原子操作函数 InterlockedExchangedAdd。
-  g_lInstances 的值在第一个实例运行时总为 0，其它实例中取到的值以先于它运行的实例中改变后的值为准。
-
-
-示例代码：
-
-#include &l...</div><a href="/windows/2015/03/31/singleton-process.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 03月31日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/blog/2015/03/30/work-lesson.html">工作中得来的教训</a></h1>
-          <div class="m-article-content">把每一次的挫败，化解为下一次生长的营养。
-
-最近在工作上比较烦闷，大致想一下，其实原本可以做到更好，记录一些自认为重要的点，以后遇到类似的状况参考之。
-
-出来混，迟早是要还的。
-
-更准确一点说，应该是「今天偷的懒，早晚是要加倍的精力补回来的」。
-
-对于程序员来讲，把代码写得优雅，不将就，不只是为了看起来牛逼，更不是为了装逼，写出易读可扩展性好灵活的程序，以后你因为一些原因在一段时间以后需要去改动维护你自己的代码的时候，你会深深地感激自己当时坚持了一下，抵挡住了临时写法的诱惑，才不用在后来需要付出多倍的代价才能加入一个本不复杂的特性。
-
-坑要及时补，不然下次还会掉进去。
-
-如果你遇到某个技术点不熟，时间允许的话，在完成工作任务的同时，学好它；如果时间不充裕，把它加入你的 TODO 列表，...</div><a href="/blog/2015/03/30/work-lesson.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 03月30日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/blog/2015/02/14/strum-life.html">乱弹一气人生</a></h1>
-          <div class="m-article-content">直到临离开北京的这个凌晨，整个人才完全放松下来，暂时忘却那因工作 Delay 带来的耿耿于怀，赶走那常伴左右粘腻的莫名焦虑感，不用担心晚睡导致的第二天工作效率低下，身体和脑袋平日里要应付各种事务带来的紧绷感逐渐远离，难得的体会，当然任思绪飘飞。
-
-             ---&gt; 
-         ***********    
-  ^   ***           ***   |
-  | **       mood      ** |
-  |   ***           ***   v
-         ***********       
-             &lt;---
-
-
-关于工作
-
-每每回望自己的先搞汽车后干 IT 的从业经历，常觉得是一路崎岖，走下来...</div><a href="/blog/2015/02/14/strum-life.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 02月14日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/blog/2015/02/01/some-impressions.html">生活这件小事，烦请费思量</a></h1>
-          <div class="m-article-content">我不生产鸡汤，我只是源自心灵的鸡汤的搬运工。
-
-人都是有惰性的，如果不主动去思考更多，脑子里每天装的仅仅就是工作生活里必须去做的那些事，那逐渐就会麻木了情感，沉溺于身边的一方小世界里成了井底之蛙。
-
-所以——
-
-做一个有意识的人
-
-
+    偶然发现是进程一直卡在后台没有正确执行也没有退出（之前寻找原因的过程中思路有点被测试同学的描述带跑了，导致居然是「偶然」才发现的，这个要反思）。
   
-    要有眼界意识。
+  
+    用 WinDbg 工具 Attach 卡死进程并分析之。
+  
 
-    眼界决定生活层次，连见都没见过的生活当然不知道怎么努力去过上了。记住这个故事：
 
-    
-      两个农妇聊天，其中一个农妇问，你说皇后娘娘早上吃什么？另一个农妇回答：肯定是大饼卷大葱，酱想蘸多少就蘸多少，一点都不心疼；刚好她们的男人也在聊天，一个男人说，如果我是皇帝，就把整个村的牛粪全包下来，不许别人捡，只能我自己一个人捡；另一个人说，愚昧！皇帝哪还用捡牛粪？他老人家肯定是拿个蒲扇，吃着西瓜，坐在树荫底下看着...</div><a href="/blog/2015/02/01/some-impressions.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 02月01日</span></div>
+WinDbg 分析过程
+
+使用 ~*k...</div><a href="/windbg/2014/08/01/deadlock.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 08月01日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/cplusplus/2015/01/19/printf.html">一个 printf 引发的基础复习</a></h1>
-          <div class="m-article-content">先看一下引发我追究一下 printf 和栈桢等相关知识的一段简单的程序：
+</article><article><h1><a href="/fiddler/2014/07/20/fiddlercontextmenu.html">定制 Fiddler 之将请求发往另一服务器</a></h1>
+          <div class="m-article-content">需求
+
+对 Fiddler 抓取的某个特定 SESSION 能在必要时手动操作发往另一个服务器。
+
+设想
+
+在 SESSION 上点击右键弹出的菜单中添加一项，让它对应的响应事件来完成此操作。而联想到 Fiddler 的 Composer 功能能够将某条 SESSION 按自己的需要修改后重新发出，那利用 Composer 来做应该是比较容易实现且便捷的方式。
+
+实现
+
+对 Fiddler 的扩展比较方便的是使用 FiddlerScript，修改 CustomRules.js 来做。比如希望在 hostname 为www.mazhuang.org的 SESSION 上右键后利用自己添加的菜单项将此 SESSION 的 hostname 修改为mazhuang.org后重新发送请求，最终...</div><a href="/fiddler/2014/07/20/fiddlercontextmenu.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 07月20日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/fiddler/2014/07/19/fiddlerwithwinhttp.html">定制 Fiddler 之抓获 WinHTTP 请求</a></h1>
+          <div class="m-article-content">背景
+
+发现使用 Fiddler 进行抓包时有一部分请求总是没抓到，查看了一下源代码，发现使用 WinINET 这套 API 发送的请求都能正常抓到，而使用 WinHTTP 这套 API 发送的请求都没有抓到，遂搜索了一下，果然前人们早已给出答案，解决方案原文可以参看 Fiddler 作者 Eric Lawrence 大神的一篇博客 Using Fiddler with WinHTTP，博客里表示 Fiddler 对各种 HTTP(s) stacks 都是能支持的，只是默认启动时只是接管了 WinINET 代理设置。
+
+Eric 的那篇博客里已经列出了相关的方法和代码，本文只是对其略做改进，让同一段代码可以适配不同的 Windows 版本。
+
+分析
+
+我们需要让 Fiddler 抓取 ...</div><a href="/fiddler/2014/07/19/fiddlerwithwinhttp.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 07月19日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/windows/2014/07/13/dllsearch.html">默认的 DLL 搜索路径优先级</a></h1>
+          <div class="m-article-content">结论
+
+在默认情况下，Windows 加载程序在用户磁盘上搜索 DLL 的搜索顺序：
+
+
+  包含可执行文件的目录。
+  Windows 的系统目录，该目录可以通过 GetSystemDirectory 得到，一般为 System32 目录，若为 32 位程序跑在 64 位系统下，则为 SysWOW64 目录。
+  16 位的系统目录，即 Windows 目录中的 System 目录。
+  Windows 目录，该目录可以通过 GetWindowsDirectory 得到。
+  进程的当前目录。
+  PATH 环境变量中所列出的目录。
+
+
+如果调用 LoadLibrary 时传入的是绝对路径，那么加载程序将只尝试从该绝对路径搜索 DLL。
+
+附注
+
+以上结论在「Windows 核心编程...</div><a href="/windows/2014/07/13/dllsearch.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 07月13日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/cplusplus/2014/07/13/cppinit.html">C++ 类成员变量初始化</a></h1>
+          <div class="m-article-content">本文是对《Effective C++》的”Item 4: Make sure that objects are initialized before they’re used”的笔记和验证。
+
+结论
+
+
+  在进入构造函数体之前，数据成员的初始化就已完成。
+  数据成员的初始化顺序取决于声明顺序。
+
+
+结论 1 证明
+
+证明代码片段：
 
 #include &lt;stdio.h&gt;
 
-int main()
+class CA
 {
-    printf("%d ", 8.0/5);
-    printf("%.2f", 8/5);
-    return 0;
-}
+public:
+    CA(const char* pName = "default")
+    {
+        printf("CA::CA(const char*) pName = %s\n", pName);
+    }
 
-
-初看时，想当然了一下觉得输出就是1 1.00，后来编译出来运行一下，屏幕上却赫然是-1717986918 1.60。
-
-在脑中干想了良久，其时的疑惑主要有两点：
-
-
-  
-    1.6 转换为整形怎么就变成了负数。
-  
-  
-    1 转换为浮点数怎么就变成了 1.60。
-  
-
-
-现在看来当时的理解中存在着一个很大的误区，就是觉得 printf 是将参数根据格式化字符串进行强制类型转换之后再...</div><a href="/cplusplus/2015/01/19/printf.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 01月19日</span></div>
+    CA(const CA&amp; a...</div><a href="/cplusplus/2014/07/13/cppinit.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 07月13日</span></div>
   </div>
 </div>
-</article></div><nav class="m-pagination"><p>共计 103 篇文章，15 页。</p>
+</article></div><nav class="m-pagination"><p>共计 85 篇文章，13 页。</p>
           <ul><li><a class="round-button" href="/blog/page7">
                 <div class="icon icon--previous"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
@@ -364,7 +358,7 @@ int main()
                 </li><li>
                       <a class="round-button" href="/blog/page9"><span>9</span></a>
                     </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
-                      <a class="round-button" href="/blog/page15"><span>15</span></a>
+                      <a class="round-button" href="/blog/page13"><span>13</span></a>
                     </li><li>
                 <a class="round-button" href="/blog/page9">
                   <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -381,7 +375,30 @@ int main()
   <div class="main">
     <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="qishunli">
-    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+    <link itemprop="url" href="http://localhost:4000/"><li title="在 Weibo 上关注我。">
+        <div class="floating-action-round-button weibo">
+          <a itemprop="sameAs" href="https://weibo.com/浅浅蓝_qsl" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<path d="M769.226164 496.610234c-14.420098-4.330228-24.309277-7.266877-16.746482-26.214823 16.350218-41.133578 18.046881-76.626289 0.307181-101.939024-33.242099-47.500415-124.194284-44.928286-228.44638-1.280945 0-0.056317-32.73525 14.323848-24.371737-11.64523 16.042013-51.54906 13.626547-94.739726-11.332929-119.662341-56.566349-56.601163-206.976479 2.134908-335.954595 131.078209-96.594075 96.61353-152.681222 198.989775-152.681222 287.52035 0 169.337597 217.152361 272.292366 429.593589 272.292366 278.498445 0 463.752111-161.808592 463.752111-290.273715C893.345701 558.867622 827.968378 514.820945 769.226164 496.610234zM430.163922 866.063936c-169.51781 16.728051-315.851649-59.899262-326.864086-171.202185-11.010389-111.275277 117.530505-215.061482 287.031932-231.823323 169.537265-16.761841 315.876224 59.866496 326.86511 171.119247C728.190884 745.495411 599.705282 849.291856 430.163922 866.063936z" />
+	<path d="M954.16753 186.714824c-67.256246-74.565105-166.457264-102.990607-258.020739-83.522502l-0.037886 0c-21.188318 4.535015-34.695065 25.37929-30.159026 46.527675 4.516584 21.166816 25.352668 34.691993 46.54201 30.174385 65.139769-13.832358 135.634727 6.400627 183.442323 59.368863 47.765615 52.96414 60.740938 125.206957 40.282686 188.537431l0.011263 0.012287c-6.666851 20.629249 4.617954 42.698153 25.271777 49.366027 20.570885 6.662755 42.687913-4.607714 49.362955-25.188838 0-0.037886 0-0.116729 0.011263-0.150519C1039.577146 362.756133 1021.443231 261.206205 954.16753 186.714824" />
+	<path d="M850.886125 279.919669c-32.732179-36.315956-81.068126-50.108381-125.685136-40.621609-18.234261 3.885839-29.856965 21.833398-25.946551 40.085067 3.89915 18.173849 21.833398 29.851845 40.024654 25.893307l0 0.037886c21.809848-4.610786 45.459709 2.113405 61.461789 19.83365 16.018463 17.757107 20.323092 41.949655 13.45043 63.178931l0.035838 0c-5.715614 17.717174 3.983113 36.770584 21.717694 42.511796 17.7397 5.677728 36.76956-3.992328 42.493365-21.756603C892.458972 365.691759 883.686907 316.228458 850.886125 279.919669" />
+	<path d="M447.103928 548.691741c-80.666743-20.985579-171.84317 19.215193-206.880229 90.291746-35.685212 72.492657-1.180599 152.963828 80.321676 179.268757 84.41947 27.224424 183.926645-14.492797 218.521364-92.744074C573.187374 649.021137 530.586496 570.268131 447.103928 548.691741zM385.506979 733.819463c-16.398343 26.160554-51.51015 37.623523-77.954335 25.54824-26.066352-11.868448-33.760211-42.248645-17.360844-67.757975 16.197652-25.400793 50.129884-36.716316 76.378497-25.711046C393.129162 677.216253 401.60838 707.401901 385.506979 733.819463zM439.522702 664.493841c-5.929616 10.131852-19.03498 15.010909-29.304039 10.785123-10.096014-4.15411-13.261002-15.495231-7.522862-25.454038 5.906066-9.908634 18.500485-14.747758 28.572948-10.750309C441.502995 642.817105 445.180975 654.283146 439.522702 664.493841z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li><li title="在 Github 上关注我。">
+        <div class="floating-action-round-button github">
+          <a itemprop="sameAs" href="https://github.com/qiqishunli" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path class="svgpath" data-index="path_0" fill="#272636" d="M0 525.2c0 223.6 143.3 413.7 343 483.5 26.9 6.8 22.8-12.4 22.8-25.4l0-88.7c-155.3 18.2-161.5-84.6-172-101.7-21.1-36-70.8-45.2-56-62.3 35.4-18.2 71.4 4.6 113.1 66.3 30.2 44.7 89.1 37.2 119 29.7 6.5-26.9 20.5-50.9 39.7-69.6C248.8 728.2 181.7 630 181.7 513.2c0-56.6 18.7-108.7 55.3-150.7-23.3-69.3 2.2-128.5 5.6-137.3 66.5-6 135.5 47.6 140.9 51.8 37.8-10.2 80.9-15.6 129.1-15.6 48.5 0 91.8 5.6 129.8 15.9 12.9-9.8 77-55.8 138.8-50.2 3.3 8.8 28.2 66.7 6.3 135 37.1 42.1 56 94.6 56 151.4 0 117-67.5 215.3-228.8 243.7 26.9 26.6 43.6 63.4 43.6 104.2l0 128.8c0.9 10.3 0 20.5 17.2 20.5C878.1 942.4 1024 750.9 1024 525.3c0-282.9-229.3-512-512-512C229.1 13.2 0 242.3 0 525.2L0 525.2z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li></ul><p class="email">
+      <a title="给我发邮件。" href="mailto:shunliqi@163.com" target="_self">shunliqi@163.com</a>
+    </p></div>
 </aside>
     <footer class="site-info">
       <p>© 浅浅蓝的博客 2018</p>

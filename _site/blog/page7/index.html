@@ -210,119 +210,146 @@
 </header>
 <div class="m-page-main"><div class="m-home">
   <div class="main">
-    <div class="m-post-list"><article><h1><a href="/blog/2015/06/01/sogou-hackathon.html">黑客马拉松参赛总结</a></h1>
-          <div class="m-article-content">
+    <div class="m-post-list"><article><h1><a href="/android/2015/04/06/dp-sp-px.html">Android UI 开发里的尺寸单位理解</a></h1>
+          <div class="m-article-content">在学习 Android UI 开发的初期，经常被一些常用概念如 dp、sp 和它们与 px 的换算等虐，要避免被虐，最好的方法当然是知其所以然，再见到它们就胸中有料心不慌了。
 
-五月的最后一个周末，和同事一起组队参加了我司举办的首届黑客马拉松大赛，经过几十个小时的奋战，我和队友们一起完成度较高地准备好了演示 Demo、ppt 等，在大家一致看好、觉得在首轮评审表现出色的情况下止步首轮，说不遗憾肯定是假的，想想和小伙伴们为了完成 Demo 的通宵达旦，四个人短时间内提交的上万行代码，三十多个小时不曾睡觉的情况下，听到评审结果宣判的那一刻，倦意趁我的一丝失落情绪铺天盖地地袭来。
+背景知识
 
-时间仍然欢快地往前流淌，我在沉睡十多个小时后也满血复活，过去的就让它过去吧，收拾收拾心情，总结总结经验教训，继续前行。
+参考 http://developer.android.com/guide/practices/screens_support.html#terms
 
-比赛中有幸被小伙伴们推举为我们小组的 CTO，作为需要在技术方面掌控全局的角色，回想一下自己的表现，算是中规中矩，有亮点，也暴露了很多问题。
 
-先臭屁一下自己的优...</div><a href="/blog/2015/06/01/sogou-hackathon.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 06月01日</span></div>
+  
+    屏幕大小（Screen size）
+
+    屏幕对角线的实际物理大小。通常以英寸（inch）为单位。
+  
+  
+    屏幕密度（Screen density）
+
+    每英寸上的像素个数。通常被称作多少 dpi（dots per inch）或多少 ppi（pixels per inch）。
+
+    比如，LG Nexus 5...</div><a href="/android/2015/04/06/dp-sp-px.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 04月06日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/blog/2015/05/28/leader-art.html">领导与员工的艺术</a></h1>
-          <div class="m-article-content">
+</article><article><h1><a href="/java/2015/04/03/java-date.html">Java 日期类常用写法小结</a></h1>
+          <div class="m-article-content">Date 和 Calendar 转 String
 
-工作远非简单的完成任务而已，如何成为一名合格的员工？如何成为一名令下属信服的领导？朋友圈里的鸡汤似乎经常试图告诉我答案，但是在这个看见鸡汤文就神烦的年代，还是自己稍作总结来得更靠谱一点。
+借助 SimpleDateFormat 类的 format 方法，Calendar.getTime() 返回 Date，最终 Calendar 也是转化为 Date 后转 String。
 
-合格员工
+// see SimpleDateFormat in Java API
+String format = new String("yyyy-MM-dd HH:mm:ss");
+SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
 
-如何成为一名合格的员工？
+// Date
+String strDate = sdf.format(new Date());
 
-面对这样一个问题，很多人的答案可能是「干好手上的活呗」，此话固然不错，但是如何干好，相信不同的人心里有不同的原则与好建议。
-
-我的版本是：
-
-
-  不要只是提出问题，带着思考后的方案去。
-  对自己跟进的任务要随时心里有数，比如当前进度，预计完成时间，关键数据等。
-  敢于行权。一些在自己能力和职责范围内的事情，主动推动解决，将重要节点和结果向领导汇报即可。
-  抬高眼光层次，在自己的思考之外，尝试以你的直接领导的眼光来分析和解决问题。
-  图生存之外，还...</div><a href="/blog/2015/05/28/leader-art.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 05月28日</span></div>
+Calendar cal = Calendar....</div><a href="/java/2015/04/03/java-date.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 04月03日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/svn/2015/05/27/svn-exception.html">TortoiseSVN 从 GitHub 更新时发生异常</a></h1>
+</article><article><h1><a href="/windows/2015/03/31/singleton-process.html">Windows 实现单实例进程的两种方法</a></h1>
+          <div class="m-article-content">方法一：共享静态数据。
+
+此方法参见《Windows 核心编程》第 5 版 17.1.2 章节《在同一个可执行文件或 DLL 的多个实例间共享静态数据》。
+
+实现原理：
+
+创建一个自己命名的段，将其属性改为 READ|WRITE|SHARED，其中 SHARED 属性表示该段的内容为多个实例所共享（实际上关闭了写时复制机制），将变量放在该段内若值被改变，多个实例间都会受到改变的影响。
+
+注意点：
+
+
+  最好使用 volatile 修饰变量。
+  对变量的增减推荐使用原子操作函数 InterlockedExchangedAdd。
+  g_lInstances 的值在第一个实例运行时总为 0，其它实例中取到的值以先于它运行的实例中改变后的值为准。
+
+
+示例代码：
+
+#include &l...</div><a href="/windows/2015/03/31/singleton-process.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 03月31日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/cplusplus/2015/01/19/printf.html">一个 printf 引发的基础复习</a></h1>
+          <div class="m-article-content">先看一下引发我追究一下 printf 和栈桢等相关知识的一段简单的程序：
+
+#include &lt;stdio.h&gt;
+
+int main()
+{
+    printf("%d ", 8.0/5);
+    printf("%.2f", 8/5);
+    return 0;
+}
+
+
+初看时，想当然了一下觉得输出就是1 1.00，后来编译出来运行一下，屏幕上却赫然是-1717986918 1.60。
+
+在脑中干想了良久，其时的疑惑主要有两点：
+
+
+  
+    1.6 转换为整形怎么就变成了负数。
+  
+  
+    1 转换为浮点数怎么就变成了 1.60。
+  
+
+
+现在看来当时的理解中存在着一个很大的误区，就是觉得 printf 是将参数根据格式化字符串进行强制类型转换之后再...</div><a href="/cplusplus/2015/01/19/printf.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 01月19日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/android/2014/12/31/simplify-apk.html">如何让 HelloWorld.apk 体积最小</a></h1>
+          <div class="m-article-content">按照最新 ADT 的默认设置（如下图所示）创建一个最简单的 HelloWorld 程序，会发现最后生成的 apk 文件大小就已经达到了惊人的 903KB。如果只是想做一个功能非常简单的 APP，体积也这么大的话那太让人沮丧了，那我们就来探索一下如何让这个 HelloWorld.apk 体积最小。
+
+
+
+（注：本文所述方法是以牺牲新的 API 为代价的。）
+
+默认生成的 apk 文件大小（903KB）：
+
+
+
+移除 appcompat_v7 依赖
+
+创建一个 Minimum Required SDK 低于 API level 11（对应 Android 3.0），Target SDK 高于 API Level 11 的工程，ADT 会自动生成一个名为 appcompat_v7 的库工程并...</div><a href="/android/2014/12/31/simplify-apk.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 12月31日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/vim/2014/12/21/vim-python-autocomplete.html">使用 gVim 的 Python 自动补全时遇到的问题</a></h1>
           <div class="m-article-content">问题描述
 
-使用 TortoiseSVN 从 GitHub 仓库 Update 时，弹出错误提示对话框：
+环境：Win7 x64
 
----------------------------
-Subversion Exception!
----------------------------
-Subversion encountered a serious problem.
-Please take the time to report this on the Subversion mailing list
-with as much information as possible about what
-you were trying to do.
-But please first search the mailing...</div><a href="/svn/2015/05/27/svn-exception.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 05月27日</span></div>
+从 gVim 7.4 的安装目录 /path/to/Vim/Vim74/autoload 下的 pythoncomplete.vim 看出，Vim 在这个版本已经默认内置了对 Python 的自动补全的支持。然而我在自己的笔记本上用得很好的配置，同样的、_vimrc 和插件平移到工作机上以后就出问题了， &lt;C-x&gt;&lt;C-o&gt; 的时候 gVim 底部提示：
+
+Error: Required vim compiled with +python
+E117: Unknown function: pythoncomplete#Complete
+
+
+解决过程
+
+
+  
+    排查 Vim 版本编译时的 Python 支持
+
+    根...</div><a href="/vim/2014/12/21/vim-python-autocomplete.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 12月21日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/java/2015/05/15/java-compare.html">Java 中的比较运算符</a></h1>
-          <div class="m-article-content">小菜鸟才学习 Java 没多久，这天要写一个存储长整形的列表，于是这样写：
+</article><article><h1><a href="/python/2014/10/12/csdnresautocomment.html">CSDN 已下载资源自动批量评论脚本</a></h1>
+          <div class="m-article-content">用 Python 实现自动批量打分评论指定 CSDN 账号内所有下载过待评论的资源。
 
-List&lt;long&gt; listData = new ArrayList&lt;long&gt;();
+GitHub 仓库地址：https://github.com/mzlogin/csdncommenter
 
+可通过 pip 安装运行：
 
-这时 Android Studio 不高兴了，在 long 下面打上红色波浪线，然后提示小菜鸟：
-
-Type argument cannot be of primitive type
-
-
-赶紧进 List 的定义看了一下，发现类型参数必须是引用类型，不能用原始数值类型。
-
-于是就改为：
-
-List&lt;Long&gt; listData = new ArrayList&lt;Long&gt;();
+pip install csdncommenter
+csdncommenter
 
 
-这时 Android Studio 不说什么了，于是小菜鸟很开心地继续往下写，往 list...</div><a href="/java/2015/05/15/java-compare.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 05月15日</span></div>
+背景
+
+CSDN 账号过一段时间就会累积几十个下载过但是未评论打分的资源，虽然现在上传了一些资源供别人下载后基本不愁积分，但是为了可持续发展，还是把评论一下就能顺手拿了的这种积分不客气地收入囊中吧！不过手动一个一个去评论真的很蛋疼……特别是 CSDN 还设了两个评论间隔不能小于 60 秒、刚刚下载的资源十分钟内不能评论的限制，评论几十个就得至少花个几十分钟折腾，所以想想这种耗时、无...</div><a href="/python/2014/10/12/csdnresautocomment.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 10月12日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/emacs/2015/05/10/emacs.html">Emacs 折腾记</a></h1>
-          <div class="m-article-content">作为一名在 Windows 下使用了多年 gVim 的少年，已然把它在我需要的地方都收拾得服服贴贴，可以说 Vim 经过配置配置，上得厅堂下得厨房，基本能满足我的所有幻想。
-
-直到那天突然产生了新的需求——Lisp。我工作中倒并没有用得到 Lisp 的地方，但是最近眼前晃过的一些书，比如《计算机程序的构造和解释》、《码农》杂志第 13 期，都对这门古老的语言推崇备至，还有垠神也撰文《Lisp 已死，Lisp 万岁！》历数现代 Lisp 方言的先进性，再者我也一直有学习一门函数式编程语言的想法，看起来，Lisp 是不二之选。但是在用 Vim 配置 Lisp 开发环境时遇到些问题，虽然有 Slimv，可用起来还是感觉各种不便。
-
-在搜索网友们对此的经验之谈的时候，自然而然地，目光逐渐聚集到...</div><a href="/emacs/2015/05/10/emacs.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 05月10日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/blog/2015/05/09/no-need-to-tangle.html">一些不必纠结的事情</a></h1>
-          <div class="m-article-content">这里记录的都是一些我曾经反复思考的问题，可能我某一天已经做好了决定，但是后来忘了这个决定，然后再纠结一遍，这耗费了大量的脑力却没有任何帮助。当再次因为一个事情纠结的时候，看一看这里，是不是这个问题已经纠结过了，有结论了。
-
-一本书该不该看
-
-虽然我们需要高效地安排自己的时间，用有限的时间换来最大的收益，但是既然会纠结，就说明至少这本书要么是兴趣所在，要么是内心觉得看了会有用。即如此，那就看吧，因为可以记住一点：
-
-投入地看一本书，即使只是利用工作之余的时间，一般有几天也就看完了。
-
-即使这本书以后并没有给你带来什么，但是你也并没有失去什么。
-
-Emacs 还是 Vim
-
-用合适的工具正确地干活，它俩各有优点，所以我选择都用。在需要快速启动编辑配置文件的几个字段时 ，显然 Vim 更合适...</div><a href="/blog/2015/05/09/no-need-to-tangle.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 05月09日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/android/2015/05/06/android-studio.html">Android Studio 遇到问题集锦</a></h1>
-          <div class="m-article-content">打开 Android Studio 卡在「Fetching Android SDK component information」界面。
-
-如图：
-
-
-
-Android Studio First Run 检测 Android SDK 及更新，由于众所周知的原因，我们会「Unable to access Android SDK add-on list」，而且大家一般也已经提前配置好了 Android SDK，真正需要更新的时候手动去 SDK Manager 更新就好了。
-
-解决方案：
-
-在 Android Studio 安装目录 bin/idea.properties 文件最后追加一句
-
-disable.android.first.run=true
-
-
-参考： http://ask.and...</div><a href="/android/2015/05/06/android-studio.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2015年 05月06日</span></div>
-  </div>
-</div>
-</article></div><nav class="m-pagination"><p>共计 103 篇文章，15 页。</p>
+</article></div><nav class="m-pagination"><p>共计 85 篇文章，13 页。</p>
           <ul><li><a class="round-button" href="/blog/page6">
                 <div class="icon icon--previous"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
@@ -337,7 +364,7 @@ disable.android.first.run=true
                 </li><li>
                       <a class="round-button" href="/blog/page8"><span>8</span></a>
                     </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
-                      <a class="round-button" href="/blog/page15"><span>15</span></a>
+                      <a class="round-button" href="/blog/page13"><span>13</span></a>
                     </li><li>
                 <a class="round-button" href="/blog/page8">
                   <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -354,7 +381,30 @@ disable.android.first.run=true
   <div class="main">
     <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="qishunli">
-    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+    <link itemprop="url" href="http://localhost:4000/"><li title="在 Weibo 上关注我。">
+        <div class="floating-action-round-button weibo">
+          <a itemprop="sameAs" href="https://weibo.com/浅浅蓝_qsl" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<path d="M769.226164 496.610234c-14.420098-4.330228-24.309277-7.266877-16.746482-26.214823 16.350218-41.133578 18.046881-76.626289 0.307181-101.939024-33.242099-47.500415-124.194284-44.928286-228.44638-1.280945 0-0.056317-32.73525 14.323848-24.371737-11.64523 16.042013-51.54906 13.626547-94.739726-11.332929-119.662341-56.566349-56.601163-206.976479 2.134908-335.954595 131.078209-96.594075 96.61353-152.681222 198.989775-152.681222 287.52035 0 169.337597 217.152361 272.292366 429.593589 272.292366 278.498445 0 463.752111-161.808592 463.752111-290.273715C893.345701 558.867622 827.968378 514.820945 769.226164 496.610234zM430.163922 866.063936c-169.51781 16.728051-315.851649-59.899262-326.864086-171.202185-11.010389-111.275277 117.530505-215.061482 287.031932-231.823323 169.537265-16.761841 315.876224 59.866496 326.86511 171.119247C728.190884 745.495411 599.705282 849.291856 430.163922 866.063936z" />
+	<path d="M954.16753 186.714824c-67.256246-74.565105-166.457264-102.990607-258.020739-83.522502l-0.037886 0c-21.188318 4.535015-34.695065 25.37929-30.159026 46.527675 4.516584 21.166816 25.352668 34.691993 46.54201 30.174385 65.139769-13.832358 135.634727 6.400627 183.442323 59.368863 47.765615 52.96414 60.740938 125.206957 40.282686 188.537431l0.011263 0.012287c-6.666851 20.629249 4.617954 42.698153 25.271777 49.366027 20.570885 6.662755 42.687913-4.607714 49.362955-25.188838 0-0.037886 0-0.116729 0.011263-0.150519C1039.577146 362.756133 1021.443231 261.206205 954.16753 186.714824" />
+	<path d="M850.886125 279.919669c-32.732179-36.315956-81.068126-50.108381-125.685136-40.621609-18.234261 3.885839-29.856965 21.833398-25.946551 40.085067 3.89915 18.173849 21.833398 29.851845 40.024654 25.893307l0 0.037886c21.809848-4.610786 45.459709 2.113405 61.461789 19.83365 16.018463 17.757107 20.323092 41.949655 13.45043 63.178931l0.035838 0c-5.715614 17.717174 3.983113 36.770584 21.717694 42.511796 17.7397 5.677728 36.76956-3.992328 42.493365-21.756603C892.458972 365.691759 883.686907 316.228458 850.886125 279.919669" />
+	<path d="M447.103928 548.691741c-80.666743-20.985579-171.84317 19.215193-206.880229 90.291746-35.685212 72.492657-1.180599 152.963828 80.321676 179.268757 84.41947 27.224424 183.926645-14.492797 218.521364-92.744074C573.187374 649.021137 530.586496 570.268131 447.103928 548.691741zM385.506979 733.819463c-16.398343 26.160554-51.51015 37.623523-77.954335 25.54824-26.066352-11.868448-33.760211-42.248645-17.360844-67.757975 16.197652-25.400793 50.129884-36.716316 76.378497-25.711046C393.129162 677.216253 401.60838 707.401901 385.506979 733.819463zM439.522702 664.493841c-5.929616 10.131852-19.03498 15.010909-29.304039 10.785123-10.096014-4.15411-13.261002-15.495231-7.522862-25.454038 5.906066-9.908634 18.500485-14.747758 28.572948-10.750309C441.502995 642.817105 445.180975 654.283146 439.522702 664.493841z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li><li title="在 Github 上关注我。">
+        <div class="floating-action-round-button github">
+          <a itemprop="sameAs" href="https://github.com/qiqishunli" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path class="svgpath" data-index="path_0" fill="#272636" d="M0 525.2c0 223.6 143.3 413.7 343 483.5 26.9 6.8 22.8-12.4 22.8-25.4l0-88.7c-155.3 18.2-161.5-84.6-172-101.7-21.1-36-70.8-45.2-56-62.3 35.4-18.2 71.4 4.6 113.1 66.3 30.2 44.7 89.1 37.2 119 29.7 6.5-26.9 20.5-50.9 39.7-69.6C248.8 728.2 181.7 630 181.7 513.2c0-56.6 18.7-108.7 55.3-150.7-23.3-69.3 2.2-128.5 5.6-137.3 66.5-6 135.5 47.6 140.9 51.8 37.8-10.2 80.9-15.6 129.1-15.6 48.5 0 91.8 5.6 129.8 15.9 12.9-9.8 77-55.8 138.8-50.2 3.3 8.8 28.2 66.7 6.3 135 37.1 42.1 56 94.6 56 151.4 0 117-67.5 215.3-228.8 243.7 26.9 26.6 43.6 63.4 43.6 104.2l0 128.8c0.9 10.3 0 20.5 17.2 20.5C878.1 942.4 1024 750.9 1024 525.3c0-282.9-229.3-512-512-512C229.1 13.2 0 242.3 0 525.2L0 525.2z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li></ul><p class="email">
+      <a title="给我发邮件。" href="mailto:shunliqi@163.com" target="_self">shunliqi@163.com</a>
+    </p></div>
 </aside>
     <footer class="site-info">
       <p>© 浅浅蓝的博客 2018</p>

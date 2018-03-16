@@ -210,195 +210,146 @@
 </header>
 <div class="m-page-main"><div class="m-home">
   <div class="main">
-    <div class="m-post-list"><article><h1><a href="/cplusplus/2014/05/24/virtualfunctions.html">对象内存结构及虚函数表分析</a></h1>
-          <div class="m-article-content">最近抽空浏览了一遍《COM 原理与应用》，一本老书了，COM 技术在我工作中运用得不多，但是接口设计规范和标准这一套东西还是能带给我一些有用的实践经验和启发的。在读到第二章《COM 对象和接口》的时候，看到虚函数表的一些相关知识，这些之前倒是也都知道，但是从来没有试着自己描述过，所以老觉得理解得不够彻底，那么……就试着结合一些小的代码段描述一下看，权当笔记加深记忆。
+    <div class="m-post-list"><article><h1><a href="/gecko/2012/02/24/gecko-embed.html">将 Mozilla 源码里的 winEmbed 工程移植到 VC</a></h1>
+          <div class="m-article-content">最近在学习怎么将 Gecko 嵌入到自己的应用程序中，下载了一份比较早一点的源码在对照官方文档痛苦地推进——网上相关资料确实相当缺乏，难道大家都各种 webkit 去了？我的计划是先弄清怎么用，让程序跑起来，然后再根据官方文档结构说明去定制，削减掉不需要的部分，折腾这个移植就花了我不少时间，果断觉得应该跟大家分享之。废话不说,直接上过程。
 
-以下代码及运行结果基于 Win7_64 + GCC 4.7.2 环境，其它环境下可能程序运行结果等有出入，但是原理相通。
+下载xulrunner源码并编译。
 
-目录
+我这里用的 1.9.2rc1 版本，对应 firefox 3.6.X。
 
+源码下载地址：ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/releases/1.9.2rc1/source/
 
-  无继承类对象的内存结构
-  单继承的类对象的内存结构
-  普通多继承的类对象的内存结构
-  单虚继承的类对象的内存结构
-  钻石结构的类对象的内存结构
-
-
-无继承类对象的内存结构
-
-先...</div><a href="/cplusplus/2014/05/24/virtualfunctions.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 05月24日</span></div>
+编译环境 mozilla-build 下载地址：http://ftp.mo...</div><a href="/gecko/2012/02/24/gecko-embed.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2012年 02月24日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/cplusplus/2014/05/10/numbersign.html">C++ 中的#，##，和"</a></h1>
-          <div class="m-article-content">想要灵活应用宏，离不开#和##。
-
-”
-在学习#和##之前，先来看一个关于"的例子：
-
-#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
-
-int main()
-{
-    const char* p1 = "Hello," "World!";     // 一个空格
-    const char* p2 = "Hello,"    "World!";  // 多个空格
-    const char* p3 = "Hello,""World!";      // 没有空格
-    const char* p4 = "Hello,World!";        // 一个整串
-    const char* p5 = "Nihao,""...</div><a href="/cplusplus/2014/05/10/numbersign.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 05月10日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/windows/2014/03/07/pits-in-windows.html">Windows API 中的坑</a></h1>
-          <div class="m-article-content">ExpandEnvironmentStrings
-
-风险：
-
-进程会继承其父进程的环境变量，在展开如 %APPDATA% 等目录时，有可能父进程对此环境变量进行过修改，那么可能你获取的就不是你想要的当前 SESSION 的 %APPDATA% 了。
-
-建议：
-
-使用 SHGetFolderPath 系列函数来做这件事。
-
-GetModuleFileName
-
-风险：
-
-在 DLL 中调用时，若传入的 instance 参数为 NULL，那获取的将是加载 DLL 的进程的 EXE 的路径，若需要获取 DLL 的路径，传入的 instance 参数需为 DLL 的 hModule。
-
-RegQueryValueEx
-
-风险：
-
-最后一个参数为 inout 参数，需要带入 Buffer 的 ...</div><a href="/windows/2014/03/07/pits-in-windows.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 03月07日</span></div>
-  </div>
-</div>
-</article><article><h1><a href="/excel/2014/02/19/excel-incommonuse.html">Excel 常用操作</a></h1>
-          <div class="m-article-content">查找
+</article><article><h1><a href="/hge/2012/02/12/hge.html">HGE 引擎学习笔记 1——如何模拟物理碰撞</a></h1>
+          <div class="m-article-content">模拟物理碰撞要解决的几个问题：
 
 
   
-    FIND 函数
+    怎样模拟速度的变化？
 
-    作用：
-
-    用于在第二个文本串中定位第一个文本串，并返回第一个文本串的起始位置的值，该值从第二个文本串的第一个字符算起。
-
-    语法：
-
-    FIND(find_text, within_text, [start_num])
-
-    示例：
-
-    =FIND("ha", B2)
+    设置一个摩擦系数 friction(0&lt;friction&lt;1.0) 和响应用户按键之后的一个 X 坐标单时间片增量 dx，一个 Y 坐标单时间片增量 dy，每隔一个时间片 dx *= friction; dy *= friction; 只要参数设置得当，看起来就会觉得速度自然地减慢。因为我们所用的浮点数的数据类型的精度限制，物体在经过一定数量时间片后就会停下来。
   
+  
+    怎样模拟碰撞？
+
+    每个时间片处理过程中，判断物体的边缘坐标加上 dx 与 dy 后有没有超过屏幕边缘，如果超过，则采取一定的策略重新设置物体坐标让其在正常范围内，如 X 轴超过，则对 dx 取反；如 Y 轴...</div><a href="/hge/2012/02/12/hge.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2012年 02月12日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/algorithm/2011/11/20/permutation.html">简单的全排列算法实现</a></h1>
+          <div class="m-article-content">问题描述
+
+实现一个简单的全排列算法，以整形数组{1,2,3,4,5}为例，假设元素无重复。
+
+问题分析
+
+如果用多层循环来实现，那么……有多少个元素将需要有多少层循环，这样作为实现一个算法的角度来看显然是不可取的。
+
+以 a[] = {1,2,3,4,5}为例，它的全排列是
+
+1　{2,3,4,5}的全排列
+2  {1,3,4,5}的全排列
+3  {1,2,4,5}的全排列
+4  {1,2,3,5}的全排列
+5  {1,2,3,4}的全排列
 
 
-替换
+由子数组的全排列得到母数组的全排列结果，可以考虑用递归实现，具体可以设计为将 a 依次变换为
+
+12345
+21345
+31245
+41235
+51234
+
+
+然后分别求它们后四个元素的全排列，依此类推。
+
+简单的 C++ 实现
+
+#incl...</div><a href="/algorithm/2011/11/20/permutation.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2011年 11月20日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/basis/2011/11/06/basis.html">操作系统和数据库基础</a></h1>
+          <div class="m-article-content">
+  
+    进程与线程的差别
+
+    进程是程序的一次执行。线程可以理解为进程中执行的一段程序片段。在一个多任务环境下中下面的概念可以帮助我们理解两者的区别。
+
+    进程间是独立的，这表现在内存空间，上下文环境上；线程运行在进程空间里。一般来讲（不使用特殊技术），进程无法突破进程边界存取其它进程内的存储空间；而线程由于处于线程空间内，所以同一进程所产生的线程共享内一内存空间。同一进程中的两段代码不能够同时执行，除非引入线程。
+
+    线程是属于进程的，当进程退出时该进程所产生的线程都会被强制退出并清除。线程占用的资源要少于进程所占用的资料。
+
+    进程和线程都可以有优先级。
+  
+  
+    进程间通信的方式
+
+    现在最常用进程间通信的方式有信号，信号量，消息队...</div><a href="/basis/2011/11/06/basis.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2011年 11月06日</span></div>
+  </div>
+</div>
+</article><article><h1><a href="/basis/2011/11/04/basis.html">C++ 语言基础</a></h1>
+          <div class="m-article-content">面试中遇到的 C++ 语言基础试题。
 
 
   
-    REPLACE 函数
+    new 与 malloc 的区别
 
-    作用：
+    (1)new 是 C++ 操作符，malloc 是 C 库函数。
 
-    使用其它文本字符串并根据所指定的字符数替换某文本字符串中的部分文本。
+    (2)对于非内部数据结构的对象而言，malloc 无法满足动态对象的要求。对象在创建的同时要自动执行构造函数，对象在消亡之前要自动执行析构函数，由于 malloc 是库函数而不是运算符，不在编译器的控制权限之内，不能够把执行构造函数和析构函数的任务强加于 malloc/free。
 
-    语法：
+    (3)new 可以认为是 malloc 加构造函数的执行。
 
-    REPLACE(old_text, start_num, num_chars, new_text)
+    (4)new 出来的是对象，而 malloc 出来的是 (void *)
+  
+  
+    如何禁用掉拷贝构造函数与赋值操作符?
 
-    示例：
-
-    =REPLACE(B2, FIND...</div><a href="/excel/2014/02/19/excel-incommonuse.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2014年 02月19日</span></div>
+    在类里声明但是...</div><a href="/basis/2011/11/04/basis.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2011年 11月04日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/designpattern/2013/12/22/HFDP-Notes3.html">设计模式学习之装饰者模式</a></h1>
-          <div class="m-article-content">如下内容是学习《Head First 设计模式》第三部分《装饰者模式》所得，主要就是一些原文摘抄和少量自己的总结。
+</article><article><h1><a href="/algorithm/2011/10/11/fibonacci.html">青蛙跳台阶的问题——Fibonacci</a></h1>
+          <div class="m-article-content">这几天正在复习算法，今天在看一篇文章时偶然看到这个题目，想了一下居然没什么思路……（抱歉，实在太菜。)，文章中提示了一个关键词：Fibonacci 数列。然后我又小百度了一下，找了一个具体分析实例，结合两处，这才理清了思路。（汗啊……基础全忘光了，这以后咋办啊……深感担忧……)
 
-装饰者模式定义
+问题描述
 
+一只青蛙一次可以跳上 1 级台阶，也可以跳上 2 级台阶，请问这只青蛙跳上 n 级的台阶总共有多少种跳法？
 
-  装饰者模式动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性的替代方案。
+问题分析
 
+设青蛙跳上 n 级台阶的跳法为 f(n) 种。
 
-OO 原则
-
-
-  对扩展开放，对修改关闭。
-
-
-书中示例的 C++ 实现版源码
-
-这个 Solution 的 DecoratorPattern 工程里。
-
-书中示例的类图
-
-Visio 原图见这里:
+设 Fibonacci 数列的第 x 项值为 fibo(x)。
 
 
-</div><a href="/designpattern/2013/12/22/HFDP-Notes3.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2013年 12月22日</span></div>
+  当 n=1 时，f(n)=1=fibo(2)
+  当 n=2 时，f(n)=2=fibo(3)
+  当 n&gt;2 时，分析可知，在跳上第 n 级台阶前一...</div><a href="/algorithm/2011/10/11/fibonacci.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2011年 10月11日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/designpattern/2013/12/03/HFDP-Notes2.html">设计模式学习之观察者模式</a></h1>
-          <div class="m-article-content">如下内容是学习《Head First 设计模式》第二部分《观察者模式》所得，主要就是一些原文的摘抄和少量自己的总结。
+</article><article><h1><a href="/excel/2011/05/25/gather-multi-excel-to-one-by-vba.html">用 VBA 将多个 Excel 文件里的数据汇总到一个 Excel 表</a></h1>
+          <div class="m-article-content">需求
 
-观察者模式定义
+给出一个空汇总表，和若干单独的 Excel 文件，每个文件里头有一个表格里存有一个人的信息，要将这些文件里的信息全部对应地导入到汇总表里。
 
+以前写的，也不给实际例子了，直接上代码，逻辑不复杂，看看就明白。记在这里备以后查。
 
-  观察者模式定义了对象之间的一对多依赖，这样一来，当一个对象改变状态时，它的所有依赖者都会收到通知并自动更新。
+代码
 
-
-OO 原则
-
-
-  为交互对象之间的松耦合设计而努力。
-
-
-吐槽
-
-作者直接使用 Java 标准库里的 Observer 和 Observable 等东东来讲，虽然阅读起来无障碍……但是。好吧，也没啥好但是的。
-
-书中示例的 C++ 实现版源码
-
-这个 Solution 的 ObserverPattern 工程里。
-
-书中示例的类图
-
-Visio 原图见『这里』：
-
-
-</div><a href="/designpattern/2013/12/03/HFDP-Notes2.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2013年 12月03日</span></div>
+Sub ExportMyFile()
+    Dim myPath, myFileName
+    Dim myCurOpenWB As Workbook 'work工作簿
+    Dim myCurOpenWS As Worksheet 'work工作表
+    Dim myTotalWS As Worksheet '汇总工作表
+    
+    Dim myFolderName As String
+    myFolderName = "六堰...</div><a href="/excel/2011/05/25/gather-multi-excel-to-one-by-vba.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2011年 05月25日</span></div>
   </div>
 </div>
-</article><article><h1><a href="/designpattern/2013/11/23/HFDP-Notes1.html">设计模式学习之策略模式</a></h1>
-          <div class="m-article-content">如下内容是学习《Head First 设计模式》第一部分《设计模式入门》所得，主要就是一些原文的摘抄和少量自己的总结。
-
-
-  OO 原则是我们的目标，设计模式是我们的做法。
-
-
-OO 原则
-
-
-  封装变化。
-  多用组合，少用继承。
-  针对接口编程，不针对实现编程。
-
-
-在这一部分，书中通过讲解对一个简单 SimUDuck 根据新需求的重新设计，不断优化过程中，顺理成章地将策略模式讲解清楚了，策略模式「严肃」定义：
-
-
-  策略模式定义了算法族，分别封装起来让它们之间可以相互替换，此模式让算法的变化独立于使用算法的用户。
-
-
-这个模式的存在以前上面的设计原则第一条直接刷新了我之前对 OO 设计的一个认识：
-
-抽象出不变的作为基类，将不同的特化到子类中去。
-
-这个认识本身也没错，但...</div><a href="/designpattern/2013/11/23/HFDP-Notes1.html">点我阅读更多...</a><div class="m-article-data clearfix"><meta itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="qishunli"/></meta><div class="other-wrapper"><div class="date-wrapper"><span class="article-meta">2013年 11月23日</span></div>
-  </div>
-</div>
-</article></div><nav class="m-pagination"><p>共计 103 篇文章，15 页。</p>
+</article></div><nav class="m-pagination"><p>共计 85 篇文章，13 页。</p>
           <ul><li><a class="round-button" href="/blog/page11">
                 <div class="icon icon--previous"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
@@ -407,13 +358,13 @@ OO 原则
               </li><li>
                   <a class="round-button" href="/"><span>1</span></a>
                 </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
+                      <a class="round-button" href="/blog/page10"><span>10</span></a>
+                    </li><li>
                       <a class="round-button" href="/blog/page11"><span>11</span></a>
                     </li><li>
                   <div class="round-button cur"><span>12</span></div>
                 </li><li>
                       <a class="round-button" href="/blog/page13"><span>13</span></a>
-                    </li><li><span class="omit"><svg fill="#000000" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></span></li><li>
-                      <a class="round-button" href="/blog/page15"><span>15</span></a>
                     </li><li>
                 <a class="round-button" href="/blog/page13">
                   <div class="icon icon--next"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -430,7 +381,30 @@ OO 原则
   <div class="main">
     <aside><div class="follow-me"><ul itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="qishunli">
-    <link itemprop="url" href="http://localhost:4000/"></ul></div>
+    <link itemprop="url" href="http://localhost:4000/"><li title="在 Weibo 上关注我。">
+        <div class="floating-action-round-button weibo">
+          <a itemprop="sameAs" href="https://weibo.com/浅浅蓝_qsl" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<path d="M769.226164 496.610234c-14.420098-4.330228-24.309277-7.266877-16.746482-26.214823 16.350218-41.133578 18.046881-76.626289 0.307181-101.939024-33.242099-47.500415-124.194284-44.928286-228.44638-1.280945 0-0.056317-32.73525 14.323848-24.371737-11.64523 16.042013-51.54906 13.626547-94.739726-11.332929-119.662341-56.566349-56.601163-206.976479 2.134908-335.954595 131.078209-96.594075 96.61353-152.681222 198.989775-152.681222 287.52035 0 169.337597 217.152361 272.292366 429.593589 272.292366 278.498445 0 463.752111-161.808592 463.752111-290.273715C893.345701 558.867622 827.968378 514.820945 769.226164 496.610234zM430.163922 866.063936c-169.51781 16.728051-315.851649-59.899262-326.864086-171.202185-11.010389-111.275277 117.530505-215.061482 287.031932-231.823323 169.537265-16.761841 315.876224 59.866496 326.86511 171.119247C728.190884 745.495411 599.705282 849.291856 430.163922 866.063936z" />
+	<path d="M954.16753 186.714824c-67.256246-74.565105-166.457264-102.990607-258.020739-83.522502l-0.037886 0c-21.188318 4.535015-34.695065 25.37929-30.159026 46.527675 4.516584 21.166816 25.352668 34.691993 46.54201 30.174385 65.139769-13.832358 135.634727 6.400627 183.442323 59.368863 47.765615 52.96414 60.740938 125.206957 40.282686 188.537431l0.011263 0.012287c-6.666851 20.629249 4.617954 42.698153 25.271777 49.366027 20.570885 6.662755 42.687913-4.607714 49.362955-25.188838 0-0.037886 0-0.116729 0.011263-0.150519C1039.577146 362.756133 1021.443231 261.206205 954.16753 186.714824" />
+	<path d="M850.886125 279.919669c-32.732179-36.315956-81.068126-50.108381-125.685136-40.621609-18.234261 3.885839-29.856965 21.833398-25.946551 40.085067 3.89915 18.173849 21.833398 29.851845 40.024654 25.893307l0 0.037886c21.809848-4.610786 45.459709 2.113405 61.461789 19.83365 16.018463 17.757107 20.323092 41.949655 13.45043 63.178931l0.035838 0c-5.715614 17.717174 3.983113 36.770584 21.717694 42.511796 17.7397 5.677728 36.76956-3.992328 42.493365-21.756603C892.458972 365.691759 883.686907 316.228458 850.886125 279.919669" />
+	<path d="M447.103928 548.691741c-80.666743-20.985579-171.84317 19.215193-206.880229 90.291746-35.685212 72.492657-1.180599 152.963828 80.321676 179.268757 84.41947 27.224424 183.926645-14.492797 218.521364-92.744074C573.187374 649.021137 530.586496 570.268131 447.103928 548.691741zM385.506979 733.819463c-16.398343 26.160554-51.51015 37.623523-77.954335 25.54824-26.066352-11.868448-33.760211-42.248645-17.360844-67.757975 16.197652-25.400793 50.129884-36.716316 76.378497-25.711046C393.129162 677.216253 401.60838 707.401901 385.506979 733.819463zM439.522702 664.493841c-5.929616 10.131852-19.03498 15.010909-29.304039 10.785123-10.096014-4.15411-13.261002-15.495231-7.522862-25.454038 5.906066-9.908634 18.500485-14.747758 28.572948-10.750309C441.502995 642.817105 445.180975 654.283146 439.522702 664.493841z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li><li title="在 Github 上关注我。">
+        <div class="floating-action-round-button github">
+          <a itemprop="sameAs" href="https://github.com/qiqishunli" target="_blank">
+            <div class="icon"><svg fill="#000000" width="24px" height="24px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path class="svgpath" data-index="path_0" fill="#272636" d="M0 525.2c0 223.6 143.3 413.7 343 483.5 26.9 6.8 22.8-12.4 22.8-25.4l0-88.7c-155.3 18.2-161.5-84.6-172-101.7-21.1-36-70.8-45.2-56-62.3 35.4-18.2 71.4 4.6 113.1 66.3 30.2 44.7 89.1 37.2 119 29.7 6.5-26.9 20.5-50.9 39.7-69.6C248.8 728.2 181.7 630 181.7 513.2c0-56.6 18.7-108.7 55.3-150.7-23.3-69.3 2.2-128.5 5.6-137.3 66.5-6 135.5 47.6 140.9 51.8 37.8-10.2 80.9-15.6 129.1-15.6 48.5 0 91.8 5.6 129.8 15.9 12.9-9.8 77-55.8 138.8-50.2 3.3 8.8 28.2 66.7 6.3 135 37.1 42.1 56 94.6 56 151.4 0 117-67.5 215.3-228.8 243.7 26.9 26.6 43.6 63.4 43.6 104.2l0 128.8c0.9 10.3 0 20.5 17.2 20.5C878.1 942.4 1024 750.9 1024 525.3c0-282.9-229.3-512-512-512C229.1 13.2 0 242.3 0 525.2L0 525.2z" />
+</svg>
+</div>
+          </a>
+        </div>
+      </li></ul><p class="email">
+      <a title="给我发邮件。" href="mailto:shunliqi@163.com" target="_self">shunliqi@163.com</a>
+    </p></div>
 </aside>
     <footer class="site-info">
       <p>© 浅浅蓝的博客 2018</p>

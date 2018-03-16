@@ -8,7 +8,7 @@ titles:
 key: page-about
 ---
 
-Just say something about yourself. :+1:
+一个热爱前端开发的小姑娘~
 
 {% highlight javascript %}
 (() => console.log('hello, world!'))();
